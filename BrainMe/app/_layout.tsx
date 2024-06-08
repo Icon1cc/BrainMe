@@ -1,6 +1,9 @@
+import { ConvexClientProvider } from "@/providers/convex-client-providers";
 import { DefaultTheme, ThemeProvider } from "@react-navigation/native";
-import { useFonts } from "expo-font";
+import { Pacifico_400Regular, useFonts } from "@expo-google-fonts/pacifico";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
@@ -10,7 +13,13 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+    NiveauGroteskLight: require("../assets/fonts/NiveauGroteskLight.otf"),
+    NiveauGroteskLightItalic: require("../assets/fonts/NiveauGroteskLight-Italic.otf"),
+    NiveauGrotesk: require("../assets/fonts/NiveauGroteskRegular.otf"),
+    NiveauGroteskRegularSmallcaps: require("../assets/fonts/NiveauGroteskRegular-SmallCaps.otf"),
+    NiveauGroteskMedium: require("../assets/fonts/NiveauGroteskMedium.otf"),
+    NiveauGroteskBold: require("../assets/fonts/NiveauGroteskBold.otf"),
+    Pacifico: Pacifico_400Regular,
   });
 
   useEffect(() => {
@@ -24,10 +33,17 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      </Stack>
-    </ThemeProvider>
+    <ConvexClientProvider>
+      <SafeAreaProvider>
+        <ThemeProvider value={DefaultTheme}>
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="(tabs)" />
+            <Stack.Screen name="welcome" />
+            <Stack.Screen name="sign-up" />
+          </Stack>
+          <StatusBar style="light" />
+        </ThemeProvider>
+      </SafeAreaProvider>
+    </ConvexClientProvider>
   );
 }
