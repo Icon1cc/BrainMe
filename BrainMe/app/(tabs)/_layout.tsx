@@ -1,7 +1,10 @@
+import { Text } from "react-native";
 import { useUser } from "@clerk/clerk-expo";
 import { Redirect, Tabs } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import React from "react";
+
+import Colors from "@/constants/Colors";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -13,15 +16,29 @@ export default function Layout() {
     SplashScreen.hideAsync();
   }
 
-  // Redirect to the welcome screen if the user is not signed in
+  /* Redirect to the welcome screen if the user is not signed in
   if (!isSignedIn) {
     return <Redirect href={"/welcome"} />;
-  }
+  }*/
 
   return (
-    <Tabs screenOptions={{ headerShown: false }}>
-      <Tabs.Screen name="index" />
-      <Tabs.Screen name="log-out" />
+    <Tabs screenOptions={{ headerShadowVisible: false }}>
+      <Tabs.Screen
+        name="index"
+        options={{
+          headerTitle() {
+            return (
+              <Text
+                style={{ fontFamily: "Pacifico", color: "white", fontSize: 32 }}
+              >
+                Jessica Richman
+              </Text>
+            );
+          },
+          headerStyle: { backgroundColor: Colors.primary },
+        }}
+      />
+      <Tabs.Screen name="log-out" options={{ headerShown: false }} />
     </Tabs>
   );
 }
