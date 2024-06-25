@@ -1,19 +1,12 @@
-import { View, Text, Pressable } from "react-native";
-import { useAuth } from "@clerk/clerk-expo";
+import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 
-const Home = () => {
-  const { signOut } = useAuth();
+export default function Profile() {
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Pressable
-        style={{ padding: 20, backgroundColor: "red" }}
-        onPress={() => signOut()}
-      >
-        <Text style={{ color: "white", fontSize: 20 }}>Sign out</Text>
-      </Pressable>
+    <View>
+      <Text>Profile</Text>
     </View>
   );
-};
+}
 
-export default Home;
+const styles = StyleSheet.create({});

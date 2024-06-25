@@ -1,5 +1,5 @@
 import { useUser } from "@clerk/clerk-expo";
-import { Redirect, Stack } from "expo-router";
+import { Redirect, Tabs } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import React from "react";
 
@@ -18,5 +18,10 @@ export default function Layout() {
     return <Redirect href={"/welcome"} />;
   }
 
-  return <Stack screenOptions={{ headerShown: false }} />;
+  return (
+    <Tabs screenOptions={{ headerShown: false }}>
+      <Tabs.Screen name="index" />
+      <Tabs.Screen name="log-out" />
+    </Tabs>
+  );
 }
