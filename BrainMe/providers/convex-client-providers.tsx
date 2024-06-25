@@ -23,11 +23,11 @@ const tokenCache = {
 
 const convex = new ConvexReactClient(process.env.EXPO_PUBLIC_CONVEX_URL!);
 
-export const ConvexClientProvider = ({
+export function ConvexClientProvider({
   children,
 }: {
   children: React.ReactNode;
-}) => {
+}) {
   return (
     <ClerkProvider
       publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!}
@@ -38,4 +38,4 @@ export const ConvexClientProvider = ({
       </ConvexProviderWithClerk>
     </ClerkProvider>
   );
-};
+}

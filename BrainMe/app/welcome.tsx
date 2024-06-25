@@ -1,16 +1,17 @@
-import { View, Pressable, Image, ScrollView, StyleSheet } from "react-native";
+import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 
-import Colors from "@/constants/Colors";
+// This imports the structure component, which contains the main container for the screen with the header.
+import { Structure } from "@/components/auth/structure";
 
 // These imports are required to use the components in this file.
-import Header from "@/components/auth/header";
 import Input from "@/components/auth/input";
 import Separator from "@/components/auth/separator";
-import LoginButton from "@/components/button";
-import Footer from "@/components/auth/footer";
+import SocialAuth from "@/components/auth/auth-social-button";
+import LoginButton from "@/components/auth/action-button";
+import Footer from "@/components/auth/footer-text";
 
 // This import is required to use the OAuth flow.
 import * as WebBrowser from "expo-web-browser";
@@ -96,8 +97,6 @@ export default function Welcome() {
 
   // This effect redirects the user to the home screen if they are already signed in.
   // It runs when the user's authentication state changes.
-  // This effect redirects the user to the home screen if they are already signed in.
-  // It runs when the user's authentication state changes.
   useEffect(() => {
     if (isLoaded && isSignedIn) {
       router.replace("/");
@@ -105,97 +104,30 @@ export default function Welcome() {
   }, [isLoaded, isSignedIn]);
 
   return (
-    <View
-      style={{
-        flex: 1,
-        paddingTop: insets.top,
-        backgroundColor: Colors.primary,
-      }}
+    <Structure
+      title="BrainMe"
+      subtitle="Quizz your knowledge, share your wisdom!"
     >
-      <Header
-        title="BrainMe"
-        subtitle="Quizz your knowledge, share your wisdom!"
+      <Input
+        title="Email"
+        placeholder="winner@email.com"
+        keyboardType="email-address"
+        onChangeText={setEmailAddress}
       />
-      <ScrollView
-        automaticallyAdjustKeyboardInsets={true}
-        showsVerticalScrollIndicator={false}
-        style={styles.container}
-        contentContainerStyle={{ gap: 34 }}
-      >
-        <Input
-          title="Email"
-          placeholder="winner@email.com"
-          keyboardType="email-address"
-          onChangeText={setEmailAddress}
-        />
-        <Input
-          title="Your password"
-          placeholder="Insert password..."
-          secureTextEntry
-          onChangeText={setPassword}
-        />
-        <Separator />
-        <View style={styles.authContainer}>
-          <Pressable
-            style={styles.authButton}
-            onPress={() => onSelectAuth(Strategy.Google)}
-          >
-            <Image
-              source={require("@/assets/images/auth/google.png")}
-              style={styles.image}
-            />
-          </Pressable>
-          <Pressable
-            style={styles.authButton}
-            onPress={() => onSelectAuth(Strategy.Facebook)}
-          >
-            <Image
-              source={require("@/assets/images/auth/facebook.png")}
-              style={styles.image}
-            />
-          </Pressable>
-          <Pressable
-            style={styles.authButton}
-            onPress={() => onSelectAuth(Strategy.Google)}
-          >
-            <Image
-              source={require("@/assets/images/auth/apple.png")}
-              style={styles.image}
-            />
-          </Pressable>
-        </View>
-        <LoginButton text="LOGIN" onPress={onSignInPress} />
-        <Footer text="Don't have an account yet?" link="Sign up" />
-      </ScrollView>
-    </View>
+      <Input
+        title="Your password"
+        placeholder="Insert password..."
+        secureTextEntry
+        onChangeText={setPassword}
+      />
+      <Separator />
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <SocialAuth onPress={() => {}} provider="google" />
+        <SocialAuth onPress={() => {}} provider="facebook" />
+        <SocialAuth onPress={() => {}} provider="apple" />
+      </View>
+      <LoginButton text="LOGIN" onPress={onSignInPress} />
+      <Footer text="Don't have an account yet?" link="Sign up" />
+    </Structure>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    paddingHorizontal: 17,
-    paddingTop: 51,
-  },
-  authContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  authButton: {
-    paddingVertical: 17,
-    paddingHorizontal: 40,
-    borderRadius: 20,
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1,
-    borderColor: "lightgray",
-  },
-  image: {
-    resizeMode: "contain",
-    height: 24,
-    width: 24,
-  },
-});
