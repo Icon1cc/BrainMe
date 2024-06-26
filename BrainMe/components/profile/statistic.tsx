@@ -40,9 +40,11 @@ export default function Statistic(props: StatisticProps) {
         source={StatisticType[props.type as keyof typeof StatisticType]}
         style={styles.image}
       />
-      <Text>{numberFormatted}</Text>
-      <Text>{text[0]}</Text>
-      <Text>{text[1]}</Text>
+      <Text style={styles.number}>{numberFormatted}</Text>
+      <View style={{ alignItems: "center", gap: 2 }}>
+        <Text style={styles.text}>{text[0]}</Text>
+        <Text style={styles.text}>{text[1]}</Text>
+      </View>
     </View>
   );
 }
@@ -59,7 +61,17 @@ const styles = StyleSheet.create({
     borderColor: Colors.border,
   },
   image: {
-    width: 30,
-    height: 30,
+    width: 32,
+    height: 32,
+  },
+  number: {
+    fontFamily: "NiveauGroteskBold",
+    color: Colors.primary,
+    fontSize: 24,
+  },
+  text: {
+    fontFamily: "NiveauGroteskLight",
+    color: Colors.primary,
+    fontSize: 16,
   },
 });

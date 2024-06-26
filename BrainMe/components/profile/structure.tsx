@@ -1,4 +1,5 @@
 import { View, Image, StyleSheet } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 
@@ -10,11 +11,12 @@ interface StructureProps {
 }
 
 export function Structure({ children, placeholder }: StructureProps) {
+  const insets = useSafeAreaInsets();
   return (
     <View
       style={{
         flex: 1,
-        paddingTop: 17 * 5,
+        paddingTop: 17 * 10,
         backgroundColor: Colors.primary,
       }}
     >
@@ -36,8 +38,8 @@ const styles = StyleSheet.create({
     position: "relative",
     justifyContent: "space-between",
     backgroundColor: "white",
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
     paddingTop: 17 * 5,
     paddingBottom: 17 * 3,
     paddingHorizontal: 17,

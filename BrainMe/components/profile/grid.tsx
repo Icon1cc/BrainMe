@@ -10,13 +10,13 @@ export default function Grid({}: GridProps) {
     <View style={{ gap: 17 }}>
       <View style={{ flexDirection: "row", gap: 17 }}>
         <Stat type="star" stat={3} hashtag description="World rank" />
-        <Stat type="joystick" stat={3} description="Games played" />
-        <Stat type="coin" stat={3} description="Points total" />
+        <Stat type="joystick" stat={250} description="Games played" />
+        <Stat type="coin" stat={1084} description="Points total" />
       </View>
       <View style={{ flexDirection: "row", gap: 17 }}>
-        <Stat type="potion" stat={3} percent description="Completion rate" />
-        <Stat type="target" stat={3} percent description="Correct answers" />
-        <Stat type="skull" stat={3} percent description="Incorrect answers" />
+        <Stat type="potion" stat={82} percent description="Completion rate" />
+        <Stat type="target" stat={62} percent description="Correct answers" />
+        <Stat type="skull" stat={38} percent description="Incorrect answers" />
       </View>
     </View>
   );

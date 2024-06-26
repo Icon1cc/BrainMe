@@ -2,6 +2,7 @@ import { Text } from "react-native";
 import { useUser } from "@clerk/clerk-expo";
 import { Redirect, Tabs } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
+import { FontAwesome5 } from "@expo/vector-icons";
 import React from "react";
 
 import Colors from "@/constants/Colors";
@@ -22,20 +23,14 @@ export default function Layout() {
   }*/
 
   return (
-    <Tabs screenOptions={{ headerShadowVisible: false }}>
+    <Tabs screenOptions={{ headerShown: false, tabBarShowLabel: false }}>
+      <Tabs.Screen name="index" />
       <Tabs.Screen
-        name="index"
+        name="profile"
         options={{
-          headerTitle() {
-            return (
-              <Text
-                style={{ fontFamily: "Pacifico", color: "white", fontSize: 32 }}
-              >
-                Jessica Richman
-              </Text>
-            );
-          },
-          headerStyle: { backgroundColor: Colors.primary },
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome5 name="user-alt" color={color} size={size} />
+          ),
         }}
       />
       <Tabs.Screen name="log-out" options={{ headerShown: false }} />
