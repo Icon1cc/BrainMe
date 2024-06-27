@@ -9,7 +9,6 @@ interface OptionsProps {
 }
 
 export default function Options(props: OptionsProps) {
-  const [isFriend, setIsFriend] = useState(props.isFriend);
   return (
     <View style={styles.container}>
       <Pressable
@@ -23,7 +22,6 @@ export default function Options(props: OptionsProps) {
       </Pressable>
       <Pressable
         onPress={() => {
-          setIsFriend(!isFriend);
           props.onPressFollow();
         }}
         style={({ pressed }) => {
@@ -34,15 +32,14 @@ export default function Options(props: OptionsProps) {
           ];
         }}
       >
-        {isFriend ? (
+        {props.isFriend ? (
           <>
-            <Text style={[styles.text, { color: "white" }]}>Unfriend</Text>
-            <Ionicons name="checkmark" size={20} color="white" />
+            <Text style={[styles.text, { color: "white" }]}>Unfollow</Text>
           </>
         ) : (
           <>
-            <Text style={[styles.text, { color: "white" }]}>Add friend</Text>
-            <Ionicons name="person-add" size={20} color="white" />
+            <Text style={[styles.text, { color: "white" }]}>Follow</Text>
+            <Ionicons name="heart-circle-outline" size={24} color="white" />
           </>
         )}
       </Pressable>

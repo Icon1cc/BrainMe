@@ -17,10 +17,10 @@ export default function Layout() {
     SplashScreen.hideAsync();
   }
 
-  // Redirect to the welcome screen if the user is not signed in
+  /* Redirect to the welcome screen if the user is not signed in
   if (!isSignedIn) {
     return <Redirect href={"/welcome"} />;
-  }
+  }*/
 
   return (
     <Tabs screenOptions={{ tabBarShowLabel: false, headerShown: false }}>

@@ -11,7 +11,7 @@ export default defineSchema({
     completionRate: v.number(),
     correctAnswers: v.number(),
     wrongAnswers: v.number(),
-    friends_ids: v.optional(v.array(v.id("user"))),
+    friends: v.optional(v.array(v.id("user"))),
   }),
   chats: defineTable({
     user_1: v.id("user"),

@@ -18,7 +18,7 @@ export function Structure({ title, children, placeholder }: StructureProps) {
     <View
       style={{
         flex: 1,
-        paddingTop: 17 * 10,
+        paddingTop: 17 * 11,
         backgroundColor: Colors.primary,
       }}
     >

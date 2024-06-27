@@ -11,34 +11,12 @@ import React from "react";
 
 import Colors from "@/constants/Colors";
 
-const DATA = [
-  {
-    id: "1",
-    name: "John",
-  },
-  {
-    id: "2",
-    name: "Jane",
-  },
-  {
-    id: "3",
-    name: "Alice",
-  },
-  {
-    id: "4",
-    name: "Bob",
-  },
-  {
-    id: "5",
-    name: "Charlie",
-  },
-];
-
 interface FriendsProps {
   number: number;
+  friends: string[];
 }
 
-export default function Friends({ number }: FriendsProps) {
+export default function Friends({ number, friends }: FriendsProps) {
   // For the navigation.
   const router = useRouter();
   return (
@@ -46,11 +24,11 @@ export default function Friends({ number }: FriendsProps) {
       <Text style={styles.text}>Friends ({number})</Text>
       <View style={styles.container}>
         <FlatList
-          data={DATA}
+          data={friends}
           horizontal
           scrollEnabled={false}
           showsHorizontalScrollIndicator={false}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => Math.random().toString() + item}
           renderItem={({ item }) => (
             <Image
               source={require("@/assets/images/user/smiling-woman.jpeg")}
