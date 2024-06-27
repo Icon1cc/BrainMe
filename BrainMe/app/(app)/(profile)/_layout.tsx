@@ -3,30 +3,50 @@ import { Stack, Link } from "expo-router";
 import { AntDesign } from "@expo/vector-icons";
 import React from "react";
 
-const Layout = () => {
+export default function Layout() {
   return (
     <Stack
       screenOptions={{
         headerTransparent: true,
       }}
     >
-      <Stack.Screen name="profile" />
+      <Stack.Screen
+        name="profile"
+        options={{
+          headerRight() {
+            return <Header navigation="settings" />;
+          },
+        }}
+      />
+      <Stack.Screen
+        name="settings"
+        options={{
+          headerShown: false,
+          presentation: "modal",
+        }}
+      />
       <Stack.Screen
         name="[profile]"
         options={{
           headerLeft() {
-            return (
-              <Link href="/(app)/(profile)/f/finder" asChild>
-                <Pressable>
-                  <AntDesign name="arrowleft" size={24} color="white" />
-                </Pressable>
-              </Link>
-            );
+            return <Header navigation="f/finder" />;
           },
         }}
       />
     </Stack>
   );
-};
+}
 
-export default Layout;
+interface HeaderProps {
+  navigation: "f/finder" | "profile" | "settings" | "[profile]";
+}
+
+function Header(props: HeaderProps) {
+  return (
+    <Link href={`/${props.navigation}`} asChild>
+      <Pressable>
+        <AntDesign name="arrowleft" size={24} color="white" />
+      </Pressable>
+    </Link>
+  );
+}
