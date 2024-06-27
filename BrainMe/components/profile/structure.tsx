@@ -1,4 +1,5 @@
-import { View, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet } from "react-native";
+import { Stack } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
@@ -6,11 +7,12 @@ import React from "react";
 import Colors from "@/constants/Colors";
 
 interface StructureProps {
-  children: React.ReactNode;
+  title: string;
   placeholder?: string;
+  children: React.ReactNode;
 }
 
-export function Structure({ children, placeholder }: StructureProps) {
+export function Structure({ title, children, placeholder }: StructureProps) {
   const insets = useSafeAreaInsets();
   return (
     <View
@@ -20,6 +22,19 @@ export function Structure({ children, placeholder }: StructureProps) {
         backgroundColor: Colors.primary,
       }}
     >
+      <Stack.Screen
+        options={{
+          headerTitle() {
+            return (
+              <Text
+                style={{ fontFamily: "Pacifico", color: "white", fontSize: 24 }}
+              >
+                {title}
+              </Text>
+            );
+          },
+        }}
+      />
       <View style={styles.container}>
         <Image
           source={require("@/assets/images/user/smiling-woman.jpeg")}

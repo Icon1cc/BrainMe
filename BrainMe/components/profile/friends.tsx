@@ -60,7 +60,7 @@ export default function Friends({ number }: FriendsProps) {
         />
         <Pressable
           onPress={() => {
-            router.push("/(tabs)/profile/finder");
+            router.push("/(app)/(profile)/f/finder");
           }}
           style={styles.button}
         >

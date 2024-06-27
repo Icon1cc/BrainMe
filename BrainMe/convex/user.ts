@@ -4,15 +4,11 @@ import { v } from "convex/values";
 
 // This mutation inserts a new user into the database.
 export const add = mutation({
-  args: {
-    username: v.string(),
-    name: v.string(),
-  },
-  handler: async (ctx, args) => {
+  handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
     const { tokenIdentifier } = identity!;
     await ctx.db.insert("user", {
-      ...args,
+      username: "Alexandre Boving",
       ranking: 0,
       gamesPlayed: 0,
       points: 0,
@@ -28,12 +24,16 @@ export const add = mutation({
 export const myUser = query({
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
-    const { tokenIdentifier } = identity!;
-    const user = await ctx.db
-      .query("user")
-      .filter((q) => q.eq(q.field("user_id"), tokenIdentifier))
-      .unique();
-    return user;
+    if (!identity) {
+      return null;
+    } else {
+      const { tokenIdentifier } = identity!;
+      const user = await ctx.db
+        .query("user")
+        .filter((q) => q.eq(q.field("user_id"), tokenIdentifier))
+        .unique();
+      return user;
+    }
   },
 });
 

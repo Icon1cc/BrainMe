@@ -5,7 +5,6 @@ export default defineSchema({
   user: defineTable({
     user_id: v.string(),
     username: v.string(),
-    name: v.string(),
     ranking: v.number(),
     gamesPlayed: v.number(),
     points: v.number(),

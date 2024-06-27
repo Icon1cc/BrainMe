@@ -17,23 +17,24 @@ export default function Layout() {
     SplashScreen.hideAsync();
   }
 
-  /* Redirect to the welcome screen if the user is not signed in
+  // Redirect to the welcome screen if the user is not signed in
   if (!isSignedIn) {
     return <Redirect href={"/welcome"} />;
-  }*/
+  }
 
   return (
-    <Tabs screenOptions={{ headerShown: false, tabBarShowLabel: false }}>
-      <Tabs.Screen name="index" />
+    <Tabs screenOptions={{ tabBarShowLabel: false, headerShown: false }}>
+      <Tabs.Screen name="(home)" options={{ title: "Home" }} />
+      <Tabs.Screen name="(notes)" options={{ title: "Notes" }} />
+      <Tabs.Screen name="(leaderboard)" options={{ title: "Leaderboard" }} />
       <Tabs.Screen
-        name="profile"
+        name="(profile)"
         options={{
           tabBarIcon: ({ color, size }) => (
             <FontAwesome5 name="user-alt" color={color} size={size} />
           ),
         }}
       />
-      <Tabs.Screen name="log-out" options={{ headerShown: false }} />
     </Tabs>
   );
 }
