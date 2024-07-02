@@ -12,59 +12,6 @@ import { useConvex } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 
-const DATA = [
-  {
-    _id: "1",
-    name: "Jessica Richman",
-    points: 100,
-  },
-  {
-    _id: "2",
-    name: "John Doe",
-    points: 200,
-  },
-  {
-    _id: "3",
-    name: "Jane Doe",
-    points: 300,
-  },
-  {
-    _id: "4",
-    name: "Alice Smith",
-    points: 400,
-  },
-  {
-    _id: "5",
-    name: "Bob Smith",
-    points: 500,
-  },
-  {
-    _id: "6",
-    name: "Charlie Brown",
-    points: 600,
-  },
-  {
-    _id: "7",
-    name: "Daisy Duck",
-    points: 700,
-  },
-  {
-    _id: "8",
-    name: "Eve Johnson",
-    points: 800,
-  },
-  {
-    _id: "9",
-    name: "Frank White",
-    points: 900,
-  },
-  {
-    _id: "10",
-    name: "George Black",
-    points: 1000,
-  },
-];
-
 export default function Finder() {
   //Use convex.
   const convex = useConvex();

@@ -1,6 +1,6 @@
-import { Pressable } from "react-native";
+import { Text, Pressable } from "react-native";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { Stack, Link } from "expo-router";
-import { AntDesign } from "@expo/vector-icons";
 import React from "react";
 
 export default function Layout() {
@@ -14,15 +14,8 @@ export default function Layout() {
         name="profile"
         options={{
           headerRight() {
-            return <Header navigation="settings" />;
+            return <Header navigation="accounts" />;
           },
-        }}
-      />
-      <Stack.Screen
-        name="settings"
-        options={{
-          headerShown: false,
-          presentation: "modal",
         }}
       />
       <Stack.Screen
@@ -33,19 +26,30 @@ export default function Layout() {
           },
         }}
       />
+      <Stack.Screen
+        name="accounts"
+        options={{
+          headerShown: false,
+          presentation: "modal",
+        }}
+      />
     </Stack>
   );
 }
 
 interface HeaderProps {
-  navigation: "f/finder" | "profile" | "settings" | "[profile]";
+  navigation: "f/finder" | "profile" | "accounts" | "[profile]";
 }
 
 function Header(props: HeaderProps) {
   return (
     <Link href={`/${props.navigation}`} asChild>
       <Pressable>
-        <AntDesign name="arrowleft" size={24} color="white" />
+        {props.navigation === "accounts" ? (
+          <Ionicons name="settings-outline" size={24} color="white" />
+        ) : (
+          <AntDesign name="arrowleft" size={24} color="white" />
+        )}
       </Pressable>
     </Link>
   );

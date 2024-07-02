@@ -1,0 +1,55 @@
+import { View, Text, Pressable, StyleSheet } from "react-native";
+import { Stack, Link, useLocalSearchParams } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Edit } from "./name";
+import React, { useEffect, useState } from "react";
+
+export default function FamilyName() {
+  const insets = useSafeAreaInsets();
+  const { param } = useLocalSearchParams();
+
+  const [value, setValue] = useState("");
+  const [characterLeft, setCharacterLeft] = useState(1);
+
+  const onChangeText = (text: string) => {
+    setCharacterLeft(45 - text.length);
+    setValue(text);
+  };
+
+  useEffect(() => {
+    if (typeof param === "string") {
+      setValue(param);
+      setCharacterLeft(45 - param.length);
+    }
+  }, []);
+  return (
+    <View style={{ flex: 1, paddingVertical: insets.top }}>
+      <Stack.Screen
+        options={{
+          headerRight() {
+            return (
+              <Link
+                href={{
+                  pathname: "/(app)/(profile)/accounts/",
+                  params: { title: "familyName", param: value },
+                }}
+                asChild
+              >
+                <Pressable>
+                  <Text style={{ fontFamily: "NiveauGrotesk", fontSize: 20 }}>
+                    Confirm
+                  </Text>
+                </Pressable>
+              </Link>
+            );
+          },
+        }}
+      />
+      <Edit
+        value={value}
+        onChangeText={onChangeText}
+        characterLeft={characterLeft}
+      />
+    </View>
+  );
+}
