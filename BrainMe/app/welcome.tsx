@@ -122,9 +122,9 @@ export default function Welcome() {
       />
       <Separator />
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-        <SocialAuth onPress={() => {}} provider="google" />
-        <SocialAuth onPress={() => {}} provider="facebook" />
-        <SocialAuth onPress={() => {}} provider="apple" />
+        <SocialAuth onPress={() => onSelectAuth(Strategy.Google)} provider="google" />
+        <SocialAuth onPress={() => onSelectAuth(Strategy.Facebook)} provider="facebook" />
+        <SocialAuth onPress={() => onSelectAuth(Strategy.Apple)} provider="apple" />
       </View>
       <LoginButton text="LOGIN" onPress={onSignInPress} />
       <Footer text="Don't have an account yet?" link="Sign up" />
