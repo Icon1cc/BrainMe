@@ -20,6 +20,7 @@ export function Structure({ children, title, subtitle }: StructureProps) {
         paddingTop: insets.top,
         backgroundColor: Colors.primary,
       }}
+      testID="structure-container"
     >
       <View style={styles.text}>
         <Text style={styles.title}>{title}</Text>

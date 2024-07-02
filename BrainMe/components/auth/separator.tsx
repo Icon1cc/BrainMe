@@ -4,11 +4,11 @@ import React from "react";
 export default function Separator() {
   return (
     <View style={styles.separator}>
-      <View style={styles.separator_line} />
+      <View style={styles.separator_line} testID="separator-line" />
       <Text style={{ fontFamily: "NiveauGroteskLight", color: "gray" }}>
         or sign up with
       </Text>
-      <View style={styles.separator_line} />
+      <View style={styles.separator_line} testID="separator-line" />
     </View>
   );
 }
