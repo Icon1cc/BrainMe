@@ -11,7 +11,7 @@ import Input from "@/components/auth/input";
 import Separator from "@/components/auth/separator";
 import SocialAuth from "@/components/auth/auth-social-button";
 import LoginButton from "@/components/auth/action-button";
-import Footer from "@/components/auth/footer-text";
+import Footer from "@/components/auth/footer-text"; // Ensure this is the correct import path
 
 // This import is required to use the OAuth flow.
 import * as WebBrowser from "expo-web-browser";
