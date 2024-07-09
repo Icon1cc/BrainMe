@@ -37,7 +37,7 @@ export default function RootLayout() {
       <SafeAreaProvider>
         <ThemeProvider value={DefaultTheme}>
           <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="(tabs)" />
+            <Stack.Screen name="(app)" />
             <Stack.Screen name="welcome" />
             <Stack.Screen name="sign-up" />
           </Stack>

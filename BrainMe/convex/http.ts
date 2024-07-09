@@ -8,7 +8,7 @@ const http = httpRouter();
 // Special route for image upload to storage
 // Also runs the mutation to add the message to the database
 http.route({
-  path: "/sendImage",
+  path: "/profilepic",
   method: "POST",
   handler: httpAction(async (ctx, request) => {
     // Store the file
@@ -17,14 +17,12 @@ http.route({
 
     // Save the storage ID to the database via a mutation
     const user = new URL(request.url).searchParams.get("user");
-    const chat_id = new URL(request.url).searchParams.get("chat_id");
-    const content = new URL(request.url).searchParams.get("content");
+    const username = new URL(request.url).searchParams.get("username");
 
-    await ctx.runMutation(api.messages.sendMessage, {
-      content: content!,
+    await ctx.runMutation(api.user.update, {
+      _id: user as Id<"user">,
+      username: username!,
       file: storageId,
-      user: user!,
-      chat_id: chat_id as Id<"chats">,
     });
 
     // Return a response

@@ -4,22 +4,41 @@ import { v } from "convex/values";
 
 // This mutation inserts a new user into the database.
 export const add = mutation({
-  args: {
-    username: v.string(),
-    name: v.string(),
-  },
-  handler: async (ctx, args) => {
+  handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
     const { tokenIdentifier } = identity!;
-    await ctx.db.insert("user", {
+    if (tokenIdentifier) {
+      await ctx.db.insert("user", {
+        username: "Alexandre Boving",
+        ranking: 0,
+        gamesPlayed: 0,
+        points: 0,
+        completionRate: 0,
+        correctAnswers: 0,
+        wrongAnswers: 0,
+        user_id: tokenIdentifier,
+      });
+    }
+  },
+});
+
+// This mutation updates a user in the database
+export const update = mutation({
+  args: {
+    _id: v.id("user"),
+    username: v.optional(v.string()),
+    rank: v.optional(v.number()),
+    gamesPlayed: v.optional(v.number()),
+    points: v.optional(v.number()),
+    completionRate: v.optional(v.number()),
+    correctAnswers: v.optional(v.number()),
+    wrongAnswers: v.optional(v.number()),
+    friends: v.optional(v.array(v.id("user"))),
+    file: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args._id, {
       ...args,
-      ranking: 0,
-      gamesPlayed: 0,
-      points: 0,
-      completionRate: 0,
-      correctAnswers: 0,
-      wrongAnswers: 0,
-      user_id: tokenIdentifier,
     });
   },
 });
@@ -28,12 +47,22 @@ export const add = mutation({
 export const myUser = query({
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
-    const { tokenIdentifier } = identity!;
-    const user = await ctx.db
-      .query("user")
-      .filter((q) => q.eq(q.field("user_id"), tokenIdentifier))
-      .unique();
-    return user;
+    if (!identity) {
+      return null;
+    } else {
+      const { tokenIdentifier } = identity!;
+      const user = await ctx.db
+        .query("user")
+        .filter((q) => q.eq(q.field("user_id"), tokenIdentifier))
+        .unique();
+      if (user?.file && user.file) {
+        const url = await ctx.storage.getUrl(user.file as Id<"_storage">);
+        if (url) {
+          return { ...user, file: url };
+        }
+      }
+      return user;
+    }
   },
 });
 
@@ -43,10 +72,17 @@ export const get = query({
     _id: v.id("user"),
   },
   handler: async (ctx, args) => {
-    return await ctx.db
+    const user = await ctx.db
       .query("user")
       .filter((q) => q.eq(q.field("_id"), args._id))
       .unique();
+    if (user?.file && user.file) {
+      const url = await ctx.storage.getUrl(user.file as Id<"_storage">);
+      if (url) {
+        return { ...user, file: url };
+      }
+    }
+    return user;
   },
 });
 
@@ -66,24 +102,5 @@ export const collect = query({
         }
       })
     );*/
-  },
-});
-
-// This mutation updates a user in the database
-export const update = mutation({
-  args: {
-    _id: v.id("user"),
-    rank: v.optional(v.number()),
-    gamesPlayed: v.optional(v.number()),
-    points: v.optional(v.number()),
-    completionRate: v.optional(v.number()),
-    correctAnswers: v.optional(v.number()),
-    wrongAnswers: v.optional(v.number()),
-    friends: v.optional(v.array(v.id("user"))),
-  },
-  handler: async (ctx, args) => {
-    await ctx.db.patch(args._id, {
-      ...args,
-    });
   },
 });

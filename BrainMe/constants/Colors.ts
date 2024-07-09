@@ -11,6 +11,7 @@ export default {
   secondary: "#367B62",
   tertiary: "#77AD78",
   surface: "#2B2D3A",
+  border: "#D9D9D9",
   light: {
     text: "#11181C",
     background: "#fff",

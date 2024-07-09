@@ -5,3 +5,9 @@
 3. Install Backend Convex dev. Following instruction: npm install convex react-dom react-native-get-random-values
 4. Install Clerk Authentication. Following instruction: npm install @clerk/clerk-expo
 5. Install Secure Store in order to store JWT in phone's device storage securely. Following instruciton: npx expo install expo-secure-store
+
+## Notes.
+
+1. Adapt the SplashScreen for big screens.
+2. Repair the SplaschScreen Statusbar.
+3. Optimize the tabBar for changing header name.
