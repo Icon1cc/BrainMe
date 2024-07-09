@@ -46,7 +46,7 @@ export default function OtherUser() {
     //friends.push(profile as Id<"user">);
   };
   return (
-    <Structure title={otherUser?.username!}>
+    <Structure title={otherUser?.username!} placeholder={otherUser?.file!}>
       <Grid
         ranking={otherUser?.ranking!}
         gamesPlayed={otherUser?.gamesPlayed!}

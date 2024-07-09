@@ -76,11 +76,13 @@ export const get = query({
       .query("user")
       .filter((q) => q.eq(q.field("_id"), args._id))
       .unique();
-    if (user) {
-      return user;
-    } else {
-      return null;
+    if (user?.file && user.file) {
+      const url = await ctx.storage.getUrl(user.file as Id<"_storage">);
+      if (url) {
+        return { ...user, file: url };
+      }
     }
+    return user;
   },
 });
 
