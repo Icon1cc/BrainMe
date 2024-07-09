@@ -2,6 +2,7 @@ import { View, Text, Image, StyleSheet } from "react-native";
 import React from "react";
 
 import Colors from "@/constants/Colors";
+import ImageViewer from "@/components/image-viewer";
 
 interface ProfilePros {
   username: string;
@@ -11,10 +12,7 @@ interface ProfilePros {
 export default function Profiles(props: ProfilePros) {
   return (
     <View style={styles.container}>
-      <Image
-        source={require("@/assets/images/user/smiling-woman.jpeg")}
-        style={{ width: 40, height: 40, borderRadius: 20 }}
-      />
+      <ImageViewer size={40} />
       <Text style={{ flex: 1, fontSize: 20 }}>{props.username}</Text>
       <Text style={{ fontFamily: "NiveauGroteskLight", fontSize: 16 }}>
         {props.points} points

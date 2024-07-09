@@ -7,6 +7,7 @@ import {
   TextInput,
   Dimensions,
   Alert,
+  StyleSheet,
 } from "react-native";
 import { Stack, useLocalSearchParams, Link } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -22,7 +23,7 @@ export function Edit(props: EditProps) {
   const inputRef = useRef<TextInput>(null);
   useEffect(() => {
     if (props.characterLeft === 0) {
-      Alert.alert("Character limit reached", "Please limit to 45 characters", [
+      Alert.alert("Character limit reached", "Please limit to 20 characters", [
         {
           text: "OK",
         },
@@ -41,7 +42,7 @@ export function Edit(props: EditProps) {
           autoFocus
           placeholder="Insert text here..."
           value={props.value}
-          maxLength={45}
+          maxLength={20}
           onChangeText={props.onChangeText}
           style={{
             fontFamily: "NiveauGrotesk",
@@ -64,14 +65,14 @@ export default function EditName() {
   const [characterLeft, setCharacterLeft] = useState(1);
 
   const onChangeText = (text: string) => {
-    setCharacterLeft(45 - text.length);
+    setCharacterLeft(20 - text.length);
     setValue(text);
   };
 
   useEffect(() => {
     if (typeof param === "string") {
       setValue(param);
-      setCharacterLeft(45 - param.length);
+      setCharacterLeft(20 - param.length);
     }
   }, []);
   return (
@@ -88,9 +89,7 @@ export default function EditName() {
                 asChild
               >
                 <Pressable>
-                  <Text style={{ fontFamily: "NiveauGrotesk", fontSize: 20 }}>
-                    Confirm
-                  </Text>
+                  <Text style={styles.confirm}>Update</Text>
                 </Pressable>
               </Link>
             );
@@ -105,3 +104,11 @@ export default function EditName() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  confirm: {
+    fontSize: 16,
+    fontFamily: "NiveauGrotesk",
+    textDecorationLine: "underline",
+  },
+});

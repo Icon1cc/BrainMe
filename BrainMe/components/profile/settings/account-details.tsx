@@ -46,17 +46,33 @@ export default function AccountDetails(props: AccountDetailsProps) {
         </Link>
       </View>
       <View style={styles.container}>
-        <View style={styles.row}>
-          <Text style={{ flex: 1, fontSize: 16 }}>E-mail</Text>
-          <Text style={{ fontSize: 16 }}>{props.email}</Text>
-          <Ionicons name="chevron-forward" size={16} color="black" />
-        </View>
+        <Link
+          href={{
+            pathname: "/(app)/(profile)/accounts/email-address",
+            params: { param: props.email },
+          }}
+          asChild
+        >
+          <Pressable style={styles.row}>
+            <Text style={{ flex: 1, fontSize: 16 }}>E-mail</Text>
+            <Text style={{ fontSize: 16 }}>{props.email}</Text>
+            <Ionicons name="chevron-forward" size={16} color="black" />
+          </Pressable>
+        </Link>
         <View style={{ borderBottomWidth: 1, borderBottomColor: "gray" }} />
-        <View style={styles.row}>
-          <Text style={{ flex: 1, fontSize: 16 }}>Password</Text>
-          <Text style={{ fontSize: 16 }}>{props.password}</Text>
-          <Ionicons name="chevron-forward" size={16} color="black" />
-        </View>
+        <Link
+          href={{
+            pathname: "/(app)/(profile)/accounts/password",
+            params: { param: props.password },
+          }}
+          asChild
+        >
+          <Pressable style={styles.row}>
+            <Text style={{ flex: 1, fontSize: 16 }}>Password</Text>
+            <Text style={{ fontSize: 16 }}>{props.password}</Text>
+            <Ionicons name="chevron-forward" size={16} color="black" />
+          </Pressable>
+        </Link>
       </View>
     </View>
   );

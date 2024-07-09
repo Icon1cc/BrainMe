@@ -13,7 +13,7 @@ import Friends from "@/components/profile/friends";
 export default function Profile() {
   const myUser = useQuery(api.user.myUser);
   return (
-    <Structure title={myUser?.username!}>
+    <Structure title={myUser?.username!} placeholder={myUser?.file!}>
       <Grid
         ranking={myUser?.ranking!}
         gamesPlayed={myUser?.gamesPlayed!}

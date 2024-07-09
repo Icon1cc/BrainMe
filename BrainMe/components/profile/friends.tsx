@@ -1,15 +1,9 @@
-import {
-  View,
-  Text,
-  Image,
-  Pressable,
-  FlatList,
-  StyleSheet,
-} from "react-native";
+import { View, Text, Pressable, FlatList, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import React from "react";
 
 import Colors from "@/constants/Colors";
+import ImageViewer from "../image-viewer";
 
 interface FriendsProps {
   number: number;
@@ -30,10 +24,9 @@ export default function Friends({ number, friends }: FriendsProps) {
           showsHorizontalScrollIndicator={false}
           keyExtractor={(item) => Math.random().toString() + item}
           renderItem={({ item }) => (
-            <Image
-              source={require("@/assets/images/user/smiling-woman.jpeg")}
-              style={styles.image}
-            />
+            <View style={{ marginRight: -5 }}>
+              <ImageViewer size={50} />
+            </View>
           )}
         />
         <Pressable
@@ -59,14 +52,6 @@ const styles = StyleSheet.create({
     fontFamily: "NiveauGroteskBold",
     color: Colors.primary,
     fontSize: 20,
-  },
-  image: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    borderColor: "white",
-    borderWidth: 2,
-    marginRight: -10,
   },
   button: {
     height: 40,

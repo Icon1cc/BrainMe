@@ -1,13 +1,19 @@
-import { View, Image, StyleSheet, Pressable } from "react-native";
+import { View, StyleSheet, Pressable } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 
-export default function ProfilePic() {
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const placeholder = require("@/assets/images/user/smiling-woman.jpeg");
-  const image = selectedImage ? { uri: selectedImage } : placeholder;
+import ImageViewer from "@/components/image-viewer";
 
+interface ProfilePicProps {
+  selectedImage: string;
+  setSelectedImage: (image: string) => void;
+}
+
+export default function ProfilePic({
+  selectedImage,
+  setSelectedImage,
+}: ProfilePicProps) {
   const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
@@ -22,10 +28,10 @@ export default function ProfilePic() {
   };
   return (
     <View style={{ alignSelf: "center", position: "relative" }}>
-      <Image source={image} style={styles.image} />
+      <ImageViewer size={90} selectedImage={selectedImage} />
       <View style={styles.icon}>
         <Pressable onPress={pickImageAsync}>
-          <Ionicons name="camera-reverse-outline" size={24} color="black" />
+          <Ionicons name="camera-reverse-outline" size={20} color="black" />
         </Pressable>
       </View>
     </View>

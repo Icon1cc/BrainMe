@@ -22,23 +22,11 @@ export const add = mutation({
   },
 });
 
-/* This mutation updates a user's friend list in the database.
-export const updateFriends = mutation({
-  args: {
-    _id: v.id("user"),
-    friends_ids: v.array(v.id("user")),
-  },
-  handler: async (ctx, args) => {
-    await ctx.db.patch(args._id, {
-      friends_ids: args.friends_ids,
-    });
-  },
-});*/
-
 // This mutation updates a user in the database
 export const update = mutation({
   args: {
     _id: v.id("user"),
+    username: v.optional(v.string()),
     rank: v.optional(v.number()),
     gamesPlayed: v.optional(v.number()),
     points: v.optional(v.number()),
@@ -46,6 +34,7 @@ export const update = mutation({
     correctAnswers: v.optional(v.number()),
     wrongAnswers: v.optional(v.number()),
     friends: v.optional(v.array(v.id("user"))),
+    file: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     await ctx.db.patch(args._id, {
@@ -66,6 +55,12 @@ export const myUser = query({
         .query("user")
         .filter((q) => q.eq(q.field("user_id"), tokenIdentifier))
         .unique();
+      if (user?.file && user.file) {
+        const url = await ctx.storage.getUrl(user.file as Id<"_storage">);
+        if (url) {
+          return { ...user, file: url };
+        }
+      }
       return user;
     }
   },

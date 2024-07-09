@@ -12,14 +12,14 @@ export default function FamilyName() {
   const [characterLeft, setCharacterLeft] = useState(1);
 
   const onChangeText = (text: string) => {
-    setCharacterLeft(45 - text.length);
+    setCharacterLeft(20 - text.length);
     setValue(text);
   };
 
   useEffect(() => {
     if (typeof param === "string") {
       setValue(param);
-      setCharacterLeft(45 - param.length);
+      setCharacterLeft(20 - param.length);
     }
   }, []);
   return (
@@ -35,10 +35,8 @@ export default function FamilyName() {
                 }}
                 asChild
               >
-                <Pressable>
-                  <Text style={{ fontFamily: "NiveauGrotesk", fontSize: 20 }}>
-                    Confirm
-                  </Text>
+                <Pressable hitSlop={25}>
+                  <Text style={styles.confirm}>Update</Text>
                 </Pressable>
               </Link>
             );
@@ -53,3 +51,11 @@ export default function FamilyName() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  confirm: {
+    fontSize: 16,
+    fontFamily: "NiveauGrotesk",
+    textDecorationLine: "underline",
+  },
+});

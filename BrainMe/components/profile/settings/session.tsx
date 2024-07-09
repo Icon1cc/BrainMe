@@ -7,7 +7,7 @@ import Colors from "@/constants/Colors";
 export default function Session() {
   const { signOut } = useAuth();
   return (
-    <View style={{ alignItems: "center", gap: 17 }}>
+    <View style={{ alignItems: "center", gap: 34 }}>
       <Pressable
         style={({ pressed }) => {
           return [

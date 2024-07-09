@@ -1,10 +1,9 @@
 import { Pressable, Text } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import { router, Stack, useRouter } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import React from "react";
 
 export default function Layout() {
-  const router = useRouter();
   return (
     <Stack screenOptions={{ headerTransparent: true }}>
       <Stack.Screen
@@ -28,16 +27,42 @@ export default function Layout() {
           },
         }}
       />
-      <Stack.Screen name="family-name" />
-      <Stack.Screen name="email-address" />
-      <Stack.Screen name="password" />
+      <Stack.Screen
+        name="family-name"
+        options={{
+          title: "Edit Family Name",
+          headerLeft() {
+            return HeaderLeft();
+          },
+        }}
+      />
+
+      <Stack.Screen
+        name="email-address"
+        options={{
+          title: "Edit Email Address",
+          headerLeft() {
+            return HeaderLeft();
+          },
+        }}
+      />
+      <Stack.Screen
+        name="password"
+        options={{
+          title: "Change Password",
+          headerLeft() {
+            return HeaderLeft();
+          },
+        }}
+      />
     </Stack>
   );
 }
 
 function HeaderLeft() {
+  const router = useRouter();
   return (
-    <Pressable onPress={router.back}>
+    <Pressable onPress={router.back} hitSlop={25}>
       <AntDesign name="arrowleft" size={24} color="black" />
     </Pressable>
   );

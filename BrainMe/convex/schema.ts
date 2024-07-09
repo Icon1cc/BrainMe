@@ -12,6 +12,7 @@ export default defineSchema({
     correctAnswers: v.number(),
     wrongAnswers: v.number(),
     friends: v.optional(v.array(v.id("user"))),
+    file: v.optional(v.string()),
   }),
   chats: defineTable({
     user_1: v.id("user"),

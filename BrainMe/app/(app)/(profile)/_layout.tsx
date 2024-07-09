@@ -44,7 +44,7 @@ interface HeaderProps {
 function Header(props: HeaderProps) {
   return (
     <Link href={`/${props.navigation}`} asChild>
-      <Pressable>
+      <Pressable hitSlop={25}>
         {props.navigation === "accounts" ? (
           <Ionicons name="settings-outline" size={24} color="white" />
         ) : (

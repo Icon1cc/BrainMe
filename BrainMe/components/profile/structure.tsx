@@ -1,19 +1,18 @@
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { Stack } from "expo-router";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
-import React from "react";
+import React, { ReactNode } from "react";
 
 import Colors from "@/constants/Colors";
+import ImageViewer from "../image-viewer";
 
 interface StructureProps {
   title: string;
-  placeholder?: string;
-  children: React.ReactNode;
+  placeholder: string;
+  children: ReactNode;
 }
 
 export function Structure({ title, children, placeholder }: StructureProps) {
-  const insets = useSafeAreaInsets();
   return (
     <View
       style={{
@@ -36,10 +35,15 @@ export function Structure({ title, children, placeholder }: StructureProps) {
         }}
       />
       <View style={styles.container}>
-        <Image
-          source={require("@/assets/images/user/smiling-woman.jpeg")}
-          style={styles.image}
-        />
+        <View
+          style={{
+            position: "absolute",
+            alignSelf: "center",
+            top: -50,
+          }}
+        >
+          <ImageViewer size={100} selectedImage={placeholder} />
+        </View>
         {children}
       </View>
       <StatusBar style="light" />
@@ -58,15 +62,5 @@ const styles = StyleSheet.create({
     paddingTop: 17 * 5,
     paddingBottom: 17 * 3,
     paddingHorizontal: 17,
-  },
-  image: {
-    position: "absolute",
-    alignSelf: "center",
-    top: -50,
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    borderColor: "white",
-    borderWidth: 3,
   },
 });
