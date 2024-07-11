@@ -1,13 +1,36 @@
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import { View, Text, Pressable, StyleSheet, Alert } from "react-native";
 import { useAuth } from "@clerk/clerk-react";
 import React from "react";
 
 import Colors from "@/constants/Colors";
 
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
+
 export default function Session() {
   const { signOut } = useAuth();
+
+  // Backend.
+  const remove = useMutation(api.user.remove);
+
+  const onHandleDelete = () => {
+    Alert.alert("Are you sure you want to delete your account?", "", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "Delete",
+        onPress: () => {
+          remove();
+          signOut();
+        },
+      },
+    ]);
+  };
+
   return (
-    <View style={{ alignItems: "center", gap: 34 }}>
+    <View style={{ alignItems: "center", gap: 17 }}>
       <Pressable
         style={({ pressed }) => {
           return [
@@ -30,7 +53,22 @@ export default function Session() {
           SIGN OUT
         </Text>
       </Pressable>
-      <Text style={styles.delete}>Delete the account</Text>
+      <Pressable
+        style={({ pressed }) => {
+          return [
+            {
+              opacity: pressed ? 0.5 : 1,
+            },
+          ];
+        }}
+        onPress={() => onHandleDelete()}
+      >
+        <Text
+          style={{ color: "red", fontSize: 20, fontFamily: "NiveauGrotesk" }}
+        >
+          Delete the account
+        </Text>
+      </Pressable>
     </View>
   );
 }
@@ -43,10 +81,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: Colors.primary,
     borderRadius: 15,
-  },
-  delete: {
-    fontFamily: "NiveauGroteskMedium",
-    fontSize: 20,
-    color: "#D20000",
   },
 });

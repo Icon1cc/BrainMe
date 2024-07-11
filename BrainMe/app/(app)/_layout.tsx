@@ -1,15 +1,14 @@
-import { Text } from "react-native";
 import { useUser } from "@clerk/clerk-expo";
-import { Redirect, Tabs } from "expo-router";
+import { Redirect, Tabs, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import React from "react";
-
 import Colors from "@/constants/Colors";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function Layout() {
+  const segments = useSegments();
   // This hook provides information about the user's authentication state.
   const { isLoaded, isSignedIn } = useUser();
 
@@ -23,10 +22,34 @@ export default function Layout() {
   }
 
   return (
-    <Tabs screenOptions={{ tabBarShowLabel: false, headerShown: false }}>
-      <Tabs.Screen name="(home)" options={{ title: "Home" }} />
-      <Tabs.Screen name="(notes)" options={{ title: "Notes" }} />
-      <Tabs.Screen name="(leaderboard)" options={{ title: "Leaderboard" }} />
+    <Tabs
+      screenOptions={{
+        tabBarShowLabel: false,
+        headerShown: false,
+        tabBarActiveTintColor: Colors.primary,
+      }}
+    >
+      <Tabs.Screen
+        name="(home)"
+        options={{
+          title: "Home",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="game-controller" color={color} size={30} />
+          ),
+          tabBarStyle: {
+            display: segments[3] === "[chat]" ? "none" : "flex",
+          },
+        }}
+      />
+      <Tabs.Screen
+        name="(leaderboard)"
+        options={{
+          title: "Leaderboard",
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons name="leaderboard" color={color} size={30} />
+          ),
+        }}
+      />
       <Tabs.Screen
         name="(profile)"
         options={{

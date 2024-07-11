@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 // Backend.
 import { useQuery } from "convex/react";
@@ -12,6 +12,17 @@ import Friends from "@/components/profile/friends";
 
 export default function Profile() {
   const myUser = useQuery(api.user.myUser);
+  const myFriends = useQuery(api.user.getUserByIds, {
+    userIds: myUser?.friends?.map((friend) => friend),
+  });
+
+  const [friends, setFriends] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (myFriends) {
+      setFriends(myFriends.map((friend) => friend?.file!));
+    }
+  }, [myFriends]);
   return (
     <Structure title={myUser?.username!} placeholder={myUser?.file!}>
       <Grid
@@ -22,7 +33,7 @@ export default function Profile() {
         correctAnswers={myUser?.correctAnswers!}
         wrongAnswers={myUser?.wrongAnswers!}
       />
-      <Friends number={myUser?.friends?.length!} friends={myUser?.friends!} />
+      <Friends number={myUser?.friends?.length!} friends={friends} />
     </Structure>
   );
 }

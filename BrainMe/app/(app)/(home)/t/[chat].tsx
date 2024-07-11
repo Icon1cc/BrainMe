@@ -11,6 +11,7 @@ import {
   TextInput,
   Pressable,
 } from "react-native";
+import { StatusBar } from "expo-status-bar";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import Colors from "@/constants/Colors";
 import * as ImagePicker from "expo-image-picker";
@@ -21,7 +22,7 @@ import { api } from "@/convex/_generated/api";
 import { Id, Doc } from "@/convex/_generated/dataModel";
 import { Feather } from "@expo/vector-icons";
 
-const Chat = () => {
+export default function Chat() {
   // Back-end + Navigation
   const convex = useConvex();
   const navigation = useNavigation();
@@ -167,6 +168,7 @@ const Chat = () => {
 
   return (
     <View style={[{ flex: 1, backgroundColor: Colors.surface }]}>
+      <StatusBar style="dark" />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -212,9 +214,7 @@ const Chat = () => {
       </KeyboardAvoidingView>
     </View>
   );
-};
-
-export default Chat;
+}
 
 const styles = StyleSheet.create({
   messageContainer: {

@@ -36,25 +36,6 @@ export default function Layout() {
           },
         }}
       />
-
-      <Stack.Screen
-        name="email-address"
-        options={{
-          title: "Edit Email Address",
-          headerLeft() {
-            return HeaderLeft();
-          },
-        }}
-      />
-      <Stack.Screen
-        name="password"
-        options={{
-          title: "Change Password",
-          headerLeft() {
-            return HeaderLeft();
-          },
-        }}
-      />
     </Stack>
   );
 }

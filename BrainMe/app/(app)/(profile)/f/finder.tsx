@@ -1,4 +1,4 @@
-import { View, Text, FlatList, StyleSheet, Pressable } from "react-native";
+import { View, Text, FlatList, Pressable } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { Stack, Link } from "expo-router";
 import { AntDesign } from "@expo/vector-icons";
@@ -13,14 +13,14 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 
 export default function Finder() {
-  //Use convex.
   const convex = useConvex();
 
   const [data, setData] = useState<
     {
       _id: Id<"user">;
       _creationTime: number;
-      friends_ids?: Id<"user">[] | undefined;
+      friends?: Id<"user">[] | undefined;
+      file?: string | undefined;
       user_id: string;
       username: string;
       ranking: number;
@@ -36,7 +36,7 @@ export default function Finder() {
   // Search logic.
   const searchFilterFunction = (text: string) => {
     if (text) {
-      const newData = data.filter((item) => {
+      const newData = data.filter((item: any) => {
         const itemData = item.username.toUpperCase();
         const textData = text.toUpperCase();
         return itemData.startsWith(textData);
@@ -49,15 +49,10 @@ export default function Finder() {
 
   useEffect(() => {
     const loadUsers = async () => {
-      try {
-        const myUser = await convex.query(api.user.myUser);
-        const users = await convex.query(api.user.collect);
-        if (myUser) {
-          setData(users.filter((user) => user._id !== myUser._id));
-          setFilteredData([]);
-        }
-      } catch (error) {
-        console.error(error);
+      const users = await convex.query(api.user.getUsers);
+      if (users) {
+        setData(users);
+        setFilteredData([]);
       }
     };
     loadUsers();
@@ -68,10 +63,23 @@ export default function Finder() {
       <Stack.Screen
         options={{
           headerLeft() {
-            return <HeaderLeft />;
+            return (
+              <Link href="/(app)/(profile)/profile" asChild>
+                <Pressable hitSlop={25}>
+                  <AntDesign
+                    name="arrowleft"
+                    size={24}
+                    color={Colors.primary}
+                  />
+                </Pressable>
+              </Link>
+            );
           },
-          headerTitle() {
-            return <HeaderTitle />;
+          title: "Find friends",
+          headerTitleStyle: {
+            fontFamily: "Pacifico",
+            fontSize: 24,
+            color: Colors.primary,
           },
           headerBlurEffect: "light",
           headerSearchBarOptions: {
@@ -93,7 +101,16 @@ export default function Finder() {
         contentContainerStyle={{ paddingHorizontal: 17 }}
         keyExtractor={(item) => item._id}
         ListEmptyComponent={() => (
-          <Text style={styles.emptyText}>Find a user</Text>
+          <Text
+            style={{
+              marginTop: 17 * 15,
+              textAlign: "center",
+              fontSize: 28,
+              opacity: 0.5,
+            }}
+          >
+            Find a user
+          </Text>
         )}
         renderItem={({ item }) => (
           <Link
@@ -104,7 +121,11 @@ export default function Finder() {
             asChild
           >
             <Pressable>
-              <Profile username={item.username} points={item.points} />
+              <Profile
+                username={item.username}
+                points={item.points}
+                selectedImage={item.file}
+              />
             </Pressable>
           </Link>
         )}
@@ -112,32 +133,3 @@ export default function Finder() {
     </View>
   );
 }
-
-function HeaderLeft() {
-  return (
-    <Link href="/(app)/(profile)/profile" asChild>
-      <Pressable>
-        <AntDesign name="arrowleft" size={24} color={Colors.primary} />
-      </Pressable>
-    </Link>
-  );
-}
-
-function HeaderTitle() {
-  return (
-    <Text
-      style={{ fontFamily: "Pacifico", fontSize: 24, color: Colors.primary }}
-    >
-      find friends
-    </Text>
-  );
-}
-
-const styles = StyleSheet.create({
-  emptyText: {
-    marginTop: 17 * 15,
-    textAlign: "center",
-    fontSize: 28,
-    opacity: 0.5,
-  },
-});

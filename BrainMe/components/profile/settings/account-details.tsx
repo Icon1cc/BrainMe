@@ -6,8 +6,6 @@ import React from "react";
 interface AccountDetailsProps {
   name: string;
   familyName: string;
-  email: string;
-  password: string;
 }
 
 export default function AccountDetails(props: AccountDetailsProps) {
@@ -41,35 +39,6 @@ export default function AccountDetails(props: AccountDetailsProps) {
           <Pressable style={styles.row}>
             <Text style={{ flex: 1, fontSize: 16 }}>Family Name</Text>
             <Text style={{ fontSize: 16 }}>{props.familyName}</Text>
-            <Ionicons name="chevron-forward" size={16} color="black" />
-          </Pressable>
-        </Link>
-      </View>
-      <View style={styles.container}>
-        <Link
-          href={{
-            pathname: "/(app)/(profile)/accounts/email-address",
-            params: { param: props.email },
-          }}
-          asChild
-        >
-          <Pressable style={styles.row}>
-            <Text style={{ flex: 1, fontSize: 16 }}>E-mail</Text>
-            <Text style={{ fontSize: 16 }}>{props.email}</Text>
-            <Ionicons name="chevron-forward" size={16} color="black" />
-          </Pressable>
-        </Link>
-        <View style={{ borderBottomWidth: 1, borderBottomColor: "gray" }} />
-        <Link
-          href={{
-            pathname: "/(app)/(profile)/accounts/password",
-            params: { param: props.password },
-          }}
-          asChild
-        >
-          <Pressable style={styles.row}>
-            <Text style={{ flex: 1, fontSize: 16 }}>Password</Text>
-            <Text style={{ fontSize: 16 }}>{props.password}</Text>
             <Ionicons name="chevron-forward" size={16} color="black" />
           </Pressable>
         </Link>

@@ -11,3 +11,4 @@
 1. Adapt the SplashScreen for big screens.
 2. Repair the SplaschScreen Statusbar.
 3. Optimize the tabBar for changing header name.
+4. Changer le username quand je crée un utilisateur

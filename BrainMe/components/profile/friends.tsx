@@ -25,7 +25,7 @@ export default function Friends({ number, friends }: FriendsProps) {
           keyExtractor={(item) => Math.random().toString() + item}
           renderItem={({ item }) => (
             <View style={{ marginRight: -5 }}>
-              <ImageViewer size={50} />
+              <ImageViewer size={50} selectedImage={item} />
             </View>
           )}
         />
@@ -33,7 +33,14 @@ export default function Friends({ number, friends }: FriendsProps) {
           onPress={() => {
             router.push("/(app)/(profile)/f/finder");
           }}
-          style={styles.button}
+          style={({ pressed }) => {
+            return [
+              {
+                opacity: pressed ? 0.75 : 1,
+              },
+              styles.button,
+            ];
+          }}
         >
           <Text style={styles.buttonText}>Find friends</Text>
         </Pressable>

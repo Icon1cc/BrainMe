@@ -1,5 +1,10 @@
-import { View, Text, Pressable, StyleSheet } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+  View,
+  Text,
+  Pressable,
+  StyleSheet,
+  ActivityIndicator,
+} from "react-native";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 
@@ -16,14 +21,11 @@ export default function Settings() {
   const { title, param } = useLocalSearchParams();
   const myUser = useQuery(api.user.myUser);
   // Safe area insets and router.
-  const insets = useSafeAreaInsets();
   const router = useRouter();
 
   // State.
   const [name, setName] = useState("");
   const [familyName, setFamilyName] = useState("");
-  const [email, setEmail] = useState("alexandre.boving@gmail.com");
-  const [password, setPassword] = useState("************");
 
   // Selected image.
   const [selectedImage, setSelectedImage] = useState<string>("");
@@ -32,6 +34,7 @@ export default function Settings() {
   // Handle confirm.
   const onHandleConfirm = async () => {
     if (selectedImage) {
+      setUploading(true);
       const url = new URL(`${process.env.EXPO_PUBLIC_CONVEX_SITE}/profilepic`);
       url.searchParams.set("user", myUser?._id!);
       url.searchParams.set("username", name + " " + familyName);
@@ -61,10 +64,6 @@ export default function Settings() {
         setName(param);
       } else if (title === "familyName") {
         setFamilyName(param);
-      } else if (title === "email") {
-        setEmail(param);
-      } else if (title === "password") {
-        setPassword(param);
       }
     }
   }, [title, param]);
@@ -77,7 +76,7 @@ export default function Settings() {
     }
   }, [myUser]);
   return (
-    <View style={[styles.container, { paddingTop: insets.top + 17 * 2 }]}>
+    <View style={[styles.container]}>
       <Stack.Screen
         options={{
           headerRight() {
@@ -89,17 +88,18 @@ export default function Settings() {
           },
         }}
       />
+      <ActivityIndicator
+        animating={uploading}
+        size="large"
+        color="blue"
+        style={styles.activityIndicator}
+      />
       <ProfilePic
         selectedImage={selectedImage}
         setSelectedImage={setSelectedImage}
       />
       <View style={{ gap: 17 }}>
-        <AccountDetails
-          name={name}
-          familyName={familyName}
-          email={email}
-          password={password}
-        />
+        <AccountDetails name={name} familyName={familyName} />
         <PushNotifications />
       </View>
       <SignOut />
@@ -110,12 +110,21 @@ export default function Settings() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    gap: 34,
+    gap: 17 * 3,
+    paddingVertical: 17 * 5,
     paddingHorizontal: 17,
+    position: "relative",
   },
   confirm: {
     fontSize: 16,
     fontFamily: "NiveauGrotesk",
     textDecorationLine: "underline",
+  },
+  activityIndicator: {
+    position: "absolute",
+    top: -20,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
 });
