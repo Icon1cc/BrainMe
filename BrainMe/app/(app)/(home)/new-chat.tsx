@@ -3,7 +3,6 @@ import {
   Text,
   FlatList,
   useColorScheme,
-  Image,
   Pressable,
   SafeAreaView,
   StyleSheet,

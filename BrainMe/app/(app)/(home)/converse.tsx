@@ -1,5 +1,4 @@
 import { View, Pressable, FlatList, Text, StyleSheet } from "react-native";
-import { StatusBar } from "expo-status-bar";
 import { Stack, Link } from "expo-router";
 import React, { useEffect, useState } from "react";
 
@@ -116,7 +115,6 @@ export default function Converse() {
   }, [myUser]);
   return (
     <View style={{ flex: 1 }}>
-      <StatusBar style="dark" />
       <Stack.Screen
         options={{
           headerSearchBarOptions: {

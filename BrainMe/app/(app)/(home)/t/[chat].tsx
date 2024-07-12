@@ -11,7 +11,6 @@ import {
   TextInput,
   Pressable,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import Colors from "@/constants/Colors";
 import * as ImagePicker from "expo-image-picker";
@@ -168,7 +167,6 @@ export default function Chat() {
 
   return (
     <View style={[{ flex: 1, backgroundColor: Colors.surface }]}>
-      <StatusBar style="dark" />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
