@@ -173,22 +173,7 @@
 <a name='L108'></a><a href='#L108'>108</a>
 <a name='L109'></a><a href='#L109'>109</a>
 <a name='L110'></a><a href='#L110'>110</a>
-<a name='L111'></a><a href='#L111'>111</a>
-<a name='L112'></a><a href='#L112'>112</a>
-<a name='L113'></a><a href='#L113'>113</a>
-<a name='L114'></a><a href='#L114'>114</a>
-<a name='L115'></a><a href='#L115'>115</a>
-<a name='L116'></a><a href='#L116'>116</a>
-<a name='L117'></a><a href='#L117'>117</a>
-<a name='L118'></a><a href='#L118'>118</a>
-<a name='L119'></a><a href='#L119'>119</a>
-<a name='L120'></a><a href='#L120'>120</a>
-<a name='L121'></a><a href='#L121'>121</a>
-<a name='L122'></a><a href='#L122'>122</a>
-<a name='L123'></a><a href='#L123'>123</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L111'></a><a href='#L111'>111</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -202,7 +187,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
@@ -210,12 +194,9 @@
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -229,14 +210,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -253,8 +231,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -313,18 +289,14 @@ import { useRouter } from "expo-router";
 import { useUser, useSignUp } from "@clerk/clerk-expo";
 import React, { useEffect, useState } from "react";
 &nbsp;
-// This imports the structure component, which contains the main container for the screen with the header.
 import { Structure } from "@/components/auth/structure";
 &nbsp;
-// These imports are required to use the components in this file.
 import Input from "@/components/auth/input";
 import Button from "@/components/auth/action-button";
 &nbsp;
 export default function Welcome() {
-  // This hook provides the safe area insets, which allows you to avoid the status bar.
   const insets = useSafeAreaInsets();
 &nbsp;
-  // This hook provides functions and state for signing up.
   const { isLoaded, signUp, setActive } = useSignUp();
   const [username, setUsername] = useState("");
   const [emailAddress, setEmailAddress] = useState("");
@@ -332,13 +304,10 @@ export default function Welcome() {
   const [pendingVerification, setPendingVerification] = useState(false);
   const [code, setCode] = useState("");
 &nbsp;
-  // This hook provides information about the user's authentication state.
   const { isSignedIn } = useUser();
 &nbsp;
-  // This hook provides the router object, which allows you to navigate between screens.
   const router = useRouter();
 &nbsp;
-  // start the sign up process.
   const onSignUpPress = async () =&gt; {
     <span class="missing-if-branch" title="if path not taken" >I</span>if (!isLoaded) {
 <span class="cstat-no" title="statement not covered" >      return;</span>
@@ -351,17 +320,14 @@ export default function Welcome() {
         password,
       });
 &nbsp;
-      // send the email.
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
 &nbsp;
-      // change the UI to our pending section.
       setPendingVerification(true);
     } catch (err: any) {
 <span class="cstat-no" title="statement not covered" >      console.error(JSON.stringify(err, null, 2));</span>
     }
   };
 &nbsp;
-  // This verifies the user using email code that is delivered.
   const onPressVerify = <span class="fstat-no" title="function not covered" >as</span>ync () =&gt; {
 <span class="cstat-no" title="statement not covered" >    if (!isLoaded) {</span>
 <span class="cstat-no" title="statement not covered" >      return;</span>
@@ -378,8 +344,6 @@ export default function Welcome() {
     }
   };
 &nbsp;
-  // This effect redirects the user to the home screen if they are already signed in.
-  // It runs when the user's authentication state changes.
   useEffect(() =&gt; {
     <span class="missing-if-branch" title="if path not taken" >I</span>if (isLoaded &amp;&amp; isSignedIn) {
 <span class="cstat-no" title="statement not covered" >      router.push("/");</span>
@@ -436,7 +400,7 @@ export default function Welcome() {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-07-13T10:50:35.013Z
+                at 2024-07-13T21:13:04.505Z
             </div>
         <script src="../prettify.js"></script>
         <script>

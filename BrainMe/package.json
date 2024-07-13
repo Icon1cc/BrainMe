@@ -16,7 +16,10 @@
     "preset": "jest-expo",
     "collectCoverage": true,
     "coverageDirectory": "coverage",
-    "coverageReporters": ["html", "text"],
+    "coverageReporters": [
+      "html",
+      "text"
+    ],
     "reporters": [
       "default",
       [
