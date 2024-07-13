@@ -9,16 +9,16 @@ export default function Categories() {
     <View style={{ gap: 17 }}>
       <Text style={styles.title}>Categories</Text>
       <View style={styles.container}>
-        <Block nav="History" image="coin" />
-        <Block nav="Geography" image="coin" />
+        <Block nav="History" image="history" />
+        <Block nav="Geography" image="geography" />
       </View>
       <View style={styles.container}>
-        <Block nav="Music" image="coin" />
-        <Block nav="Arts & Literature" image="coin" />
+        <Block nav="Music" image="music" />
+        <Block nav="Arts & Literature" image="art" />
       </View>
       <View style={styles.container}>
-        <Block nav="Science" image="coin" />
-        <Block nav="General Knowledge" image="coin" />
+        <Block nav="Science" image="science" />
+        <Block nav="General Knowledge" image="knowledge" />
       </View>
     </View>
   );

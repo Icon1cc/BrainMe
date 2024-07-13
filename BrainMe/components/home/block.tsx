@@ -5,7 +5,12 @@ import React from "react";
 import Colors from "@/constants/Colors";
 
 enum ProviderImage {
-  coin = require("@/assets/images/icons/coin.png"),
+  art = require("@/assets/images/categories/art.png"),
+  geography = require("@/assets/images/categories/geography.png"),
+  history = require("@/assets/images/categories/history.png"),
+  music = require("@/assets/images/categories/music.png"),
+  science = require("@/assets/images/categories/science.png"),
+  knowledge = require("@/assets/images/categories/knowledge.png"),
 }
 
 interface BlockProps {
@@ -37,7 +42,7 @@ export default function Block({ nav, image }: BlockProps) {
     >
       <Image
         source={ProviderImage[image as keyof typeof ProviderImage]}
-        style={{ width: 60, height: 60 }}
+        style={{ width: 50, height: 50 }}
       />
       <Text style={styles.category}>{nav}</Text>
     </Pressable>

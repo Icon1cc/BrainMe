@@ -8,12 +8,18 @@ import Difficulty from "@/components/home/difficulty";
 import ActionButton from "@/components/auth/action-button";
 
 enum ProviderImage {
-  coin = require("@/assets/images/icons/coin.png"),
+  "Arts & Literature" = require("@/assets/images/categories/art.png"),
+  Geography = require("@/assets/images/categories/geography.png"),
+  History = require("@/assets/images/categories/history.png"),
+  Music = require("@/assets/images/categories/music.png"),
+  Science = require("@/assets/images/categories/science.png"),
+  "General Knowledge" = require("@/assets/images/categories/knowledge.png"),
 }
 
 export default function Category() {
   const router = useRouter();
   const { category } = useLocalSearchParams();
+  console.log(category);
   const [difficulty, setDifficulty] = useState("");
   return (
     <View style={{ flex: 1, padding: 17, paddingBottom: 17 * 2, gap: 17 * 2 }}>
@@ -29,7 +35,7 @@ export default function Category() {
       />
       <View style={styles.container}>
         <Image
-          source={ProviderImage["coin" as keyof typeof ProviderImage]}
+          source={ProviderImage[category as keyof typeof ProviderImage]}
           style={{ width: 60, height: 60 }}
         />
       </View>
