@@ -1,15 +1,14 @@
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import { Link } from "expo-router";
 import React from "react";
-
 import Colors from "@/constants/Colors";
 
 interface FooterProps {
   text: string;
-  link?: "Sign up";
+  link?: "Sign up" | "Sign in";
 }
 
-export default function Footer({ text, link }: FooterProps) {
+const Footer: React.FC<FooterProps> = ({ text, link }) => {
   return (
     <View style={styles.container}>
       <Text>{text}</Text>
@@ -28,7 +27,7 @@ export default function Footer({ text, link }: FooterProps) {
       )}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -42,3 +41,5 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
   },
 });
+
+export default Footer;

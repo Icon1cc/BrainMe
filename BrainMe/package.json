@@ -9,10 +9,14 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "test": "jest --watchAll",
+    "test:coverage": "jest --coverage",
     "lint": "expo lint"
   },
   "jest": {
     "preset": "jest-expo",
+    "collectCoverage": true,
+    "coverageDirectory": "coverage",
+    "coverageReporters": ["html", "text"],
     "reporters": [
       "default",
       [
