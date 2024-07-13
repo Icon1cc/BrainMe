@@ -11,6 +11,7 @@ export default function Layout() {
   const segments = useSegments();
   // This hook provides information about the user's authentication state.
   const { isLoaded, isSignedIn } = useUser();
+  console.log(segments);
 
   if (!isLoaded) {
     SplashScreen.hideAsync();
@@ -37,7 +38,8 @@ export default function Layout() {
             <Ionicons name="game-controller" color={color} size={30} />
           ),
           tabBarStyle: {
-            display: segments[3] === "[chat]" ? "none" : "flex",
+            display:
+              segments[3] === "[chat]" || segments[2] === "q" ? "none" : "flex",
           },
         }}
       />

@@ -1,5 +1,4 @@
 import { Text } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { useUser, useSignUp } from "@clerk/clerk-expo";
 import React, { useEffect, useState } from "react";
@@ -13,9 +12,6 @@ import Footer from "@/components/auth/footer-text";
 import Button from "@/components/auth/action-button";
 
 export default function Welcome() {
-  // This hook provides the safe area insets, which allows you to avoid the status bar.
-  const insets = useSafeAreaInsets();
-
   // This hook provides functions and state for signing up.
   const { isLoaded, signUp, setActive } = useSignUp();
   const [username, setUsername] = useState("");

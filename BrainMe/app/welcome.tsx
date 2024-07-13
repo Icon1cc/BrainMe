@@ -1,5 +1,4 @@
 import { View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 
@@ -20,7 +19,6 @@ import { useWarmUpBrowser } from "@/hooks/useWarmUpBrowser";
 
 // This function clears the authentication session when the component is unmounted.
 WebBrowser.maybeCompleteAuthSession();
-
 // This enum defines the available authentication providers.
 enum Strategy {
   Google = "oauth_google",
@@ -29,9 +27,6 @@ enum Strategy {
 }
 
 export default function Welcome() {
-  // This hook provides the safe area insets, which allows you to avoid the status bar.
-  const insets = useSafeAreaInsets();
-
   // This hook provides the signIn function, which allows you to sign in the user.
   // It also provides the setActive function, which allows you to set the active session.
   const { signIn, setActive, isLoaded } = useSignIn();

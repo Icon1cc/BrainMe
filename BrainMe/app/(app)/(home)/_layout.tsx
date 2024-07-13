@@ -100,6 +100,7 @@ export default function Layout() {
           presentation: "modal",
         }}
       />
+      <Stack.Screen name="q" options={{ headerShown: false }} />
     </Stack>
   );
 }

@@ -1,15 +1,22 @@
-import { View, Text, Image, Pressable, StyleSheet } from "react-native";
-import { useLocalSearchParams, Stack } from "expo-router";
-import React from "react";
+import { View, Text, Image, StyleSheet, Alert } from "react-native";
+import { useLocalSearchParams, Stack, useRouter } from "expo-router";
+import React, { useState } from "react";
 
 import Colors from "@/constants/Colors";
 
+import Difficulty from "@/components/home/difficulty";
 import ActionButton from "@/components/auth/action-button";
 
+enum ProviderImage {
+  coin = require("@/assets/images/icons/coin.png"),
+}
+
 export default function Category() {
+  const router = useRouter();
   const { category } = useLocalSearchParams();
+  const [difficulty, setDifficulty] = useState("");
   return (
-    <View style={{ flex: 1, padding: 17, gap: 17 * 2 }}>
+    <View style={{ flex: 1, padding: 17, paddingBottom: 17 * 2, gap: 17 * 2 }}>
       <Stack.Screen
         options={{
           title: `${category}`,
@@ -22,23 +29,41 @@ export default function Category() {
       />
       <View style={styles.container}>
         <Image
-          source={require("@/assets/images/icons/coin.png")}
+          source={ProviderImage["coin" as keyof typeof ProviderImage]}
           style={{ width: 60, height: 60 }}
         />
       </View>
-      <Text style={{ fontFamily: "NiveauGroteskBold", fontSize: 24 }}>
-        Select your difficulty
-      </Text>
-      <View
+      <Text
         style={{
-          flexDirection: "row",
-          alignItems: "center",
-          gap: 17,
+          fontFamily: "NiveauGroteskBold",
+          fontSize: 24,
+          color: Colors.primary,
         }}
       >
-        <Pressable></Pressable>
-      </View>
-      <ActionButton text="Start Challenge" onPress={() => {}} />
+        Select your difficulty
+      </Text>
+      <Difficulty difficulty={difficulty} setDifficulty={setDifficulty} />
+      <Text style={styles.text}>
+        Become the best and fastest player of quiz of the week worldwide and win
+        50$!
+      </Text>
+      <Text style={[styles.text, { flex: 1 }]} numberOfLines={4}>
+        This quiz is about design tools for non-designers. Challenge yourself
+        and your friends! Lorem ipsum dolor sit amet consectetur adipisicing
+        elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing
+      </Text>
+      <ActionButton
+        text="Start Challenge"
+        onPress={() => {
+          if (difficulty === "") {
+            Alert.alert("Please select a difficulty");
+            return;
+          } else {
+            router.push({ pathname: "/q", params: { category, difficulty } });
+          }
+          // Navigate to the quiz screen
+        }}
+      />
     </View>
   );
 }
@@ -50,5 +75,10 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
     justifyContent: "center",
     alignItems: "center",
+  },
+  text: {
+    fontFamily: "NiveauGrotesk",
+    color: Colors.primary,
+    fontSize: 16,
   },
 });
