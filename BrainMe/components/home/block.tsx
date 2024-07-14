@@ -11,6 +11,10 @@ enum ProviderImage {
   music = require("@/assets/images/categories/music.png"),
   science = require("@/assets/images/categories/science.png"),
   knowledge = require("@/assets/images/categories/knowledge.png"),
+  movie = require("@/assets/images/categories/movie.png"),
+  sport = require("@/assets/images/categories/sport.png"),
+  food = require("@/assets/images/categories/food.png"),
+  culture = require("@/assets/images/categories/culture.png"),
 }
 
 interface BlockProps {
@@ -20,7 +24,11 @@ interface BlockProps {
     | "Geography"
     | "History"
     | "Arts & Literature"
-    | "General Knowledge";
+    | "General Knowledge"
+    | "Movie"
+    | "Sport"
+    | "Food"
+    | "Culture";
   image: keyof typeof ProviderImage;
 }
 

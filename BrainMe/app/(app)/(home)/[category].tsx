@@ -14,6 +14,10 @@ enum ProviderImage {
   Music = require("@/assets/images/categories/music.png"),
   Science = require("@/assets/images/categories/science.png"),
   "General Knowledge" = require("@/assets/images/categories/knowledge.png"),
+  Movie = require("@/assets/images/categories/movie.png"),
+  Sport = require("@/assets/images/categories/sport.png"),
+  Food = require("@/assets/images/categories/food.png"),
+  Culture = require("@/assets/images/categories/culture.png"),
 }
 
 export default function Category() {

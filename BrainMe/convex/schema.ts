@@ -18,7 +18,7 @@ export default defineSchema({
     user_1: v.id("user"),
     user_2: v.id("user"),
     last_comment: v.optional(v.string()),
-    timestamp: v.number(),
+    timestamp: v.string(),
   }),
   messages: defineTable({
     chat_id: v.id("chats"),

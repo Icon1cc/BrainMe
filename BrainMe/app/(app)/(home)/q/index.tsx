@@ -16,7 +16,11 @@ enum CategorySelection {
   Geography = "geography",
   Science = "science",
   "Arts & Literature" = "arts_and_literature",
-  GeneralKnowledge = "general_knowledge",
+  "General Knowledge" = "general_knowledge",
+  Food = "food_and_drink",
+  Sport = "sport_and_leisure",
+  Movie = "film_and_tv",
+  Culture = "society_and_culture",
 }
 
 export default function Quizz() {
