@@ -12,58 +12,61 @@ export default function Difficulty({
   setDifficulty,
 }: DifficultyProps) {
   return (
-    <View style={styles.container}>
-      <Pressable
-        style={({ pressed }) => {
-          return [
-            {
-              opacity: pressed ? 0.5 : 1,
-            },
-            difficulty === "easy" ? styles.selected : styles.unselected,
-          ];
-        }}
-        onPress={() => setDifficulty("easy")}
-      >
-        <Image
-          source={require("@/assets/images/icons/coin.png")}
-          style={{ width: 24, height: 24 }}
-        />
-        <Text style={styles.text}>Easy</Text>
-      </Pressable>
-      <Pressable
-        style={({ pressed }) => {
-          return [
-            {
-              opacity: pressed ? 0.5 : 1,
-            },
-            difficulty === "medium" ? styles.selected : styles.unselected,
-          ];
-        }}
-        onPress={() => setDifficulty("medium")}
-      >
-        <Image
-          source={require("@/assets/images/icons/coin.png")}
-          style={{ width: 24, height: 24 }}
-        />
-        <Text style={styles.text}>Medium</Text>
-      </Pressable>
-      <Pressable
-        style={({ pressed }) => {
-          return [
-            {
-              opacity: pressed ? 0.5 : 1,
-            },
-            difficulty === "hard" ? styles.selected : styles.unselected,
-          ];
-        }}
-        onPress={() => setDifficulty("hard")}
-      >
-        <Image
-          source={require("@/assets/images/icons/coin.png")}
-          style={{ width: 24, height: 24 }}
-        />
-        <Text style={styles.text}>Hard</Text>
-      </Pressable>
+    <View style={{ gap: 10 }}>
+      <Text style={styles.difficulty}>Select your difficulty</Text>
+      <View style={styles.container}>
+        <Pressable
+          style={({ pressed }) => {
+            return [
+              {
+                opacity: pressed ? 0.5 : 1,
+              },
+              difficulty === "easy" ? styles.selected : styles.unselected,
+            ];
+          }}
+          onPress={() => setDifficulty("easy")}
+        >
+          <Image
+            source={require("@/assets/images/difficulties/easy.png")}
+            style={{ width: 40, height: 40 }}
+          />
+          <Text style={styles.text}>Easy</Text>
+        </Pressable>
+        <Pressable
+          style={({ pressed }) => {
+            return [
+              {
+                opacity: pressed ? 0.5 : 1,
+              },
+              difficulty === "medium" ? styles.selected : styles.unselected,
+            ];
+          }}
+          onPress={() => setDifficulty("medium")}
+        >
+          <Image
+            source={require("@/assets/images/difficulties/medium.png")}
+            style={{ width: 40, height: 40 }}
+          />
+          <Text style={styles.text}>Medium</Text>
+        </Pressable>
+        <Pressable
+          style={({ pressed }) => {
+            return [
+              {
+                opacity: pressed ? 0.5 : 1,
+              },
+              difficulty === "hard" ? styles.selected : styles.unselected,
+            ];
+          }}
+          onPress={() => setDifficulty("hard")}
+        >
+          <Image
+            source={require("@/assets/images/difficulties/hard.png")}
+            style={{ width: 40, height: 40 }}
+          />
+          <Text style={styles.text}>Hard</Text>
+        </Pressable>
+      </View>
     </View>
   );
 }
@@ -74,9 +77,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 17,
   },
+  difficulty: {
+    fontFamily: "NiveauGroteskBold",
+    fontSize: 24,
+    color: Colors.primary,
+  },
   unselected: {
     flex: 1,
-    gap: 17,
+    gap: 10,
     paddingVertical: 17,
     borderRadius: 12,
     borderWidth: 2,
@@ -87,7 +95,7 @@ const styles = StyleSheet.create({
   },
   selected: {
     flex: 1,
-    gap: 17,
+    gap: 10,
     paddingVertical: 17,
     borderRadius: 12,
     borderWidth: 2,

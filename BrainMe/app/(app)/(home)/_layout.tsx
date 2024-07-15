@@ -88,6 +88,7 @@ export default function Layout() {
       <Stack.Screen
         name="[category]"
         options={{
+          headerShadowVisible: false,
           headerLeft: () => (
             <Link href="/" asChild>
               <Pressable hitSlop={25}>

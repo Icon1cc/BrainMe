@@ -11,7 +11,6 @@ export default function Layout() {
   const segments = useSegments();
   // This hook provides information about the user's authentication state.
   const { isLoaded, isSignedIn } = useUser();
-  console.log(segments);
 
   if (!isLoaded) {
     SplashScreen.hideAsync();

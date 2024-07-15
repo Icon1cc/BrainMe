@@ -7,6 +7,8 @@ import Colors from "@/constants/Colors";
 import Difficulty from "@/components/home/difficulty";
 import ActionButton from "@/components/auth/action-button";
 
+import CategoryData from "@/assets/data/categories.json";
+
 enum ProviderImage {
   "Arts & Literature" = require("@/assets/images/categories/art.png"),
   Geography = require("@/assets/images/categories/geography.png"),
@@ -23,8 +25,16 @@ enum ProviderImage {
 export default function Category() {
   const router = useRouter();
   const { category } = useLocalSearchParams();
-  console.log(category);
   const [difficulty, setDifficulty] = useState("");
+
+  const handleOnPress = () => {
+    if (difficulty === "") {
+      Alert.alert("Please select a difficulty");
+      return;
+    } else {
+      router.push({ pathname: "/q", params: { category, difficulty } });
+    }
+  };
   return (
     <View style={{ flex: 1, padding: 17, paddingBottom: 17 * 2, gap: 17 * 2 }}>
       <Stack.Screen
@@ -43,37 +53,14 @@ export default function Category() {
           style={{ width: 60, height: 60 }}
         />
       </View>
-      <Text
-        style={{
-          fontFamily: "NiveauGroteskBold",
-          fontSize: 24,
-          color: Colors.primary,
-        }}
-      >
-        Select your difficulty
-      </Text>
       <Difficulty difficulty={difficulty} setDifficulty={setDifficulty} />
       <Text style={styles.text}>
-        Become the best and fastest player of quiz of the week worldwide and win
-        50$!
+        {CategoryData[category as keyof typeof CategoryData].header}
       </Text>
-      <Text style={[styles.text, { flex: 1 }]} numberOfLines={4}>
-        This quiz is about design tools for non-designers. Challenge yourself
-        and your friends! Lorem ipsum dolor sit amet consectetur adipisicing
-        elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing
+      <Text style={[styles.text, { flex: 1 }]}>
+        {CategoryData[category as keyof typeof CategoryData].description}
       </Text>
-      <ActionButton
-        text="Start Challenge"
-        onPress={() => {
-          if (difficulty === "") {
-            Alert.alert("Please select a difficulty");
-            return;
-          } else {
-            router.push({ pathname: "/q", params: { category, difficulty } });
-          }
-          // Navigate to the quiz screen
-        }}
-      />
+      <ActionButton text="Start Challenge" onPress={() => handleOnPress()} />
     </View>
   );
 }

@@ -29,6 +29,31 @@ export const updateChat = mutation({
   },
 });
 
+// This query returns chat group by the user ids.
+export const getChatByUsers = query({
+  args: {
+    user_1: v.id("user"),
+    user_2: v.id("user"),
+  },
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query("chats")
+      .filter((q) =>
+        q.or(
+          q.and(
+            q.eq(q.field("user_1"), args.user_1),
+            q.eq(q.field("user_2"), args.user_2)
+          ),
+          q.and(
+            q.eq(q.field("user_1"), args.user_2),
+            q.eq(q.field("user_2"), args.user_1)
+          )
+        )
+      )
+      .unique();
+  },
+});
+
 // This query returns chat groups related to your profile.
 export const get = query({
   handler: async (ctx) => {
