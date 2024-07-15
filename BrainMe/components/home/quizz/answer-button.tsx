@@ -1,41 +1,59 @@
-import { Pressable, Text, StyleSheet } from "react-native";
-import React from "react";
+import { Pressable, Text, StyleSheet, View } from "react-native";
+import React, { useEffect, useState } from "react";
 
 import Colors from "@/constants/Colors";
 
 interface AnswerButtonProps {
-  selectedbox: number;
-  setSelectedbox: (selectedbox: number) => void;
+  selectedbox: number | null;
+  setSelectedbox: (selectedbox: number | null) => void;
   answer: string;
   correctAnswer: string;
   showCorrectAnswer: boolean;
   number: number;
   currentQuestion: number;
+  timerOff: boolean;
 }
 
 export default function AnswerButton(props: AnswerButtonProps) {
+  const [isTimerOff, setIsTimerOff] = useState(false);
+
+  useEffect(() => {
+    if (props.timerOff && props.selectedbox === null) {
+      setIsTimerOff(true);
+    }
+  }, [props.timerOff, props.selectedbox]);
+
   return (
-    <Pressable
-      disabled={props.showCorrectAnswer}
-      style={
-        props.showCorrectAnswer &&
-        props.correctAnswer === props.answer &&
-        props.selectedbox === props.number
-          ? styles.correctbutton
-          : props.showCorrectAnswer && props.selectedbox === props.number
-            ? styles.uncorrectbutton
-            : props.showCorrectAnswer && props.correctAnswer === props.answer
+    <View>
+      {isTimerOff && props.selectedbox === null ? (
+        <View style={styles.messageContainer}>
+          <Text style={styles.messageText}>You did not select an answer.</Text>
+          <Text style={styles.correctAnswerText}>Correct Answer: {props.correctAnswer}</Text>
+        </View>
+      ) : (
+        <Pressable
+          disabled={props.showCorrectAnswer || isTimerOff}
+          style={
+            props.showCorrectAnswer &&
+              props.correctAnswer === props.answer &&
+              props.selectedbox === props.number
               ? styles.correctbutton
-              : props.selectedbox === props.number
-                ? styles.selectedbutton
-                : styles.button
-      }
-      onPress={() => {
-        props.setSelectedbox(props.number);
-      }}
-    >
-      <Text style={styles.text}>{props.answer}</Text>
-    </Pressable>
+              : props.showCorrectAnswer && props.selectedbox === props.number
+                ? styles.uncorrectbutton
+                : props.showCorrectAnswer && props.correctAnswer === props.answer
+                  ? styles.correctbutton
+                  : props.selectedbox === props.number
+                    ? styles.selectedbutton
+                    : styles.button
+          }
+          onPress={() => {
+            props.setSelectedbox(props.number);
+          }}
+        >
+          <Text style={styles.text}>{props.answer}</Text>
+        </Pressable>
+      )}
+    </View>
   );
 }
 
@@ -79,5 +97,18 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: "NiveauGrotesk",
     fontSize: 18,
+  },
+  messageContainer: {
+    alignItems: "center",
+    padding: 17,
+  },
+  messageText: {
+    fontSize: 18,
+    color: "red",
+    marginBottom: 10,
+  },
+  correctAnswerText: {
+    fontSize: 18,
+    color: "green",
   },
 });
