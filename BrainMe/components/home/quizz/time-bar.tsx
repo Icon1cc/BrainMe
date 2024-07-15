@@ -17,13 +17,13 @@ export default function TimeBar({ timeUp, setTimeUp }: TimeBarProps) {
   useEffect(() => {
     Animated.timing(animatedValue, {
       toValue: reactive,
-      duration: 100,
+      duration: 10,
       useNativeDriver: true,
     }).start();
 
     const interval = setInterval(() => {
-      setReactiveValue((prev) => prev - 1);
-    }, 1000);
+      setReactiveValue((prev) => prev - 0.05);
+    }, 25);
     return () => clearInterval(interval);
   }, []);
 

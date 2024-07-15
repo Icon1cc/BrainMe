@@ -58,7 +58,7 @@ export default function Quizz() {
 
   useEffect(() => {
     if (timeUp) {
-      scrollToNextQuestion(currentQuestion + 1);
+      //scrollToNextQuestion(currentQuestion + 1);
     }
   }, [timeUp]);
 
