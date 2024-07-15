@@ -8,31 +8,30 @@ interface AnswerButtonProps {
   setSelectedbox: (selectedbox: number) => void;
   answer: string;
   correctAnswer: string;
-  showCorrectAnswer: string;
-  setShowCorrectAnswer: (showCorrectAnswer: string) => void;
+  showCorrectAnswer: boolean;
   number: number;
   currentQuestion: number;
-  scrollNext: (x: number) => void;
 }
 
 export default function AnswerButton(props: AnswerButtonProps) {
   return (
     <Pressable
-      disabled={props.selectedbox !== 0}
+      disabled={props.showCorrectAnswer}
       style={
-        props.selectedbox === props.number ||
-        props.showCorrectAnswer === props.answer
-          ? props.answer === props.correctAnswer
-            ? styles.correctbutton
-            : styles.uncorrectbutton
-          : styles.button
+        props.showCorrectAnswer &&
+        props.correctAnswer === props.answer &&
+        props.selectedbox === props.number
+          ? styles.correctbutton
+          : props.showCorrectAnswer && props.selectedbox === props.number
+            ? styles.uncorrectbutton
+            : props.showCorrectAnswer && props.correctAnswer === props.answer
+              ? styles.correctbutton
+              : props.selectedbox === props.number
+                ? styles.selectedbutton
+                : styles.button
       }
       onPress={() => {
         props.setSelectedbox(props.number);
-        props.setShowCorrectAnswer(props.correctAnswer);
-        setTimeout(() => {
-          props.scrollNext(props.currentQuestion);
-        }, 2000);
       }}
     >
       <Text style={styles.text}>{props.answer}</Text>
@@ -44,6 +43,15 @@ const styles = StyleSheet.create({
   button: {
     padding: 17,
     backgroundColor: "white",
+    borderRadius: 12,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 2,
+    borderColor: Colors.primary,
+  },
+  selectedbutton: {
+    padding: 17,
+    backgroundColor: "lightgrey",
     borderRadius: 12,
     justifyContent: "center",
     alignItems: "center",

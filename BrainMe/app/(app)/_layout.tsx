@@ -29,6 +29,11 @@ export default function Layout() {
         tabBarShowLabel: false,
         headerShown: false,
         tabBarActiveTintColor: Colors.primary,
+        tabBarStyle: {
+          marginBottom: isTablet ? 15 : 0,
+          display:
+            segments[3] === "[chat]" || segments[2] === "q" ? "none" : "flex",
+        },
       }}
     >
       <Tabs.Screen
@@ -38,11 +43,6 @@ export default function Layout() {
           tabBarIcon: ({ color }) => (
             <Ionicons name="game-controller" color={color} size={30} />
           ),
-          tabBarStyle: {
-            marginBottom: isTablet ? 15 : 0,
-            display:
-              segments[3] === "[chat]" || segments[2] === "q" ? "none" : "flex",
-          },
         }}
       />
       <Tabs.Screen

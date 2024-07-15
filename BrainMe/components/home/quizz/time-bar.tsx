@@ -22,14 +22,14 @@ export default function TimeBar({ timeUp, setTimeUp }: TimeBarProps) {
     }).start();
 
     const interval = setInterval(() => {
-      setReactiveValue((prev) => prev - 0.05);
+      setReactiveValue((prev) => prev - 0.0375);
     }, 25);
     return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
     reactive.setValue(-width + (width * reactiveValue) / 10);
-    if (reactiveValue === 0) setTimeUp(true);
+    if (reactiveValue <= 0) setTimeUp(true);
   }, [reactiveValue, width]);
 
   useEffect(() => {

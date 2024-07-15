@@ -1,4 +1,11 @@
-import { View, Text, Image, Pressable, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  Pressable,
+  StyleSheet,
+  useWindowDimensions,
+} from "react-native";
 import React from "react";
 import Colors from "@/constants/Colors";
 
@@ -11,6 +18,7 @@ export default function Difficulty({
   difficulty,
   setDifficulty,
 }: DifficultyProps) {
+  const isTablet = useWindowDimensions().width >= 768;
   return (
     <View style={{ gap: 10 }}>
       <Text style={styles.difficulty}>Select your difficulty</Text>
@@ -21,14 +29,28 @@ export default function Difficulty({
               {
                 opacity: pressed ? 0.5 : 1,
               },
-              difficulty === "easy" ? styles.selected : styles.unselected,
+              difficulty === "easy"
+                ? [
+                    styles.selected,
+                    {
+                      paddingVertical: isTablet ? 17 * 2 : 17,
+                      gap: isTablet ? 17 * 2 : 17,
+                    },
+                  ]
+                : [
+                    styles.unselected,
+                    {
+                      paddingVertical: isTablet ? 17 * 2 : 17,
+                      gap: isTablet ? 17 * 2 : 17,
+                    },
+                  ],
             ];
           }}
           onPress={() => setDifficulty("easy")}
         >
           <Image
             source={require("@/assets/images/difficulties/easy.png")}
-            style={{ width: 30, height: 30 }}
+            style={{ width: isTablet ? 40 : 30, height: isTablet ? 40 : 30 }}
           />
           <Text style={styles.text}>Easy</Text>
         </Pressable>
@@ -38,14 +60,29 @@ export default function Difficulty({
               {
                 opacity: pressed ? 0.5 : 1,
               },
-              difficulty === "medium" ? styles.selected : styles.unselected,
+              difficulty === "medium"
+                ? [
+                    styles.selected,
+                    {
+                      paddingVertical: isTablet ? 17 * 2 : 17,
+                      gap: isTablet ? 17 * 2 : 17,
+                    },
+                  ]
+                : [
+                    styles.unselected,
+                    {
+                      paddingVertical: isTablet ? 17 * 2 : 17,
+                      gap: isTablet ? 17 * 2 : 17,
+                    },
+                  ],
+              ,
             ];
           }}
           onPress={() => setDifficulty("medium")}
         >
           <Image
             source={require("@/assets/images/difficulties/medium.png")}
-            style={{ width: 30, height: 30 }}
+            style={{ width: isTablet ? 40 : 30, height: isTablet ? 40 : 30 }}
           />
           <Text style={styles.text}>Medium</Text>
         </Pressable>
@@ -55,14 +92,29 @@ export default function Difficulty({
               {
                 opacity: pressed ? 0.5 : 1,
               },
-              difficulty === "hard" ? styles.selected : styles.unselected,
+              difficulty === "hard"
+                ? [
+                    styles.selected,
+                    {
+                      paddingVertical: isTablet ? 17 * 2 : 17,
+                      gap: isTablet ? 17 * 2 : 17,
+                    },
+                  ]
+                : [
+                    styles.unselected,
+                    {
+                      paddingVertical: isTablet ? 17 * 2 : 17,
+                      gap: isTablet ? 17 * 2 : 17,
+                    },
+                  ],
+              ,
             ];
           }}
           onPress={() => setDifficulty("hard")}
         >
           <Image
             source={require("@/assets/images/difficulties/hard.png")}
-            style={{ width: 30, height: 30 }}
+            style={{ width: isTablet ? 40 : 30, height: isTablet ? 40 : 30 }}
           />
           <Text style={styles.text}>Hard</Text>
         </Pressable>
@@ -85,7 +137,6 @@ const styles = StyleSheet.create({
   unselected: {
     flex: 1,
     gap: 17,
-    paddingVertical: 17,
     borderRadius: 12,
     borderWidth: 2,
     borderColor: "lightgray",
@@ -96,7 +147,6 @@ const styles = StyleSheet.create({
   selected: {
     flex: 1,
     gap: 17,
-    paddingVertical: 17,
     borderRadius: 12,
     borderWidth: 2,
     borderColor: "#00FF0A",

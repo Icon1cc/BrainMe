@@ -1,4 +1,11 @@
-import { View, Text, Image, StyleSheet, Alert } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Alert,
+  useWindowDimensions,
+} from "react-native";
 import { useLocalSearchParams, Stack, useRouter } from "expo-router";
 import React, { useState } from "react";
 
@@ -26,6 +33,7 @@ export default function Category() {
   const router = useRouter();
   const { category } = useLocalSearchParams();
   const [difficulty, setDifficulty] = useState("");
+  const isTablet = useWindowDimensions().width >= 768;
 
   const handleOnPress = () => {
     if (difficulty === "") {
@@ -47,10 +55,17 @@ export default function Category() {
           },
         }}
       />
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          {
+            paddingVertical: isTablet ? 17 * 5 : 17 * 3,
+          },
+        ]}
+      >
         <Image
           source={ProviderImage[category as keyof typeof ProviderImage]}
-          style={{ width: 60, height: 60 }}
+          style={{ width: isTablet ? 90 : 60, height: isTablet ? 90 : 60 }}
         />
       </View>
       <Difficulty difficulty={difficulty} setDifficulty={setDifficulty} />
@@ -60,14 +75,17 @@ export default function Category() {
       <Text style={[styles.text, { flex: 1 }]}>
         {CategoryData[category as keyof typeof CategoryData].description}
       </Text>
-      <ActionButton text="Start Challenge" onPress={() => handleOnPress()} />
+      <ActionButton
+        activity={false}
+        text="Start Challenge"
+        onPress={() => handleOnPress()}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    padding: 17 * 3,
     borderRadius: 12,
     backgroundColor: Colors.primary,
     justifyContent: "center",

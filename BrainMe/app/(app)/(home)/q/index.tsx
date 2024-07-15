@@ -1,5 +1,4 @@
 import { View, FlatList, StyleSheet } from "react-native";
-import { StatusBar } from "expo-status-bar";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState, useRef } from "react";
@@ -35,30 +34,28 @@ export default function Quizz() {
 
   // State to store the questions.
   const [data, setData] = useState([]);
-  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [currentQuestion, setCurrentQuestion] = useState(1);
   const [timeUp, setTimeUp] = useState(false);
+  console.log(timeUp);
 
   // PendingScreen component.
   const [pending, setPending] = useState(true);
 
-  const scrollToNextQuestion = (x: number) => {
-    if (x < data.length) {
-      setTimeUp(true);
-      _FlatList.current?.scrollToIndex({
-        index: x,
-      });
-      setCurrentQuestion(x);
-      setTimeUp(false);
-    } else {
-      // End of the quiz.
-      setPending(false);
-      console.log("End of the quiz");
-    }
-  };
-
   useEffect(() => {
     if (timeUp) {
-      //scrollToNextQuestion(currentQuestion + 1);
+      setTimeout(() => {
+        if (currentQuestion < data.length) {
+          _FlatList.current?.scrollToIndex({
+            index: currentQuestion,
+          });
+          setCurrentQuestion(currentQuestion + 1);
+          setTimeUp(false);
+        } else {
+          // End of the quizz.
+          setTimeUp(false);
+          setPending(false);
+        }
+      }, 3000);
     }
   }, [timeUp]);
 
@@ -90,7 +87,6 @@ export default function Quizz() {
   }, []);
   return (
     <View style={[styles.container, { paddingVertical: insets.top + 17 }]}>
-      <StatusBar style="light" />
       {pending ? (
         <>
           <TimeBar timeUp={timeUp} setTimeUp={setTimeUp} />
@@ -108,7 +104,7 @@ export default function Quizz() {
                 question={item.question}
                 answers={item.answers}
                 correctAnswer={item.correctAnswer}
-                scrollToNextQuestion={scrollToNextQuestion}
+                showCorrectAnswer={timeUp}
               />
             )}
           />
