@@ -3,6 +3,7 @@ import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 
 interface OptionsProps {
+  disabled: boolean;
   isFriend: boolean;
   onPressMessage: () => void;
   onPressFollow: () => void;
@@ -12,6 +13,7 @@ export default function Options(props: OptionsProps) {
   return (
     <View style={styles.container}>
       <Pressable
+        disabled={props.disabled}
         onPress={props.onPressMessage}
         style={({ pressed }) => {
           return [
@@ -28,6 +30,7 @@ export default function Options(props: OptionsProps) {
         <Text style={styles.text}>Send Message</Text>
       </Pressable>
       <Pressable
+        disabled={props.disabled}
         onPress={() => {
           props.onPressFollow();
         }}

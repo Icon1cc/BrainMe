@@ -193,7 +193,8 @@ const styles = StyleSheet.create({
     color: "wrap",
   },
   inputContainer: {
-    padding: 20,
+    padding: 17,
+    paddingBottom: 34,
     backgroundColor: Colors.primary,
     alignItems: "center",
     shadowColor: "#000",

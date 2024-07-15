@@ -1,3 +1,4 @@
+import { ActivityIndicator, StyleSheet } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -22,6 +23,7 @@ export default function OtherUser() {
   const myUser = useQuery(api.user.myUser);
   const otherUser = useQuery(api.user.get, { _id: profile as Id<"user"> });
   const updateFriends = useMutation(api.user.update);
+  const [uploading, setUploading] = useState(false);
 
   // Check if the user is a friend.
   const [isFriend, setIsFriend] = useState(false);
@@ -32,22 +34,42 @@ export default function OtherUser() {
   }, [otherUser, myUser]);
 
   const handleOnMessage = async () => {
+    setUploading(true);
     if (myUser) {
       const chat = await convex.query(api.chats.getChatByUsers, {
         user_1: myUser._id,
         user_2: profile as Id<"user">,
       });
       if (chat) {
+        setUploading(false);
+        router.push({
+          pathname: "/(home)/t/[chat]",
+          params: { chat: chat._id },
+        });
       } else {
-        const createdChat = await convex.mutation(api.chats.createChat, {
+        await convex.mutation(api.chats.createChat, {
           user_1: myUser._id,
           user_2: profile as Id<"user">,
           last_comment: "",
           timestamp: "",
         });
+        const createdChat = await convex.query(api.chats.getChatByUsers, {
+          user_1: myUser._id,
+          user_2: profile as Id<"user">,
+        });
+        if (createdChat) {
+          router.push({
+            pathname: "/(home)/t/[chat]",
+            params: { chat: createdChat._id },
+          });
+          setUploading(false);
+        } else {
+          setUploading(false);
+        }
       }
     }
   };
+
   const handleOnFollow = async () => {
     if (isFriend) {
       await updateFriends({
@@ -62,10 +84,15 @@ export default function OtherUser() {
       });
       setIsFriend(true);
     }
-    //friends.push(profile as Id<"user">);
   };
   return (
     <Structure title={otherUser?.username!} placeholder={otherUser?.file!}>
+      <ActivityIndicator
+        animating={uploading}
+        size="large"
+        color="blue"
+        style={styles.activityIndicator}
+      />
       <Grid
         ranking={otherUser?.ranking!}
         gamesPlayed={otherUser?.gamesPlayed!}
@@ -75,6 +102,7 @@ export default function OtherUser() {
         wrongAnswers={otherUser?.wrongAnswers!}
       />
       <Options
+        disabled={uploading}
         onPressMessage={handleOnMessage}
         onPressFollow={handleOnFollow}
         isFriend={isFriend}
@@ -82,3 +110,13 @@ export default function OtherUser() {
     </Structure>
   );
 }
+
+const styles = StyleSheet.create({
+  activityIndicator: {
+    position: "absolute",
+    top: -20,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+});
