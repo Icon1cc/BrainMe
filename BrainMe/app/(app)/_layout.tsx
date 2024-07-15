@@ -1,3 +1,4 @@
+import { useWindowDimensions } from "react-native";
 import { useUser } from "@clerk/clerk-expo";
 import { Redirect, Tabs, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -8,6 +9,7 @@ import Colors from "@/constants/Colors";
 SplashScreen.preventAutoHideAsync();
 
 export default function Layout() {
+  const isTablet = useWindowDimensions().width >= 768;
   const segments = useSegments();
   // This hook provides information about the user's authentication state.
   const { isLoaded, isSignedIn } = useUser();
@@ -37,6 +39,7 @@ export default function Layout() {
             <Ionicons name="game-controller" color={color} size={30} />
           ),
           tabBarStyle: {
+            marginBottom: isTablet ? 15 : 0,
             display:
               segments[3] === "[chat]" || segments[2] === "q" ? "none" : "flex",
           },

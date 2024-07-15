@@ -1,4 +1,4 @@
-import { Text } from "react-native";
+import { Text, ActivityIndicator } from "react-native";
 import { useRouter } from "expo-router";
 import { useUser, useSignUp } from "@clerk/clerk-expo";
 import React, { useEffect, useState } from "react";
@@ -9,7 +9,7 @@ import { Structure } from "@/components/auth/structure";
 // These imports are required to use the components in this file.
 import Input from "@/components/auth/input";
 import Footer from "@/components/auth/footer-text";
-import Button from "@/components/auth/action-button";
+import SignUpButton from "@/components/auth/action-button";
 
 export default function Welcome() {
   // This hook provides functions and state for signing up.
@@ -19,6 +19,7 @@ export default function Welcome() {
   const [password, setPassword] = useState("");
   const [pendingVerification, setPendingVerification] = useState(false);
   const [code, setCode] = useState("");
+  const [activity, setActivity] = useState(false);
 
   // This hook provides information about the user's authentication state.
   const { isSignedIn } = useUser();
@@ -32,6 +33,8 @@ export default function Welcome() {
       return;
     }
 
+    setActivity(true);
+
     try {
       await signUp.create({
         username,
@@ -43,8 +46,10 @@ export default function Welcome() {
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
 
       // change the UI to our pending section.
+      setActivity(false);
       setPendingVerification(true);
     } catch (err: any) {
+      setActivity(false);
       console.error(JSON.stringify(err, null, 2));
     }
   };
@@ -55,13 +60,17 @@ export default function Welcome() {
       return;
     }
 
+    setActivity(true);
+
     try {
       const completeSignUp = await signUp.attemptEmailAddressVerification({
         code,
       });
 
       await setActive({ session: completeSignUp.createdSessionId });
+      setActivity(false);
     } catch (err: any) {
+      setActivity(false);
       console.error(JSON.stringify(err, null, 2));
     }
   };
@@ -78,6 +87,18 @@ export default function Welcome() {
     <Structure title="Sign up now" subtitle="Join BrainMe and invite friends">
       {!pendingVerification ? (
         <>
+          <ActivityIndicator
+            animating={activity}
+            size="large"
+            color="blue"
+            style={{
+              position: "absolute",
+              top: -200,
+              left: 0,
+              right: 0,
+              bottom: 0,
+            }}
+          />
           <Input
             title="Email"
             placeholder="winner@email.com"
@@ -95,11 +116,27 @@ export default function Welcome() {
             secureTextEntry
             onChangeText={setPassword}
           />
-          <Button text="SIGN UP" onPress={onSignUpPress} />
+          <SignUpButton
+            activity={activity}
+            text="SIGN UP"
+            onPress={onSignUpPress}
+          />
           <Footer text="Already have an account?" />
         </>
       ) : (
         <>
+          <ActivityIndicator
+            animating={activity}
+            size="large"
+            color="blue"
+            style={{
+              position: "absolute",
+              top: -200,
+              left: 0,
+              right: 0,
+              bottom: 0,
+            }}
+          />
           <Text>
             Please, insert the verification code we provided on your email
             address.
@@ -112,7 +149,11 @@ export default function Welcome() {
             maxlength={6}
             onChangeText={setCode}
           />
-          <Button text="VERIFY" onPress={onPressVerify} />
+          <SignUpButton
+            activity={activity}
+            text="VERIFY"
+            onPress={onPressVerify}
+          />
           <Footer text="Already have an account?" />
         </>
       )}

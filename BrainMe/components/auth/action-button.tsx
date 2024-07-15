@@ -6,11 +6,13 @@ import Colors from "@/constants/Colors";
 interface ButtonProps {
   text: string;
   onPress: () => void;
+  activity: boolean;
 }
 
-export default function Button({ text, onPress }: ButtonProps) {
+export default function Button({ text, onPress, activity }: ButtonProps) {
   return (
     <Pressable
+      disabled={activity}
       style={({ pressed }) => {
         return [
           {

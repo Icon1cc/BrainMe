@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { View, ActivityIndicator } from "react-native";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 
@@ -32,6 +32,7 @@ export default function Welcome() {
   const { signIn, setActive, isLoaded } = useSignIn();
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
+  const [activity, setActivity] = useState(false);
 
   // This hook provides information about the user's authentication state.
   const { isSignedIn } = useUser();
@@ -58,6 +59,8 @@ export default function Welcome() {
       [Strategy.Facebook]: facebookAuth,
     }[strategy];
 
+    setActivity(true);
+
     try {
       console.log("OAuth start");
       const { createdSessionId, setActive, signIn, signUp } =
@@ -66,8 +69,10 @@ export default function Welcome() {
         console.log("OAuth success", createdSessionId);
         setActive!({ session: createdSessionId });
       }
+      setActivity(false);
     } catch (err) {
       console.error("OAuth error", err);
+      setActivity(false);
     }
   };
 
@@ -77,6 +82,8 @@ export default function Welcome() {
       return;
     }
 
+    setActivity(true);
+
     try {
       const completeSignIn = await signIn.create({
         identifier: emailAddress,
@@ -85,8 +92,10 @@ export default function Welcome() {
       // This is an important step,
       // This indicates the user is signed in
       await setActive({ session: completeSignIn.createdSessionId });
+      setActivity(false);
     } catch (err: any) {
       console.log(err);
+      setActivity(false);
     }
   };
 
@@ -103,6 +112,18 @@ export default function Welcome() {
       title="BrainMe"
       subtitle="Quizz your knowledge, share your wisdom!"
     >
+      <ActivityIndicator
+        animating={activity}
+        size="large"
+        color="blue"
+        style={{
+          position: "absolute",
+          top: -200,
+          left: 0,
+          right: 0,
+          bottom: 0,
+        }}
+      />
       <Input
         title="Email"
         placeholder="winner@email.com"
@@ -116,21 +137,30 @@ export default function Welcome() {
         onChangeText={setPassword}
       />
       <Separator />
-      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
         <SocialAuth
+          activity={activity}
           onPress={() => onSelectAuth(Strategy.Google)}
           provider="google"
         />
         <SocialAuth
+          activity={activity}
           onPress={() => onSelectAuth(Strategy.Facebook)}
           provider="facebook"
         />
         <SocialAuth
+          activity={activity}
           onPress={() => onSelectAuth(Strategy.Apple)}
           provider="apple"
         />
       </View>
-      <LoginButton text="LOGIN" onPress={onSignInPress} />
+      <LoginButton activity={activity} text="LOGIN" onPress={onSignInPress} />
       <Footer text="Don't have an account yet?" link="Sign up" />
     </Structure>
   );

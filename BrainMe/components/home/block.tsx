@@ -1,4 +1,10 @@
-import { Pressable, Text, Image, StyleSheet } from "react-native";
+import {
+  Pressable,
+  Text,
+  Image,
+  StyleSheet,
+  useWindowDimensions,
+} from "react-native";
 import { useRouter } from "expo-router";
 import React from "react";
 
@@ -34,6 +40,7 @@ interface BlockProps {
 
 export default function Block({ nav, image }: BlockProps) {
   const router = useRouter();
+  const isTablet = useWindowDimensions().width >= 768;
   return (
     <Pressable
       style={({ pressed }) => {
@@ -41,7 +48,13 @@ export default function Block({ nav, image }: BlockProps) {
           {
             backgroundColor: pressed ? "lightgray" : "transparent",
           },
-          styles.button,
+          [
+            styles.button,
+            {
+              paddingVertical: isTablet ? 17 * 3 : 17,
+              gap: isTablet ? 10 * 2 : 10,
+            },
+          ],
         ];
       }}
       onPress={() => {
@@ -60,10 +73,8 @@ export default function Block({ nav, image }: BlockProps) {
 const styles = StyleSheet.create({
   button: {
     flex: 1,
-    paddingVertical: 17,
     borderWidth: 1,
     borderRadius: 12,
-    gap: 12,
     borderColor: "lightgray",
     justifyContent: "center",
     alignItems: "center",
