@@ -1,6 +1,5 @@
 import { View, Text, StyleSheet } from "react-native";
 import { Stack } from "expo-router";
-import { StatusBar } from "expo-status-bar";
 import React, { ReactNode } from "react";
 
 import Colors from "@/constants/Colors";
@@ -46,7 +45,6 @@ export function Structure({ title, children, placeholder }: StructureProps) {
         </View>
         {children}
       </View>
-      <StatusBar style="light" />
     </View>
   );
 }

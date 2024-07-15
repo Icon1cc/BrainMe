@@ -28,7 +28,7 @@ export default function Difficulty({
         >
           <Image
             source={require("@/assets/images/difficulties/easy.png")}
-            style={{ width: 40, height: 40 }}
+            style={{ width: 30, height: 30 }}
           />
           <Text style={styles.text}>Easy</Text>
         </Pressable>
@@ -45,7 +45,7 @@ export default function Difficulty({
         >
           <Image
             source={require("@/assets/images/difficulties/medium.png")}
-            style={{ width: 40, height: 40 }}
+            style={{ width: 30, height: 30 }}
           />
           <Text style={styles.text}>Medium</Text>
         </Pressable>
@@ -62,7 +62,7 @@ export default function Difficulty({
         >
           <Image
             source={require("@/assets/images/difficulties/hard.png")}
-            style={{ width: 40, height: 40 }}
+            style={{ width: 30, height: 30 }}
           />
           <Text style={styles.text}>Hard</Text>
         </Pressable>
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   },
   unselected: {
     flex: 1,
-    gap: 10,
+    gap: 17,
     paddingVertical: 17,
     borderRadius: 12,
     borderWidth: 2,
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   },
   selected: {
     flex: 1,
-    gap: 10,
+    gap: 17,
     paddingVertical: 17,
     borderRadius: 12,
     borderWidth: 2,
