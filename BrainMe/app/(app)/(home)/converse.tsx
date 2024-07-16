@@ -1,4 +1,11 @@
-import { View, Pressable, FlatList, Text, StyleSheet } from "react-native";
+import {
+  View,
+  Pressable,
+  FlatList,
+  Text,
+  StyleSheet,
+  useWindowDimensions,
+} from "react-native";
 import { Stack, Link } from "expo-router";
 import React, { useEffect, useState } from "react";
 
@@ -122,49 +129,8 @@ export default function Converse() {
     loadChats();
   }, [myUser, chatGroups]);
 
-  /*useEffect(() => {
-    const loadChats = async () => {
-      // Retrieves all the chat groups which the current user is in.
-      const chatGroups = await convex.query(api.chats.get, {
-        user: myUser?._id as Id<"user">,
-      });
-      // Retrieves the other user id in all of the chat groups.
-      const otherUsersId = chatGroups.map((chat) => {
-        const otherUser =
-          chat.user_1 === myUser?._id ? chat.user_2 : chat.user_1;
-        return otherUser;
-      });
-      // Retrieves the username of the other users.
-      const otherUsers = await convex.query(api.user.getUserByIds, {
-        userIds: otherUsersId,
-      });
-      // Prepares the chat data to be displayed.
-      const chats = otherUsers.map((otherName) => {
-        const chatId = chatGroups.find(
-          (chat) =>
-            chat.user_1 === otherName?._id || chat.user_2 === otherName?._id
-        )?._id;
-        const last_comment = chatGroups.find(
-          (chat) =>
-            chat.user_1 === otherName?._id || chat.user_2 === otherName?._id
-        )?.last_comment;
-        const timestamp = chatGroups.find(
-          (chat) =>
-            chat.user_1 === otherName?._id || chat.user_2 === otherName?._id
-        )?.timestamp;
-        return {
-          _id: chatId as Id<"chats">,
-          username: otherName?.username!,
-          last_comment: last_comment as string,
-          timestamp: timestamp as string,
-          selectedImage: otherName?.file!,
-        };
-      });
-      setChats(chats);
-      setFilteredChats(chats);
-    };
-    loadChats();
-  }, [myUser]);*/
+  const isTablet = useWindowDimensions().width >= 768;
+
   return (
     <View style={{ flex: 1 }}>
       <Stack.Screen
@@ -187,7 +153,7 @@ export default function Converse() {
         keyExtractor={(item) => item._id.toString()}
         contentInsetAdjustmentBehavior="automatic"
         ItemSeparatorComponent={() => {
-          return <View style={{ height: 17 }} />;
+          return <View style={{ height: isTablet ? 20 : 17 }} />;
         }}
         contentContainerStyle={{ paddingHorizontal: 17 }}
         renderItem={({ item }) => <RenderItem item={item} />}

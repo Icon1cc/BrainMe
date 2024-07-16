@@ -1,4 +1,11 @@
-import { View, Text, Pressable, FlatList, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  FlatList,
+  StyleSheet,
+  useWindowDimensions,
+} from "react-native";
 import { useRouter } from "expo-router";
 import React from "react";
 
@@ -11,11 +18,14 @@ interface FriendsProps {
 }
 
 export default function Friends({ number, friends }: FriendsProps) {
+  const isTablet = useWindowDimensions().width > 763;
   // For the navigation.
   const router = useRouter();
   return (
-    <View style={{ gap: 5 }}>
-      <Text style={styles.text}>Friends ({number})</Text>
+    <View style={{ gap: isTablet ? 10 : 5 }}>
+      <Text style={[styles.text, { fontSize: isTablet ? 24 : 20 }]}>
+        Friends ({number})
+      </Text>
       <View style={styles.container}>
         <FlatList
           data={friends}
@@ -25,7 +35,7 @@ export default function Friends({ number, friends }: FriendsProps) {
           keyExtractor={(item) => Math.random().toString() + item}
           renderItem={({ item }) => (
             <View style={{ marginRight: -5 }}>
-              <ImageViewer size={50} selectedImage={item} />
+              <ImageViewer size={isTablet ? 80 : 50} selectedImage={item} />
             </View>
           )}
         />
@@ -38,11 +48,16 @@ export default function Friends({ number, friends }: FriendsProps) {
               {
                 opacity: pressed ? 0.75 : 1,
               },
-              styles.button,
+              [
+                styles.button,
+                { height: isTablet ? 60 : 40, width: isTablet ? 175 : 125 },
+              ],
             ];
           }}
         >
-          <Text style={styles.buttonText}>Find friends</Text>
+          <Text style={[styles.buttonText, { fontSize: isTablet ? 24 : 16 }]}>
+            Find friends
+          </Text>
         </Pressable>
       </View>
     </View>

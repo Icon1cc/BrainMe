@@ -9,8 +9,10 @@ import {
   ListRenderItem,
   TextInput,
   Pressable,
+  useWindowDimensions,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
 import { useLocalSearchParams, Stack, useRouter } from "expo-router";
 import React, { useEffect, useState, useRef } from "react";
 
@@ -30,9 +32,12 @@ export default function Chat() {
   const [username, setUsername] = useState("");
   const addMessage = useMutation(api.messages.sendMessage);
   const conversation = useMutation(api.chats.updateChat);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const messages = useQuery(api.messages.getMessages, {
     chat_id: chat as Id<"chats">,
   });
+
+  const isTablet = useWindowDimensions().width >= 768;
 
   // Front-end.
   const [newMessage, setNewMessage] = useState("");
@@ -71,6 +76,19 @@ export default function Chat() {
       listRef.current!.scrollToEnd({ animated: true });
     }, 300);
   }, [messages]);
+
+  // Open image picker and set selected image
+  const captureImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      const uri = result.assets[0].uri;
+      setSelectedImage(uri);
+    }
+  };
 
   // Send message to Convex.
   const handleMessage = async () => {
@@ -142,6 +160,7 @@ export default function Chat() {
         keyboardVerticalOffset={90}
       >
         <FlatList
+          style={{ padding: isTablet ? 10 : 0 }}
           ref={listRef}
           data={messages}
           renderItem={renderMessage}
@@ -150,7 +169,12 @@ export default function Chat() {
           contentInsetAdjustmentBehavior="automatic"
         />
         {/* For the Inputbar. */}
-        <View style={styles.inputContainer}>
+        <View
+          style={[
+            styles.inputContainer,
+            { paddingHorizontal: isTablet ? 30 : 17 },
+          ]}
+        >
           <View style={{ flexDirection: "row", alignItems: "center", gap: 20 }}>
             <TextInput
               style={styles.textInput}
@@ -162,6 +186,9 @@ export default function Chat() {
               autoCorrect={false}
               onChangeText={setNewMessage}
             />
+            <Pressable onPress={captureImage}>
+              <Feather name="file-plus" size={24} color={"white"} />
+            </Pressable>
             <Pressable onPress={handleMessage} disabled={newMessage === ""}>
               <Feather name="send" size={24} color={"white"} />
             </Pressable>
