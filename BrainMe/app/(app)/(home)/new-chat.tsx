@@ -1,4 +1,11 @@
-import { View, Text, FlatList, Pressable, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  Pressable,
+  StyleSheet,
+  useWindowDimensions,
+} from "react-native";
 import { Stack, useRouter, useLocalSearchParams } from "expo-router";
 import React, { useState, useEffect } from "react";
 
@@ -10,14 +17,20 @@ import ImageViewer from "@/components/image-viewer";
 
 interface RenderItemProps {
   name: string;
+  placeholder?: string;
   id: Id<"user">;
   onHandlePress: (id: Id<"user">) => void;
 }
 
-const RenderItem = ({ name, id, onHandlePress }: RenderItemProps) => {
+const RenderItem = ({
+  name,
+  id,
+  onHandlePress,
+  placeholder,
+}: RenderItemProps) => {
   return (
     <Pressable style={styles.container} onPress={() => onHandlePress(id)}>
-      <ImageViewer size={50} />
+      <ImageViewer selectedImage={placeholder} size={50} />
       <View style={styles.name}>
         <Text style={{ fontSize: 18, fontFamily: "NiveauGrotesk" }}>
           {name}
@@ -28,6 +41,7 @@ const RenderItem = ({ name, id, onHandlePress }: RenderItemProps) => {
 };
 
 export default function NewChat() {
+  const isTablet = useWindowDimensions().width >= 768;
   const { users } = useLocalSearchParams();
   const convex = useConvex();
   const myUser = useQuery(api.user.myUser);
@@ -102,19 +116,21 @@ export default function NewChat() {
         }}
       />
       <FlatList
+        style={{ flex: 1 }}
         data={filteredData}
         keyExtractor={(item) => item.username}
         contentInsetAdjustmentBehavior="automatic"
-        contentContainerStyle={{ padding: 10 }}
+        contentContainerStyle={{ padding: 17 }}
         renderItem={({ item }) => (
           <RenderItem
+            placeholder={item.file}
             name={item.username}
             id={item._id}
             onHandlePress={onHandlePress}
           />
         )}
         ItemSeparatorComponent={() => {
-          return <View style={{ height: 15 }} />;
+          return <View style={{ height: isTablet ? 20 : 17 }} />;
         }}
       />
     </View>

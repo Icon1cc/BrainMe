@@ -1,4 +1,11 @@
-import { View, Text, Pressable, StyleSheet, Image } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  StyleSheet,
+  Image,
+  useWindowDimensions,
+} from "react-native";
 import { useRouter } from "expo-router";
 import React from "react";
 
@@ -13,14 +20,29 @@ interface EndQuizzProps {
 }
 
 export default function EndQuizz(props: EndQuizzProps) {
+  const isTablet = useWindowDimensions().width >= 768;
   const router = useRouter();
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {
+          paddingHorizontal: isTablet ? 17 * 3 : 17,
+          gap: isTablet ? 17 * 3 : 17,
+        },
+      ]}
+    >
       <Text style={styles.title}>Quizz Results</Text>
       <View style={{ alignItems: "center", gap: 10 }}>
-        <Text style={styles.totalquestions}>Total Questions</Text>
+        <Text style={[styles.totalquestions, { fontSize: isTablet ? 30 : 24 }]}>
+          Total Questions
+        </Text>
         <Text
-          style={{ fontFamily: "NiveauGrotesk", fontSize: 24, color: "white" }}
+          style={{
+            fontFamily: "NiveauGrotesk",
+            fontSize: isTablet ? 30 : 24,
+            color: "white",
+          }}
         >
           {props.totalQuestions}
         </Text>
@@ -33,18 +55,50 @@ export default function EndQuizz(props: EndQuizzProps) {
         }}
       >
         <View style={{ alignItems: "center", gap: 10 }}>
-          <Text style={styles.incorrectanswer}>Wrong Answers</Text>
-          <Text style={styles.incorrectanswer}>{props.wrongAnswers}</Text>
+          <Text
+            style={[
+              styles.correctincorrectanswer,
+              { fontSize: isTablet ? 30 : 24, color: "#FF1E1E" },
+            ]}
+          >
+            Wrong Answers
+          </Text>
+          <Text
+            style={[
+              styles.correctincorrectanswer,
+              { fontSize: isTablet ? 30 : 24, color: "#FF1E1E" },
+            ]}
+          >
+            {props.wrongAnswers}
+          </Text>
         </View>
         <View style={{ alignItems: "center", gap: 10 }}>
-          <Text style={styles.correctanswer}>Correct Answers</Text>
-          <Text style={styles.correctanswer}>{props.correctAnswers}</Text>
+          <Text
+            style={[
+              styles.correctincorrectanswer,
+              { fontSize: isTablet ? 30 : 24 },
+            ]}
+          >
+            Correct Answers
+          </Text>
+          <Text
+            style={[
+              styles.correctincorrectanswer,
+              { fontSize: isTablet ? 30 : 24 },
+            ]}
+          >
+            {props.correctAnswers}
+          </Text>
         </View>
       </View>
       <View style={{ flex: 1, justifyContent: "center" }}>
         <Image
           source={require("@/assets/images/icons/checklist.png")}
-          style={{ width: 175, height: 175, alignSelf: "center" }}
+          style={{
+            width: isTablet ? 250 : 175,
+            height: isTablet ? 250 : 175,
+            alignSelf: "center",
+          }}
         />
       </View>
       <View style={{ gap: 17 }}>
@@ -61,7 +115,12 @@ export default function EndQuizz(props: EndQuizzProps) {
             props.setReview(true);
           }}
         >
-          <Text style={[styles.buttonText, { color: "white" }]}>
+          <Text
+            style={[
+              styles.buttonText,
+              { color: "white", fontSize: isTablet ? 24 : 20 },
+            ]}
+          >
             Review Answers
           </Text>
         </Pressable>
@@ -79,7 +138,9 @@ export default function EndQuizz(props: EndQuizzProps) {
             router.push("/");
           }}
         >
-          <Text style={styles.buttonText}>Return Home</Text>
+          <Text style={[styles.buttonText, { fontSize: isTablet ? 24 : 20 }]}>
+            Return Home
+          </Text>
         </Pressable>
       </View>
     </View>
@@ -90,8 +151,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 17 * 2,
-    paddingHorizontal: 17,
-    gap: 17 * 2,
   },
   title: {
     color: "white",
@@ -101,7 +160,6 @@ const styles = StyleSheet.create({
   },
   totalquestions: {
     color: "white",
-    fontSize: 20,
     fontFamily: "NiveauGroteskMedium",
   },
   answers: {
@@ -109,15 +167,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  correctanswer: {
+  correctincorrectanswer: {
     color: "#00FF0A",
     fontFamily: "NiveauGroteskMedium",
-    fontSize: 20,
-  },
-  incorrectanswer: {
-    color: "#FF1E1E",
-    fontFamily: "NiveauGroteskMedium",
-    fontSize: 20,
   },
   button: {
     height: 50,
@@ -127,7 +179,6 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: Colors.primary,
-    fontSize: 18,
     letterSpacing: 2,
     fontFamily: "NiveauGrotesk",
   },

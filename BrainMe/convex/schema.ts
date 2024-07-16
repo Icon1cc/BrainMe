@@ -31,4 +31,10 @@ export default defineSchema({
     answers: v.array(v.array(v.string())),
     correctAnswer: v.array(v.string()),
   }),
+  leaderboard: defineTable({
+    user_id: v.id("user"),
+    ranking: v.number(),
+    gamesPlayed: v.number(),
+    points: v.number(),
+  }),
 });

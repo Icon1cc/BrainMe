@@ -1,4 +1,4 @@
-import { View, StyleSheet, Pressable } from "react-native";
+import { View, StyleSheet, Pressable, useWindowDimensions } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
@@ -14,6 +14,7 @@ export default function ProfilePic({
   selectedImage,
   setSelectedImage,
 }: ProfilePicProps) {
+  const isTablet = useWindowDimensions().width > 763;
   const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
@@ -28,8 +29,15 @@ export default function ProfilePic({
   };
   return (
     <View style={{ alignSelf: "center", position: "relative" }}>
-      <ImageViewer size={90} selectedImage={selectedImage} />
-      <View style={styles.icon}>
+      <ImageViewer size={isTablet ? 120 : 90} selectedImage={selectedImage} />
+      <View
+        style={[
+          styles.icon,
+          {
+            right: isTablet ? 5 : -5,
+          },
+        ]}
+      >
         <Pressable onPress={pickImageAsync}>
           <Ionicons name="camera-reverse-outline" size={20} color="black" />
         </Pressable>
@@ -46,8 +54,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     position: "absolute",
-    bottom: -6,
-    right: -6,
+    bottom: 0,
     backgroundColor: "white",
     borderWidth: 1,
     borderColor: "black",

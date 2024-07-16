@@ -4,6 +4,7 @@ import {
   Pressable,
   StyleSheet,
   ActivityIndicator,
+  useWindowDimensions,
 } from "react-native";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -18,6 +19,7 @@ import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 
 export default function Settings() {
+  const isTablet = useWindowDimensions().width > 763;
   const { title, param } = useLocalSearchParams();
   const myUser = useQuery(api.user.myUser);
   // Safe area insets and router.
@@ -76,7 +78,15 @@ export default function Settings() {
     }
   }, [myUser]);
   return (
-    <View style={[styles.container]}>
+    <View
+      style={[
+        styles.container,
+        {
+          paddingHorizontal: isTablet ? 17 * 3 : 17,
+          gap: isTablet ? 17 * 6 : 17 * 3,
+        },
+      ]}
+    >
       <Stack.Screen
         options={{
           headerRight() {
@@ -112,7 +122,6 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 17 * 3,
     paddingVertical: 17 * 5,
-    paddingHorizontal: 17,
     position: "relative",
   },
   confirm: {
