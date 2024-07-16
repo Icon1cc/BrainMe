@@ -6,13 +6,17 @@ import Colors from "@/constants/Colors";
 
 interface HeaderProps {
   title: string;
-  onPress: () => void;
+  onPress: (direction: "forward" | "backward") => void;
 }
 
 export default function Header(props: HeaderProps) {
   return (
     <View style={styles.container}>
-      <Pressable style={styles.button} onPress={() => {}}>
+      <Pressable
+        style={styles.button}
+        hitSlop={25}
+        onPress={() => props.onPress("forward")}
+      >
         <Ionicons
           name="chevron-back-outline"
           size={20}
@@ -20,7 +24,11 @@ export default function Header(props: HeaderProps) {
         />
       </Pressable>
       <Text style={{ fontSize: 20, color: Colors.primary }}>{props.title}</Text>
-      <Pressable style={styles.button} onPress={() => {}}>
+      <Pressable
+        hitSlop={25}
+        style={styles.button}
+        onPress={() => props.onPress("backward")}
+      >
         <Ionicons
           name="chevron-forward-outline"
           size={20}

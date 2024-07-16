@@ -1,22 +1,34 @@
-import { View, Text, Image, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  useWindowDimensions,
+} from "react-native";
 import React from "react";
 
 import Colors from "@/constants/Colors";
 import Swipeable from "@/components/swipeable-row";
 
 interface RanksProps {
+  userId: string;
   position: number;
   username: string;
   rank: number;
+  placeholder?: string;
 }
 
 export default function Ranks(props: RanksProps) {
+  const isTablet = useWindowDimensions().width >= 768;
+  const imageSource = props.placeholder
+    ? { uri: props.placeholder }
+    : require("@/assets/images/user/user.png");
   return (
     <View
-      style={{ borderWidth: 1, borderColor: Colors.border, borderRadius: 12 }}
+      style={{ borderWidth: 1, borderColor: Colors.border, borderRadius: 5 }}
     >
       <Swipeable>
-        <View style={styles.container}>
+        <View style={[styles.container, { height: isTablet ? 70 : 60 }]}>
           <Text style={styles.position}>{props.position}</Text>
           <View
             style={{
@@ -27,7 +39,7 @@ export default function Ranks(props: RanksProps) {
             }}
           >
             <Image
-              source={require("@/assets/images/user/user.png")}
+              source={imageSource}
               style={{ width: 40, height: 40, borderRadius: 20 }}
             />
             <Text style={styles.username}>{props.username}</Text>

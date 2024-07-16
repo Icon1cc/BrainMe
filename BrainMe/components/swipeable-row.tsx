@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import React, { Component, PropsWithChildren } from "react";
 import { Animated, StyleSheet, View, I18nManager } from "react-native";
 
@@ -7,6 +8,37 @@ import { RectButton } from "react-native-gesture-handler";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 
 // This script is a modified version of the example provided by the react-native-gesture-handler library
+
+interface RectangularButtonProps {
+  color: string;
+  pressHandler: () => void;
+  text: string;
+}
+
+function RectangularButton(props: RectangularButtonProps) {
+  const router = useRouter();
+  return (
+    <RectButton
+      style={[
+        styles.rightAction,
+        {
+          backgroundColor: props.color,
+        },
+      ]}
+      onPress={props.pressHandler}
+    >
+      <Ionicons
+        name={props.text === "Chat" ? "chatbubbles-outline" : "person-outline"}
+        size={24}
+        color={"#fff"}
+      />
+    </RectButton>
+  );
+}
+
+interface Props {
+  userId: string;
+}
 
 export default class AppleStyleSwipeableRow extends Component<
   PropsWithChildren<unknown>
@@ -29,19 +61,11 @@ export default class AppleStyleSwipeableRow extends Component<
 
     return (
       <Animated.View style={{ flex: 1, transform: [{ translateX: trans }] }}>
-        <RectButton
-          style={[
-            styles.rightAction,
-            { backgroundColor: color, borderRadius: text === "User" ? 12 : 0 },
-          ]}
-          onPress={pressHandler}
-        >
-          <Ionicons
-            name={text === "Chat" ? "chatbubbles-outline" : "person-outline"}
-            size={24}
-            color={"#fff"}
-          />
-        </RectButton>
+        <RectangularButton
+          color={color}
+          pressHandler={pressHandler}
+          text={text}
+        />
       </Animated.View>
     );
   };
@@ -52,7 +76,7 @@ export default class AppleStyleSwipeableRow extends Component<
   ) => (
     <View
       style={{
-        width: 192,
+        width: 150,
         flexDirection: I18nManager.isRTL ? "row-reverse" : "row",
       }}
     >
@@ -74,7 +98,7 @@ export default class AppleStyleSwipeableRow extends Component<
     return (
       <Swipeable
         ref={this.updateRef}
-        friction={2}
+        friction={1}
         enableTrackpadTwoFingerGesture
         rightThreshold={40}
         renderRightActions={this.renderRightActions}

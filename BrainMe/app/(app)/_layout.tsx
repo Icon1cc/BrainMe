@@ -43,7 +43,7 @@ export default function Layout() {
           options={{
             title: "Home",
             tabBarIcon: ({ color }) => (
-              <Ionicons name="game-controller" color={color} size={30} />
+              <Ionicons name="game-controller" color={color} size={26} />
             ),
           }}
         />
@@ -52,7 +52,7 @@ export default function Layout() {
           options={{
             title: "Leaderboard",
             tabBarIcon: ({ color }) => (
-              <MaterialIcons name="leaderboard" color={color} size={30} />
+              <MaterialIcons name="leaderboard" color={color} size={26} />
             ),
           }}
         />
