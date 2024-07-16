@@ -26,7 +26,7 @@ function Podium(props: PodiumProps) {
         </Text>
       </View>
       <Image
-        source={require("@/assets/images/user/smiling-woman.jpeg")}
+        source={require("@/assets/images/user/user.png")}
         style={
           props.position === 1
             ? { width: 90, height: 90, borderRadius: 45 }
@@ -41,7 +41,11 @@ function Podium(props: PodiumProps) {
   );
 }
 
-export default function TopPodium() {
+interface TopPodiumProps {
+  users: { name: string; rank: number; placeholder: string }[];
+}
+
+export default function TopPodium(props: TopPodiumProps) {
   return (
     <View style={styles.container}>
       <Podium position={2} name="Alex B." rank={200} />

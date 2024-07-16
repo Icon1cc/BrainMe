@@ -3,6 +3,7 @@ import { useUser } from "@clerk/clerk-expo";
 import { Redirect, Tabs, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import React from "react";
 import Colors from "@/constants/Colors";
 
@@ -24,44 +25,46 @@ export default function Layout() {
   }
 
   return (
-    <Tabs
-      screenOptions={{
-        tabBarShowLabel: false,
-        headerShown: false,
-        tabBarActiveTintColor: Colors.primary,
-        tabBarStyle: {
-          marginBottom: isTablet ? 15 : 0,
-          display:
-            segments[3] === "[chat]" || segments[2] === "q" ? "none" : "flex",
-        },
-      }}
-    >
-      <Tabs.Screen
-        name="(home)"
-        options={{
-          title: "Home",
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="game-controller" color={color} size={30} />
-          ),
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Tabs
+        screenOptions={{
+          tabBarShowLabel: false,
+          headerShown: false,
+          tabBarActiveTintColor: Colors.primary,
+          tabBarStyle: {
+            marginBottom: isTablet ? 15 : 0,
+            display:
+              segments[3] === "[chat]" || segments[2] === "q" ? "none" : "flex",
+          },
         }}
-      />
-      <Tabs.Screen
-        name="(leaderboard)"
-        options={{
-          title: "Leaderboard",
-          tabBarIcon: ({ color }) => (
-            <MaterialIcons name="leaderboard" color={color} size={30} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="(profile)"
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <FontAwesome5 name="user-alt" color={color} size={size} />
-          ),
-        }}
-      />
-    </Tabs>
+      >
+        <Tabs.Screen
+          name="(home)"
+          options={{
+            title: "Home",
+            tabBarIcon: ({ color }) => (
+              <Ionicons name="game-controller" color={color} size={30} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="(leaderboard)"
+          options={{
+            title: "Leaderboard",
+            tabBarIcon: ({ color }) => (
+              <MaterialIcons name="leaderboard" color={color} size={30} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="(profile)"
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <FontAwesome5 name="user-alt" color={color} size={size} />
+            ),
+          }}
+        />
+      </Tabs>
+    </GestureHandlerRootView>
   );
 }
