@@ -33,6 +33,10 @@ jest.mock('expo-router', () => ({
 }));
 
 describe('SignUp Screen', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
     it('renders without crashing and allows user to sign up', async () => {
         const { getByText, getByPlaceholderText } = render(<SignUp />);
 
@@ -56,5 +60,95 @@ describe('SignUp Screen', () => {
             emailAddress: 'test@example.com',
             password: 'password123',
         });
+
+        expect(mockPrepareEmailAddressVerification).toHaveBeenCalledWith({
+            strategy: 'email_code',
+        });
+    });
+
+    it('renders verification screen after sign up', async () => {
+        const { getByText, getByPlaceholderText } = render(<SignUp />);
+
+        fireEvent.changeText(getByPlaceholderText('winner@email.com'), 'test@example.com');
+        fireEvent.changeText(getByPlaceholderText('Rookie'), 'testuser');
+        fireEvent.changeText(getByPlaceholderText('Insert password...'), 'password123');
+
+        await act(async () => {
+            fireEvent.press(getByText('SIGN UP'));
+        });
+
+        expect(mockCreate).toHaveBeenCalledWith({
+            username: 'testuser',
+            emailAddress: 'test@example.com',
+            password: 'password123',
+        });
+
+        expect(mockPrepareEmailAddressVerification).toHaveBeenCalledWith({
+            strategy: 'email_code',
+        });
+
+        expect(getByText('Please, insert the verification code we provided on your email address.')).toBeTruthy();
+        expect(getByPlaceholderText('Insert code...')).toBeTruthy();
+        expect(getByText('VERIFY')).toBeTruthy();
+    });
+
+    it('verifies user email with code', async () => {
+        mockAttemptEmailAddressVerification.mockResolvedValueOnce({ createdSessionId: 'test-session-id' });
+
+        const { getByText, getByPlaceholderText } = render(<SignUp />);
+
+        fireEvent.changeText(getByPlaceholderText('winner@email.com'), 'test@example.com');
+        fireEvent.changeText(getByPlaceholderText('Rookie'), 'testuser');
+        fireEvent.changeText(getByPlaceholderText('Insert password...'), 'password123');
+
+        await act(async () => {
+            fireEvent.press(getByText('SIGN UP'));
+        });
+
+        expect(mockCreate).toHaveBeenCalledWith({
+            username: 'testuser',
+            emailAddress: 'test@example.com',
+            password: 'password123',
+        });
+
+        expect(mockPrepareEmailAddressVerification).toHaveBeenCalledWith({
+            strategy: 'email_code',
+        });
+
+        fireEvent.changeText(getByPlaceholderText('Insert code...'), '123456');
+
+        await act(async () => {
+            fireEvent.press(getByText('VERIFY'));
+        });
+
+        expect(mockAttemptEmailAddressVerification).toHaveBeenCalledWith({
+            code: '123456',
+        });
+
+        expect(mockSetActive).toHaveBeenCalledWith({ session: 'test-session-id' });
+    });
+
+    it('handles sign-up error', async () => {
+        mockCreate.mockImplementationOnce(() => {
+            throw new Error('Sign-up failed');
+        });
+
+        const { getByText, getByPlaceholderText, queryByText } = render(<SignUp />);
+
+        fireEvent.changeText(getByPlaceholderText('winner@email.com'), 'test@example.com');
+        fireEvent.changeText(getByPlaceholderText('Rookie'), 'testuser');
+        fireEvent.changeText(getByPlaceholderText('Insert password...'), 'password123');
+
+        await act(async () => {
+            fireEvent.press(getByText('SIGN UP'));
+        });
+
+        expect(mockCreate).toHaveBeenCalledWith({
+            username: 'testuser',
+            emailAddress: 'test@example.com',
+            password: 'password123',
+        });
+
+        expect(queryByText('Please, insert the verification code we provided on your email address.')).toBeFalsy();
     });
 });

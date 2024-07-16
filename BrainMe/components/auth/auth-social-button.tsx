@@ -13,10 +13,17 @@ interface AuthSocialButtonProps {
 }
 
 export default function AuthSocialButton(props: AuthSocialButtonProps) {
-  const image = ProviderImage[props.provider as keyof typeof ProviderImage];
   return (
-    <Pressable onPress={props.onPress} style={styles.container} testID="auth-social-button">
-      <Image source={image} style={styles.image} testID={`${props.provider}-image`} />
+    <Pressable
+      onPress={props.onPress}
+      style={styles.container}
+      testID="auth-social-button"
+    >
+      <Image
+        source={ProviderImage[props.provider as keyof typeof ProviderImage]}
+        style={styles.image}
+        testID={`${props.provider}-image`}
+      />
     </Pressable>
   );
 }

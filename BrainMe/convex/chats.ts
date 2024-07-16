@@ -6,6 +6,8 @@ export const createChat = mutation({
   args: {
     user_1: v.id("user"),
     user_2: v.id("user"),
+    last_comment: v.string(),
+    timestamp: v.number(),
   },
   handler: async (ctx, args) => {
     await ctx.db.insert("chats", args);

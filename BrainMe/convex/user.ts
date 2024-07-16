@@ -4,22 +4,58 @@ import { v } from "convex/values";
 
 // This mutation inserts a new user into the database.
 export const add = mutation({
-  args: {
-    username: v.string(),
-    name: v.string(),
-  },
-  handler: async (ctx, args) => {
+  handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
     const { tokenIdentifier } = identity!;
-    await ctx.db.insert("user", {
+    if (tokenIdentifier) {
+      await ctx.db.insert("user", {
+        username: "Alexandre Boving",
+        ranking: 0,
+        gamesPlayed: 0,
+        points: 0,
+        completionRate: 0,
+        correctAnswers: 0,
+        wrongAnswers: 0,
+        user_id: tokenIdentifier,
+      });
+    }
+  },
+});
+
+// This mutation deletes your user from the database
+export const remove = mutation({
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    const { tokenIdentifier } = identity!;
+    if (tokenIdentifier) {
+      const user = await ctx.db
+        .query("user")
+        .filter((q) => q.eq(q.field("user_id"), tokenIdentifier))
+        .unique();
+      if (user) {
+        await ctx.db.delete(user._id);
+      }
+    }
+  },
+});
+
+// This mutation updates a user in the database
+export const update = mutation({
+  args: {
+    _id: v.id("user"),
+    username: v.optional(v.string()),
+    rank: v.optional(v.number()),
+    gamesPlayed: v.optional(v.number()),
+    points: v.optional(v.number()),
+    completionRate: v.optional(v.number()),
+    correctAnswers: v.optional(v.number()),
+    wrongAnswers: v.optional(v.number()),
+    friends: v.optional(v.array(v.id("user"))),
+    file: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args._id, {
       ...args,
-      ranking: 0,
-      gamesPlayed: 0,
-      points: 0,
-      completionRate: 0,
-      correctAnswers: 0,
-      wrongAnswers: 0,
-      user_id: tokenIdentifier,
     });
   },
 });
@@ -28,12 +64,22 @@ export const add = mutation({
 export const myUser = query({
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
-    const { tokenIdentifier } = identity!;
-    const user = await ctx.db
-      .query("user")
-      .filter((q) => q.eq(q.field("user_id"), tokenIdentifier))
-      .unique();
-    return user;
+    if (!identity) {
+      return null;
+    } else {
+      const { tokenIdentifier } = identity!;
+      const user = await ctx.db
+        .query("user")
+        .filter((q) => q.eq(q.field("user_id"), tokenIdentifier))
+        .unique();
+      if (user?.file && user.file) {
+        const url = await ctx.storage.getUrl(user.file as Id<"_storage">);
+        if (url) {
+          return { ...user, file: url };
+        }
+      }
+      return user;
+    }
   },
 });
 
@@ -43,47 +89,84 @@ export const get = query({
     _id: v.id("user"),
   },
   handler: async (ctx, args) => {
-    return await ctx.db
+    const user = await ctx.db
       .query("user")
       .filter((q) => q.eq(q.field("_id"), args._id))
       .unique();
+    if (user?.file && user.file) {
+      const url = await ctx.storage.getUrl(user.file as Id<"_storage">);
+      if (url) {
+        return { ...user, file: url };
+      }
+    }
+    return user;
   },
 });
 
-// This query retrieves all users from the database
-export const collect = query({
+// This query return all the users except the current user.
+export const getUsers = query({
   handler: async (ctx) => {
-    return await ctx.db.query("user").collect();
+    const identity = await ctx.auth.getUserIdentity();
+    const { tokenIdentifier } = identity!;
+    const users = await ctx.db
+      .query("user")
+      .filter((q) => q.neq(q.field("user_id"), tokenIdentifier))
+      .collect();
 
-    /*return Promise.all(
+    // if the user has a file, get the URL from the storage.
+    return Promise.all(
       users.map(async (user) => {
         if (user.file) {
-          const url = await ctx.storage.getUrl(user.avatar);
+          const url = await ctx.storage.getUrl(user.file as Id<"_storage">);
           if (url) {
-            return { ...user, avatar: url };
+            return { ...user, file: url };
           }
-          return user;
         }
+        return user;
       })
-    );*/
+    );
   },
 });
 
-// This mutation updates a user in the database
-export const update = mutation({
-  args: {
-    _id: v.id("user"),
-    rank: v.optional(v.number()),
-    gamesPlayed: v.optional(v.number()),
-    points: v.optional(v.number()),
-    completionRate: v.optional(v.number()),
-    correctAnswers: v.optional(v.number()),
-    wrongAnswers: v.optional(v.number()),
-    friends: v.optional(v.array(v.id("user"))),
-  },
+// This query returns multiple users by their IDs.
+export const getUserByIds = query({
+  args: { userIds: v.optional(v.array(v.id("user"))) },
   handler: async (ctx, args) => {
-    await ctx.db.patch(args._id, {
-      ...args,
-    });
+    if (args.userIds) {
+      return Promise.all(
+        args.userIds.map(async (userId) => {
+          const user = await ctx.db.get(userId);
+          if (user && user.file) {
+            const url = await ctx.storage.getUrl(user.file as Id<"_storage">);
+            if (url) {
+              return { ...user, file: url };
+            }
+          }
+          return user;
+        })
+      );
+    } else {
+      return [];
+    }
   },
 });
+
+/* This query returns multiple users by their IDs.
+export const getUserByIds = query({
+  args: { userIds: v.optional(v.array(v.id("user"))) },
+  handler: async (ctx, args) => {
+    if (args.userIds) {
+      return Promise.all(
+        args.userIds.map(async (userId) => {
+          const user = await ctx.db.get(userId);
+          return {
+            username: user?.username as string,
+            _id: userId,
+          };
+        })
+      );
+    } else {
+      return [];
+    }
+  },
+});*/
