@@ -26,4 +26,9 @@ export default defineSchema({
     content: v.string(),
     file: v.optional(v.string()),
   }),
+  quizz: defineTable({
+    question: v.array(v.string()),
+    answers: v.array(v.array(v.string())),
+    correctAnswer: v.array(v.string()),
+  }),
 });

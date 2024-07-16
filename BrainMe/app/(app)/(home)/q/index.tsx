@@ -1,4 +1,4 @@
-import { View, FlatList, StyleSheet } from "react-native";
+import { View, FlatList, Pressable, ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState, useRef } from "react";
@@ -6,8 +6,14 @@ import React, { useEffect, useState, useRef } from "react";
 import Colors from "@/constants/Colors";
 import TimeBar from "@/components/home/quizz/time-bar";
 import Question from "@/components/home/quizz/questions";
+import EndQuizz from "@/components/home/quizz/end-quizz";
+import ReviewQuestion from "@/components/home/quizz/review-question";
 
 const url = "https://the-trivia-api.com/api/questions";
+
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { Ionicons } from "@expo/vector-icons";
 
 enum CategorySelection {
   Music = "music",
@@ -23,6 +29,8 @@ enum CategorySelection {
 }
 
 export default function Quizz() {
+  const addQuizz = useMutation(api.quizz.createQuizz);
+
   // Get the category and difficulty from the URL.
   const { category, difficulty } = useLocalSearchParams();
 
@@ -33,13 +41,16 @@ export default function Quizz() {
   const _FlatList = useRef<FlatList>(null);
 
   // State to store the questions.
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<any>([]);
+  const [userAnswer, setUserAnswer] = useState("");
+  const [userAnswers, setUserAnswers] = useState<string[]>([]);
+  const [userCorrectAnswers, setUserCorrectAnswers] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(1);
   const [timeUp, setTimeUp] = useState(false);
-  console.log(timeUp);
 
   // PendingScreen component.
-  const [pending, setPending] = useState(true);
+  const [pending, setPending] = useState(false);
+  const [review, setReview] = useState(false);
 
   useEffect(() => {
     if (timeUp) {
@@ -48,16 +59,30 @@ export default function Quizz() {
           _FlatList.current?.scrollToIndex({
             index: currentQuestion,
           });
+          setUserAnswers([...userAnswers, userAnswer]);
+          setUserAnswer("");
           setCurrentQuestion(currentQuestion + 1);
           setTimeUp(false);
         } else {
           // End of the quizz.
+          setUserAnswers([...userAnswers, userAnswer]);
+          setUserAnswer("");
           setTimeUp(false);
-          setPending(false);
+          setPending(true);
         }
-      }, 3000);
+      }, 2000);
     }
   }, [timeUp]);
+
+  useEffect(() => {
+    if (userAnswers.length === data.length) {
+      setUserCorrectAnswers(
+        userAnswers.filter(
+          (answer, index) => answer === data[index].correctAnswer
+        ).length
+      );
+    }
+  }, [userAnswers]);
 
   useEffect(() => {
     // Fetch the questions.
@@ -70,15 +95,19 @@ export default function Quizz() {
         });
         const response = await fetch(`${url}?${params}`);
         const data = await response.json();
-        setData(
-          data.map((question: any) => ({
-            question: question.question,
-            answers: question.incorrectAnswers
-              .concat(question.correctAnswer)
-              .sort(() => Math.random() - 0.5),
-            correctAnswer: question.correctAnswer,
-          }))
-        );
+        const quizz = data.map((question: any) => ({
+          question: question.question,
+          answers: question.incorrectAnswers
+            .concat(question.correctAnswer)
+            .sort(() => Math.random() - 0.5),
+          correctAnswer: question.correctAnswer,
+        }));
+        addQuizz({
+          question: quizz.map((q: any) => q.question!),
+          answers: quizz.map((q: any) => q.answers!),
+          correctAnswer: quizz.map((q: any) => q.correctAnswer!),
+        });
+        setData(quizz);
       } catch (error) {
         console.error(error);
       }
@@ -86,8 +115,14 @@ export default function Quizz() {
     fetchQuestions();
   }, []);
   return (
-    <View style={[styles.container, { paddingVertical: insets.top + 17 }]}>
-      {pending ? (
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: Colors.primary,
+        paddingVertical: insets.top + 17,
+      }}
+    >
+      {!pending ? (
         <>
           <TimeBar timeUp={timeUp} setTimeUp={setTimeUp} />
           <FlatList
@@ -99,6 +134,7 @@ export default function Quizz() {
             keyExtractor={(item) => item.question}
             renderItem={({ item, index }) => (
               <Question
+                setUserAnswer={setUserAnswer}
                 totalQuestions={data.length}
                 currentQuestion={index + 1}
                 question={item.question}
@@ -109,14 +145,47 @@ export default function Quizz() {
             )}
           />
         </>
-      ) : null}
+      ) : review ? (
+        <>
+          <Pressable
+            hitSlop={25}
+            style={{ alignSelf: "flex-end", paddingRight: 17 }}
+            onPress={() => {
+              setReview(false);
+            }}
+          >
+            <Ionicons name="close" size={30} color={"white"} />
+          </Pressable>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            pagingEnabled
+            scrollEnabled={true}
+          >
+            {data.map((item: any, index: any) => (
+              <ReviewQuestion
+                key={index}
+                userAnswers={userAnswers}
+                totalQuestions={data.length}
+                currentQuestion={index + 1}
+                question={item.question}
+                answers={item.answers}
+                correctAnswer={item.correctAnswer}
+              />
+            ))}
+          </ScrollView>
+        </>
+      ) : (
+        <>
+          <EndQuizz
+            setReview={setReview}
+            setPending={setPending}
+            totalQuestions={data.length}
+            correctAnswers={userCorrectAnswers}
+            wrongAnswers={data.length - userCorrectAnswers}
+          />
+        </>
+      )}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.primary,
-  },
-});

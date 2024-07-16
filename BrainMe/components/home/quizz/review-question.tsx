@@ -1,5 +1,5 @@
 import { View, Text, Dimensions, StyleSheet } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 interface QuestionProps {
   totalQuestions: number;
@@ -7,8 +7,7 @@ interface QuestionProps {
   question: string;
   answers: string[];
   correctAnswer: string;
-  showCorrectAnswer: boolean;
-  setUserAnswer: (answer: string) => void;
+  userAnswers: string[];
 }
 
 import AnswerButton from "./answer-button";
@@ -17,9 +16,6 @@ export default function Question(props: QuestionProps) {
   const [selectedbox, setSelectedbox] = useState(0);
   const { width } = Dimensions.get("window");
 
-  useEffect(() => {
-    props.setUserAnswer(props.answers[selectedbox - 1]);
-  }, [selectedbox]);
   return (
     <View style={{ paddingHorizontal: 17, width: width }}>
       <View style={styles.container}>
@@ -31,12 +27,13 @@ export default function Question(props: QuestionProps) {
       <View style={{ gap: 17 }}>
         {props.answers.map((answer, index) => (
           <AnswerButton
+            userAnswers={props.userAnswers}
             key={index}
             selectedbox={selectedbox}
             setSelectedbox={setSelectedbox}
             answer={answer}
             correctAnswer={props.correctAnswer}
-            showCorrectAnswer={props.showCorrectAnswer}
+            showCorrectAnswer={true}
             currentQuestion={props.currentQuestion}
             number={index + 1}
           />
