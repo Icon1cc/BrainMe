@@ -14,7 +14,6 @@ export default function Home() {
   // This hook provides information about the user's authentication state.
   const convex = useConvex();
 
-  /* Check if the user exists in the database. Otherwise, add the user.
   useEffect(() => {
     async function checkUser() {
       const myUser = await convex.query(api.user.myUser);
@@ -23,7 +22,7 @@ export default function Home() {
       }
     }
     checkUser();
-  }, []);*/
+  }, []);
 
   return (
     <View style={[styles.container, { paddingTop: insets.top + 17 * 7 }]}>

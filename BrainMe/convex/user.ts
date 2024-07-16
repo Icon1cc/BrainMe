@@ -9,7 +9,7 @@ export const add = mutation({
     const { tokenIdentifier } = identity!;
     if (tokenIdentifier) {
       await ctx.db.insert("user", {
-        username: "Alexandre Boving",
+        username: "Rishabh Tiwari",
         ranking: 0,
         gamesPlayed: 0,
         points: 0,

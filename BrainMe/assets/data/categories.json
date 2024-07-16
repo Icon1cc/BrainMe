@@ -1,42 +1,42 @@
 {
   "Arts & Literature": {
     "header": "Unleash Your Inner Art Connoisseur!",
-    "description": "Step into the captivating world of arts and literature. From Shakespearean plays to Renaissance paintings, challenge your knowledge and discover new masterpieces. Can you become the ultimate art expert?"
+    "description": "Step into the captivating world of arts and literature. From Shakespearean plays to Renaissance paintings, challenge your knowledge and discover new masterpieces. Can you become the ultimate art expert?\n\nPlease find the points distribution for each difficulty level: \n\n• Easy quiz: 2 points\n• Medium quiz: 3 points\n• Hard quiz: 5 points"
   },
   "Culture": {
     "header": "Journey Through the Rich Tapestry of Cultures!",
-    "description": "Embark on a global adventure and explore the diverse traditions, customs, and festivals that make our world so fascinating. Test your cultural knowledge and see how well you understand the world's heritage."
+    "description": "Embark on a global adventure and explore the diverse traditions, customs, and festivals that make our world so fascinating. Test your cultural knowledge and see how well you understand the world's heritage.\n\nPlease find the points distribution for each difficulty level: \n\n• Easy quiz: 2 points\n• Medium quiz: 3 points\n• Hard quiz: 5 points"
   },
   "Food": {
     "header": "Culinary Quest: Are You a True Food Lover?",
-    "description": "Satisfy your appetite for knowledge with this delicious food quiz. From exotic cuisines to famous chefs, challenge your taste buds and see if you can earn the title of ultimate foodie!"
+    "description": "Satisfy your appetite for knowledge with this delicious food quiz. From exotic cuisines to famous chefs, challenge your taste buds and see if you can earn the title of ultimate foodie!\n\nPlease find the points distribution for each difficulty level: \n\n• Easy quiz: 2 points\n• Medium quiz: 3 points\n• Hard quiz: 5 points"
   },
   "Geography": {
     "header": "Around the World in 20 Questions!",
-    "description": "Pack your virtual bags and get ready to explore the wonders of our planet. Test your knowledge on countries, landmarks, and natural wonders. Can you navigate your way to the top?"
+    "description": "Pack your virtual bags and get ready to explore the wonders of our planet. Test your knowledge on countries, landmarks, and natural wonders. Can you navigate your way to the top?\n\nPlease find the points distribution for each difficulty level: \n\n• Easy quiz: 2 points\n• Medium quiz: 3 points\n• Hard quiz: 5 points"
   },
   "General Knowledge": {
     "header": "The Ultimate Brain Teaser Challenge!",
-    "description": "Put your thinking cap on and dive into this general knowledge quiz. Covering a wide array of topics, this quiz will test your smarts and keep you on your toes. Are you ready for the challenge?"
+    "description": "Put your thinking cap on and dive into this general knowledge quiz. Covering a wide array of topics, this quiz will test your smarts and keep you on your toes. Are you ready for the challenge?\n\nPlease find the points distribution for each difficulty level: \n\n• Easy quiz: 2 points\n• Medium quiz: 3 points\n• Hard quiz: 5 points"
   },
   "History": {
     "header": "Time Traveler's Trivia: Relive the Past!",
-    "description": "Travel through time and explore the pivotal moments that shaped our world. From ancient civilizations to modern history, test your knowledge and see if you can become a history guru!"
+    "description": "Travel through time and explore the pivotal moments that shaped our world. From ancient civilizations to modern history, test your knowledge and see if you can become a history guru!\n\nPlease find the points distribution for each difficulty level: \n\n• Easy quiz: 2 points\n• Medium quiz: 3 points\n• Hard quiz: 5 points"
   },
   "Movie": {
     "header": "Movie Buff Mania: Test Your Film IQ!",
-    "description": "Lights, camera, action! Dive into the world of cinema and see how well you know your movies. From classic films to modern blockbusters, challenge your film knowledge and become a movie maestro!"
+    "description": "Lights, camera, action! Dive into the world of cinema and see how well you know your movies. From classic films to modern blockbusters, challenge your film knowledge and become a movie maestro!\n\nPlease find the points distribution for each difficulty level: \n\n• Easy quiz: 2 points\n• Medium quiz: 3 points\n• Hard quiz: 5 points"
   },
   "Music": {
     "header": "Music Maestro: Hit the Right Notes!",
-    "description": "Get ready to groove with this music quiz that spans across genres and eras. Test your knowledge on iconic artists, hit songs, and musical milestones. Can you hit all the right notes?"
+    "description": "Get ready to groove with this music quiz that spans across genres and eras. Test your knowledge on iconic artists, hit songs, and musical milestones. Can you hit all the right notes?\n\nPlease find the points distribution for each difficulty level: \n\n• Easy quiz: 2 points\n• Medium quiz: 3 points\n• Hard quiz: 5 points"
   },
   "Science": {
     "header": "Science Whiz: Unravel the Mysteries of the Universe!",
-    "description": "From the tiniest atoms to the vast cosmos, this science quiz will challenge your understanding of the natural world. Test your knowledge and see if you have what it takes to be a science whiz!"
-  },
+    "description": "From the tiniest atoms to the vast cosmos, this science quiz will challenge your understanding of the natural world. Test your knowledge and see if you have what it takes to be a science whiz!\n\nPlease find the points distribution for each difficulty level: \n\n• Easy quiz: 2 points\n• Medium quiz: 3 points\n• Hard quiz: 5 points"
+  },  
   "Sport": {
     "header": "Sports Spectacular: Are You a True Fan?",
-    "description": "Ready, set, go! Dive into the world of sports and test your knowledge on famous athletes, major events, and thrilling moments. Compete with friends and see who is the ultimate sports fanatic!"
+    "description": "Ready, set, go! Dive into the world of sports and test your knowledge on famous athletes, major events, and thrilling moments. Compete with friends and see who is the ultimate sports fanatic!\n\nPlease find the points distribution for each difficulty level: \n\n• Easy quiz: 2 points\n• Medium quiz: 3 points\n• Hard quiz: 5 points"
   }
 }
