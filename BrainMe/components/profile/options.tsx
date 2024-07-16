@@ -1,8 +1,9 @@
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React from "react";
 
 interface OptionsProps {
+  disabled: boolean;
   isFriend: boolean;
   onPressMessage: () => void;
   onPressFollow: () => void;
@@ -12,15 +13,24 @@ export default function Options(props: OptionsProps) {
   return (
     <View style={styles.container}>
       <Pressable
+        disabled={props.disabled}
         onPress={props.onPressMessage}
-        style={[
-          styles.button,
-          { backgroundColor: "white", borderColor: "#006989", borderWidth: 1 },
-        ]}
+        style={({ pressed }) => {
+          return [
+            { backgroundColor: pressed ? "lightgrey" : "transparent" },
+            styles.button,
+            {
+              backgroundColor: "white",
+              borderColor: "#006989",
+              borderWidth: 1,
+            },
+          ];
+        }}
       >
         <Text style={styles.text}>Send Message</Text>
       </Pressable>
       <Pressable
+        disabled={props.disabled}
         onPress={() => {
           props.onPressFollow();
         }}

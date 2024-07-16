@@ -7,15 +7,14 @@ import {
   KeyboardAvoidingView,
   Platform,
   ListRenderItem,
-  Image,
   TextInput,
   Pressable,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
-import { useLocalSearchParams, useNavigation } from "expo-router";
-import Colors from "@/constants/Colors";
-import * as ImagePicker from "expo-image-picker";
+import { Ionicons } from "@expo/vector-icons";
+import { useLocalSearchParams, Stack, useRouter } from "expo-router";
 import React, { useEffect, useState, useRef } from "react";
+
+import Colors from "@/constants/Colors";
 
 import { useConvex, useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
@@ -25,18 +24,18 @@ import { Feather } from "@expo/vector-icons";
 export default function Chat() {
   // Back-end + Navigation
   const convex = useConvex();
-  const navigation = useNavigation();
+  const router = useRouter();
   const { chat } = useLocalSearchParams();
   const [user, setUser] = useState<string | null>();
+  const [username, setUsername] = useState("");
   const addMessage = useMutation(api.messages.sendMessage);
+  const conversation = useMutation(api.chats.updateChat);
   const messages = useQuery(api.messages.getMessages, {
     chat_id: chat as Id<"chats">,
   });
 
   // Front-end.
   const [newMessage, setNewMessage] = useState("");
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [uploading, setUploading] = useState(false);
   const listRef = useRef<FlatList>(null);
 
   useEffect(() => {
@@ -59,10 +58,8 @@ export default function Chat() {
         _id: otherUserId as Id<"user">,
       });
 
-      // Set the title of the chat to the other user's username.
-      navigation.setOptions({
-        title: otherUser!.username,
-      });
+      // Set the other user's username.
+      setUsername(otherUser!.username);
     };
 
     if (chat) loadUser();
@@ -78,52 +75,19 @@ export default function Chat() {
   // Send message to Convex.
   const handleMessage = async () => {
     Keyboard.dismiss();
-
-    if (selectedImage) {
-      const url = new URL(`${process.env.EXPO_PUBLIC_CONVEX_SITE}/sendImage`);
-
-      url.searchParams.set("user", user!);
-      url.searchParams.set("chat_id", chat as Id<"chats">);
-      url.searchParams.set("content", newMessage);
-
-      // Convert URI to blob.
-      const response = await fetch(selectedImage);
-      const blob = await response.blob();
-
-      // Send blob to Convex
-      fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": blob!.type },
-        body: blob,
-      })
-        .then(() => {
-          setSelectedImage(null);
-          setNewMessage("");
-        })
-        .catch((err) => console.log("ERROR: ", err))
-        .finally(() => setUploading(false));
-    } else {
-      // Regular mutation to add a message
-      await addMessage({
-        chat_id: chat as Id<"chats">,
-        content: newMessage,
-        user: user!,
-      });
-      setNewMessage("");
-    }
-  };
-
-  // Open image picker and set selected image
-  const captureImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 1,
+    // Regular mutation to add a message
+    await addMessage({
+      chat_id: chat as Id<"chats">,
+      content: newMessage,
+      user: user!,
     });
-
-    if (!result.canceled) {
-      const uri = result.assets[0].uri;
-      setSelectedImage(uri);
-    }
+    // Regular mutation to update the chat group.
+    await conversation({
+      chatId: chat as Id<"chats">,
+      last_comment: newMessage,
+      timestamp: new Date().toLocaleTimeString(),
+    });
+    setNewMessage("");
   };
 
   const renderMessage: ListRenderItem<Doc<"messages">> = ({ item }) => {
@@ -135,31 +99,15 @@ export default function Chat() {
           styles.messageContainer,
           isUserMessage
             ? styles.userMessageContainer
-            : [
-                styles.otherMessageContainer,
-                {
-                  backgroundColor: "white",
-                },
-              ],
+            : [styles.otherMessageContainer],
         ]}
       >
         {item.content !== "" && (
-          <Text
-            style={[
-              styles.messageText,
-              isUserMessage ? { color: "white" } : { color: "black" },
-            ]}
-          >
+          <Text style={[styles.messageText, { color: "white" }]}>
             {item.content}
           </Text>
         )}
-        {item.file && (
-          <Image
-            source={{ uri: item.file }}
-            style={{ width: 200, height: 200, margin: 10 }}
-          />
-        )}
-        <Text style={isUserMessage ? { color: "white" } : { color: "black" }}>
+        <Text style={{ color: "white" }}>
           {new Date(item._creationTime).toLocaleTimeString()} - {item.user}
         </Text>
       </View>
@@ -167,12 +115,31 @@ export default function Chat() {
   };
 
   return (
-    <View style={[{ flex: 1, backgroundColor: Colors.surface }]}>
-      <StatusBar style="dark" />
+    <View style={[{ flex: 1 }]}>
+      <Stack.Screen
+        options={{
+          headerTitle: `${username}`,
+          headerTitleStyle: {
+            fontFamily: "NiveauGrotesk",
+            color: Colors.primary,
+            fontSize: 20,
+          },
+          headerLeft: () => (
+            <Pressable
+              hitSlop={25}
+              onPress={() => {
+                router.back();
+              }}
+            >
+              <Ionicons name="arrow-back" size={24} color={Colors.primary} />
+            </Pressable>
+          ),
+        }}
+      />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={100}
+        keyboardVerticalOffset={90}
       >
         <FlatList
           ref={listRef}
@@ -183,29 +150,18 @@ export default function Chat() {
           contentInsetAdjustmentBehavior="automatic"
         />
         {/* For the Inputbar. */}
-        <View
-          style={[styles.inputContainer, { backgroundColor: Colors.primary }]}
-        >
-          {selectedImage && (
-            <Image
-              source={{ uri: selectedImage }}
-              style={{ width: 200, height: 200 }}
-            />
-          )}
+        <View style={styles.inputContainer}>
           <View style={{ flexDirection: "row", alignItems: "center", gap: 20 }}>
             <TextInput
               style={styles.textInput}
               value={newMessage}
               placeholder="Send a message..."
-              placeholderTextColor={"grey"}
+              placeholderTextColor={"lightgrey"}
               multiline={true}
-              selectionColor={"black"}
+              selectionColor={"white"}
               autoCorrect={false}
               onChangeText={setNewMessage}
             />
-            <Pressable onPress={captureImage}>
-              <Feather name="file-plus" size={24} color={"white"} />
-            </Pressable>
             <Pressable onPress={handleMessage} disabled={newMessage === ""}>
               <Feather name="send" size={24} color={"white"} />
             </Pressable>
@@ -225,11 +181,11 @@ const styles = StyleSheet.create({
     maxWidth: "80%",
   },
   userMessageContainer: {
-    backgroundColor: Colors.secondary,
+    backgroundColor: Colors.primary,
     alignSelf: "flex-end",
   },
   otherMessageContainer: {
-    backgroundColor: "#fff",
+    backgroundColor: Colors.secondary,
     alignSelf: "flex-start",
   },
   messageText: {
@@ -237,8 +193,9 @@ const styles = StyleSheet.create({
     color: "wrap",
   },
   inputContainer: {
-    padding: 20,
-    backgroundColor: "#fff",
+    padding: 17,
+    paddingBottom: 34,
+    backgroundColor: Colors.primary,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -247,17 +204,17 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.1,
     shadowRadius: 5,
-
     elevation: 3,
   },
   textInput: {
     flex: 1,
     borderWidth: 1,
-    borderColor: "gray",
+    borderColor: "lightgrey",
     borderRadius: 12,
     paddingHorizontal: 10,
     minHeight: 40,
     backgroundColor: Colors.primary,
     paddingTop: 10,
+    color: "white",
   },
 });

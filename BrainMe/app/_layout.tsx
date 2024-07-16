@@ -41,7 +41,7 @@ export default function RootLayout() {
             <Stack.Screen name="welcome" />
             <Stack.Screen name="sign-up" />
           </Stack>
-          <StatusBar style="light" />
+          <StatusBar style="dark" />
         </ThemeProvider>
       </SafeAreaProvider>
     </ConvexClientProvider>

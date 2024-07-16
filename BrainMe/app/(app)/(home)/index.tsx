@@ -1,16 +1,20 @@
-import { View, Text } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import { View, StyleSheet } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import React, { useEffect } from "react";
+
+import Level from "@/components/home/level";
+import Categories from "@/components/home/categories";
 
 // Backend.
 import { useConvex } from "convex/react";
 import { api } from "@/convex/_generated/api";
 
 export default function Home() {
+  const insets = useSafeAreaInsets();
   // This hook provides information about the user's authentication state.
   const convex = useConvex();
 
-  // Check if the user exists in the database. Otherwise, add the user.
+  /* Check if the user exists in the database. Otherwise, add the user.
   useEffect(() => {
     async function checkUser() {
       const myUser = await convex.query(api.user.myUser);
@@ -19,12 +23,21 @@ export default function Home() {
       }
     }
     checkUser();
-  }, []);
+  }, []);*/
 
   return (
-    <View>
-      <StatusBar style="dark" />
-      <Text>Home</Text>
+    <View style={[styles.container, { paddingTop: insets.top + 17 * 7 }]}>
+      <Level />
+      <Categories />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    gap: 17,
+    paddingBottom: 5,
+    paddingHorizontal: 17,
+  },
+});
