@@ -22,35 +22,34 @@ export default function FamilyName() {
       setCharacterLeft(20 - param.length);
     }
   }, []);
+
   return (
     <View style={{ flex: 1, paddingVertical: insets.top }}>
-      <Stack.Screen
-        options={{
-          headerRight() {
-            return (
-              <Link
-                href={{
-                  pathname: "/(app)/(profile)/accounts/",
-                  params: { title: "familyName", param: value },
-                }}
-                asChild
-              >
-                <Pressable hitSlop={25}>
-                  <Text style={styles.confirm}>Update</Text>
-                </Pressable>
-              </Link>
-            );
-          },
-        }}
-      />
       <Edit
         value={value}
         onChangeText={onChangeText}
         characterLeft={characterLeft}
       />
+      <UpdateButton value={value} />
     </View>
   );
 }
+
+const UpdateButton = ({ value }: { value: string }) => {
+  return (
+    <Link
+      href={{
+        pathname: "/(app)/(profile)/accounts/",
+        params: { title: "familyName", param: value },
+      }}
+      asChild
+    >
+      <Pressable hitSlop={25} testID="update-button">
+        <Text style={styles.confirm}>Update</Text>
+      </Pressable>
+    </Link>
+  );
+};
 
 const styles = StyleSheet.create({
   confirm: {

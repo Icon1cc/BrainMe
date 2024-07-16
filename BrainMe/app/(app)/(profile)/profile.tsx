@@ -12,6 +12,7 @@ import Friends from "@/components/profile/friends";
 
 export default function Profile() {
   const myUser = useQuery(api.user.myUser);
+  console.log('myUser:', myUser);
   const myFriends = useQuery(api.user.getUserByIds, {
     userIds: myUser?.friends?.map((friend) => friend),
   });
