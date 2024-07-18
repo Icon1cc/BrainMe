@@ -5,20 +5,19 @@ import React, { useEffect } from "react";
 import Level from "@/components/home/level";
 import Categories from "@/components/home/categories";
 
-// Backend.
 import { useConvex } from "convex/react";
 import { api } from "@/convex/_generated/api";
 
 export default function Home() {
   const insets = useSafeAreaInsets();
-  // This hook provides information about the user's authentication state.
   const convex = useConvex();
 
   useEffect(() => {
     async function checkUser() {
-      const myUser = await convex.query(api.user.myUser);
-      if (!myUser) {
-        await convex.mutation(api.user.add);
+      const user = await convex.query(api.user.myUser);
+      if (!user) {
+        await convex.mutation(api.user.insert);
+        await convex.mutation(api.leaderboard.insert);
       }
     }
     checkUser();

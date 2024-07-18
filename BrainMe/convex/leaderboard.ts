@@ -18,6 +18,7 @@ export const insert = mutation({
           games: 0,
           points: 0,
           level: 0,
+          ratio: 0,
         });
       }
     }

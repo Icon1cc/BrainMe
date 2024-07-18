@@ -29,7 +29,10 @@ enum CategorySelection {
 }
 
 export default function Quizz() {
-  const addQuizz = useMutation(api.quizz.createQuizz);
+  const insertQuizz = useMutation(api.quizz.insert);
+  const updateQuizz = useMutation(api.quizz.update);
+  const quizz = useQuery(api.quizz.retrieve);
+  console.log(quizz?._id);
   const myUser = useQuery(api.user.myUser);
   const router = useRouter();
 
@@ -109,10 +112,17 @@ export default function Quizz() {
             .sort(() => Math.random() - 0.5),
           correctAnswer: question.correctAnswer,
         }));
-        addQuizz({
-          question: quizz.map((q: any) => q.question!),
-          answers: quizz.map((q: any) => q.answers!),
-          correctAnswer: quizz.map((q: any) => q.correctAnswer!),
+        insertQuizz({
+          category: category as string,
+          difficulty: difficulty as string,
+          questions: quizz.map((q: any) => q.question!),
+          answers: quizz.map((q: any) => ({
+            incorrectAnswers: q.answers.filter(
+              (a: any) => a !== q.correctAnswer
+            ),
+            correctAnswer: q.correctAnswer,
+          })),
+          userAnswers: [],
         });
         setData(quizz);
       } catch (error) {

@@ -5,12 +5,6 @@ export default defineSchema({
   user: defineTable({
     user_id: v.string(),
     username: v.string(),
-    ranking: v.number(),
-    gamesPlayed: v.number(),
-    points: v.number(),
-    completionRate: v.number(),
-    correctAnswers: v.number(),
-    wrongAnswers: v.number(),
     friends: v.optional(v.array(v.id("user"))),
     file: v.optional(v.string()),
   }),
@@ -27,9 +21,16 @@ export default defineSchema({
     file: v.optional(v.string()),
   }),
   quizz: defineTable({
-    question: v.array(v.string()),
-    answers: v.array(v.array(v.string())),
-    correctAnswer: v.array(v.string()),
+    category: v.string(),
+    difficulty: v.string(),
+    questions: v.array(v.string()),
+    answers: v.array(
+      v.object({
+        incorrectAnswers: v.array(v.string()),
+        correctAnswer: v.string(),
+      })
+    ),
+    userAnswers: v.array(v.string()),
   }),
   leaderboard: defineTable({
     user_id: v.id("user"),
@@ -37,5 +38,6 @@ export default defineSchema({
     games: v.number(),
     points: v.number(),
     level: v.number(),
+    ratio: v.number(),
   }),
 });
