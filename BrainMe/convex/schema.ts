@@ -34,7 +34,8 @@ export default defineSchema({
   leaderboard: defineTable({
     user_id: v.id("user"),
     ranking: v.number(),
-    gamesPlayed: v.number(),
+    games: v.number(),
     points: v.number(),
+    level: v.number(),
   }),
 });

@@ -22,8 +22,8 @@ export default function TimeBar({ timeUp, setTimeUp }: TimeBarProps) {
     }).start();
 
     const interval = setInterval(() => {
-      // 0.0375 represents 15 seconds.
-      setReactiveValue((prev) => prev - 0.0375);
+      // 0.0375 represents 15 seconds. 0.05 represents 10 seconds. 0.1 represents 5 seconds.
+      setReactiveValue((prev) => prev - 0.05);
     }, 25);
     return () => clearInterval(interval);
   }, []);

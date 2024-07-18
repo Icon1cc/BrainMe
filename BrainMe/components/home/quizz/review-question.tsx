@@ -1,4 +1,5 @@
 import { View, Text, Dimensions, StyleSheet } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
 import React, { useState } from "react";
 
 interface QuestionProps {
@@ -19,6 +20,22 @@ export default function Question(props: QuestionProps) {
   return (
     <View style={{ paddingHorizontal: 17, width: width }}>
       <View style={styles.container}>
+        {props.userAnswers[props.currentQuestion - 1] ===
+        props.correctAnswer ? (
+          <AntDesign
+            name="checkcircleo"
+            size={30}
+            color="#00FF0A"
+            style={{ marginBottom: 17 }}
+          />
+        ) : (
+          <AntDesign
+            name="closecircleo"
+            size={30}
+            color="#FF1E1E"
+            style={{ marginBottom: 17 }}
+          />
+        )}
         <Text style={styles.remaining}>
           Question {props.currentQuestion} out of {props.totalQuestions}
         </Text>

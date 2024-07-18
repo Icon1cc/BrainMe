@@ -6,22 +6,20 @@ import {
   Image,
   useWindowDimensions,
 } from "react-native";
-import { useRouter } from "expo-router";
 import React from "react";
 
 import Colors from "@/constants/Colors";
 
 interface EndQuizzProps {
   setReview: (review: boolean) => void;
-  setPending: (pending: boolean) => void;
   totalQuestions: number;
   correctAnswers: number;
   wrongAnswers: number;
+  onHandleEndOfQuizz: () => void;
 }
 
 export default function EndQuizz(props: EndQuizzProps) {
   const isTablet = useWindowDimensions().width >= 768;
-  const router = useRouter();
   return (
     <View
       style={[
@@ -134,8 +132,7 @@ export default function EndQuizz(props: EndQuizzProps) {
             ];
           }}
           onPress={() => {
-            props.setPending(false);
-            router.push("/");
+            props.onHandleEndOfQuizz();
           }}
         >
           <Text style={[styles.buttonText, { fontSize: isTablet ? 24 : 20 }]}>

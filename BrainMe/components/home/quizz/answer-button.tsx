@@ -67,12 +67,12 @@ const styles = StyleSheet.create({
   },
   selectedbutton: {
     padding: 17,
-    backgroundColor: "lightgrey",
     borderRadius: 12,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 2,
-    borderColor: Colors.primary,
+    borderColor: "#00FF0A",
+    backgroundColor: "#A2FF86",
   },
   correctbutton: {
     padding: 17,

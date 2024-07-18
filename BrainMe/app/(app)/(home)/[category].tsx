@@ -4,6 +4,7 @@ import {
   Image,
   StyleSheet,
   Alert,
+  ScrollView,
   useWindowDimensions,
 } from "react-native";
 import { useLocalSearchParams, Stack, useRouter } from "expo-router";
@@ -69,12 +70,18 @@ export default function Category() {
         />
       </View>
       <Difficulty difficulty={difficulty} setDifficulty={setDifficulty} />
-      <Text style={styles.text}>
-        {CategoryData[category as keyof typeof CategoryData].header}
-      </Text>
-      <Text style={[styles.text, { flex: 1 }]}>
-        {CategoryData[category as keyof typeof CategoryData].description}
-      </Text>
+      <ScrollView
+        contentContainerStyle={{ gap: 17 * 2 }}
+        showsVerticalScrollIndicator={false}
+        style={{ flex: 1 }}
+      >
+        <Text style={styles.text}>
+          {CategoryData[category as keyof typeof CategoryData].header}
+        </Text>
+        <Text style={styles.text}>
+          {CategoryData[category as keyof typeof CategoryData].description}
+        </Text>
+      </ScrollView>
       <ActionButton
         activity={false}
         text="Start Challenge"

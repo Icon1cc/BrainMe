@@ -31,7 +31,10 @@ export default function Difficulty({
               },
               difficulty === "easy"
                 ? [
-                    styles.selected,
+                    [
+                      styles.selected,
+                      { borderColor: "#00FF0A", backgroundColor: "#A2FF86" },
+                    ],
                     {
                       paddingVertical: isTablet ? 17 * 2 : 17,
                       gap: isTablet ? 17 * 2 : 17,
@@ -63,6 +66,7 @@ export default function Difficulty({
               difficulty === "medium"
                 ? [
                     styles.selected,
+                    { borderColor: "#DFE400", backgroundColor: "#FBFF2B" },
                     {
                       paddingVertical: isTablet ? 17 * 2 : 17,
                       gap: isTablet ? 17 * 2 : 17,
@@ -95,6 +99,7 @@ export default function Difficulty({
               difficulty === "hard"
                 ? [
                     styles.selected,
+                    { borderColor: "#FF1E1E", backgroundColor: "#FF6C6C" },
                     {
                       paddingVertical: isTablet ? 17 * 2 : 17,
                       gap: isTablet ? 17 * 2 : 17,
@@ -149,13 +154,11 @@ const styles = StyleSheet.create({
     gap: 17,
     borderRadius: 12,
     borderWidth: 2,
-    borderColor: "#00FF0A",
-    backgroundColor: "#A2FF86",
     justifyContent: "center",
     alignItems: "center",
   },
   text: {
-    fontFamily: "NiveauGroteskLight",
+    fontFamily: "NiveauGroteskMedium",
     fontSize: 16,
     color: Colors.primary,
   },

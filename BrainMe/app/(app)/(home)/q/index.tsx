@@ -1,6 +1,6 @@
 import { View, FlatList, Pressable, ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState, useRef } from "react";
 
 import Colors from "@/constants/Colors";
@@ -11,7 +11,7 @@ import ReviewQuestion from "@/components/home/quizz/review-question";
 
 const url = "https://the-trivia-api.com/api/questions";
 
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -30,6 +30,8 @@ enum CategorySelection {
 
 export default function Quizz() {
   const addQuizz = useMutation(api.quizz.createQuizz);
+  const myUser = useQuery(api.user.myUser);
+  const router = useRouter();
 
   // Get the category and difficulty from the URL.
   const { category, difficulty } = useLocalSearchParams();
@@ -51,6 +53,11 @@ export default function Quizz() {
   // PendingScreen component.
   const [pending, setPending] = useState(false);
   const [review, setReview] = useState(false);
+
+  const handleOnEndOfQuizz = () => {
+    setPending(false);
+    router.push("/");
+  };
 
   useEffect(() => {
     if (timeUp) {
@@ -179,10 +186,10 @@ export default function Quizz() {
         <>
           <EndQuizz
             setReview={setReview}
-            setPending={setPending}
             totalQuestions={data.length}
             correctAnswers={userCorrectAnswers}
             wrongAnswers={data.length - userCorrectAnswers}
+            onHandleEndOfQuizz={handleOnEndOfQuizz}
           />
         </>
       )}
