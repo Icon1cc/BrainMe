@@ -86,7 +86,7 @@ export default function Welcome() {
             secureTextEntry
             onChangeText={setPassword}
           />
-          <Button text="SIGN UP" onPress={onSignUpPress} />
+          <Button text="SIGN UP" onPress={onSignUpPress} activity={false} />
         </>
       ) : (
         <>
@@ -102,7 +102,7 @@ export default function Welcome() {
             maxlength={6}
             onChangeText={setCode}
           />
-          <Button text="VERIFY" onPress={onPressVerify} />
+          <Button text="VERIFY" onPress={onPressVerify} activity={false} />
         </>
       )}
     </Structure>

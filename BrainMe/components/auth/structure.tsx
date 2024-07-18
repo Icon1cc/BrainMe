@@ -1,4 +1,10 @@
-import { View, Text, ScrollView, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  useWindowDimensions,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import React from "react";
 
@@ -13,6 +19,7 @@ interface StructureProps {
 export function Structure({ children, title, subtitle }: StructureProps) {
   // This hook provides the safe area insets, which allows you to avoid the status bar.
   const insets = useSafeAreaInsets();
+  const isTablet = useWindowDimensions().width >= 768;
   return (
     <View
       style={{
@@ -22,15 +29,27 @@ export function Structure({ children, title, subtitle }: StructureProps) {
       }}
       testID="structure-container"
     >
-      <View style={styles.text}>
+      <View
+        style={[
+          styles.text,
+          {
+            paddingVertical: isTablet ? 51 * 2 : 51,
+          },
+        ]}
+      >
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.subtitle}>{subtitle}</Text>
       </View>
       <ScrollView
         automaticallyAdjustKeyboardInsets={true}
         showsVerticalScrollIndicator={false}
-        style={styles.container}
-        contentContainerStyle={{ gap: 34 }}
+        style={[styles.container, { paddingTop: isTablet ? 51 * 2 : 51 }]}
+        contentContainerStyle={{
+          gap: isTablet ? 17 * 3 : 17 * 2,
+          maxWidth: isTablet ? "85%" : "100%",
+          width: isTablet ? 768 : "100%",
+          alignSelf: "center",
+        }}
       >
         {children}
       </ScrollView>
@@ -45,10 +64,8 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     paddingHorizontal: 17,
-    paddingTop: 51,
   },
   text: {
-    paddingVertical: 51,
     alignItems: "center",
     gap: 10,
   },

@@ -9,7 +9,7 @@ export const add = mutation({
     const { tokenIdentifier } = identity!;
     if (tokenIdentifier) {
       await ctx.db.insert("user", {
-        username: "Alexandre Boving",
+        username: "Rishabh Tiwari",
         ranking: 0,
         gamesPlayed: 0,
         points: 0,
@@ -151,22 +151,20 @@ export const getUserByIds = query({
   },
 });
 
-/* This query returns multiple users by their IDs.
-export const getUserByIds = query({
-  args: { userIds: v.optional(v.array(v.id("user"))) },
-  handler: async (ctx, args) => {
-    if (args.userIds) {
-      return Promise.all(
-        args.userIds.map(async (userId) => {
-          const user = await ctx.db.get(userId);
-          return {
-            username: user?.username as string,
-            _id: userId,
-          };
-        })
-      );
-    } else {
-      return [];
-    }
+// This query returns all the users in the database.
+export const all = query({
+  handler: async (ctx) => {
+    const users = await ctx.db.query("user").collect();
+    return Promise.all(
+      users.map(async (user) => {
+        if (user.file) {
+          const url = await ctx.storage.getUrl(user.file as Id<"_storage">);
+          if (url) {
+            return { ...user, file: url };
+          }
+        }
+        return user;
+      })
+    );
   },
-});*/
+});

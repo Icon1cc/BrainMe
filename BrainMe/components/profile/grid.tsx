@@ -14,7 +14,7 @@ interface GridProps {
 
 export default function Grid(props: GridProps) {
   return (
-    <View style={{ gap: 17 }}>
+    <View style={{ gap: 17, flex: 1, justifyContent: "center" }}>
       <View style={{ flexDirection: "row", gap: 17 }}>
         <Stat
           type="star"

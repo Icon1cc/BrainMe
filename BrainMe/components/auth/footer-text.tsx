@@ -14,13 +14,13 @@ const Footer: React.FC<FooterProps> = ({ text, link }) => {
       <Text>{text}</Text>
       {link === "Sign up" ? (
         <Link href="/sign-up" asChild>
-          <Pressable>
+          <Pressable hitSlop={25}>
             <Text style={styles.text}>Sign up</Text>
           </Pressable>
         </Link>
       ) : (
         <Link href="/welcome" asChild>
-          <Pressable>
+          <Pressable hitSlop={25}>
             <Text style={styles.text}>Sign in</Text>
           </Pressable>
         </Link>

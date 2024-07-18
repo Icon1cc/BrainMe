@@ -7,7 +7,7 @@ describe('AuthSocialButton Component', () => {
 
     it('renders correctly with different providers', () => {
         providers.forEach(provider => {
-            const { getByTestId } = render(<AuthSocialButton onPress={() => {}} provider={provider} />);
+            const { getByTestId } = render(<AuthSocialButton onPress={() => { }} provider={provider} activity={false} />);
             const button = getByTestId('auth-social-button');
             expect(button).toBeTruthy();
         });
@@ -15,7 +15,7 @@ describe('AuthSocialButton Component', () => {
 
     it('calls onPress when pressed', () => {
         const onPressMock = jest.fn();
-        const { getByTestId } = render(<AuthSocialButton onPress={onPressMock} provider="google" />);
+        const { getByTestId } = render(<AuthSocialButton onPress={onPressMock} provider="google" activity={false} />);
         const button = getByTestId('auth-social-button');
         fireEvent.press(button);
         expect(onPressMock).toHaveBeenCalledTimes(1);
@@ -23,7 +23,7 @@ describe('AuthSocialButton Component', () => {
 
     it('renders the correct image for each provider', () => {
         providers.forEach(provider => {
-            const { getByTestId } = render(<AuthSocialButton onPress={() => {}} provider={provider} />);
+            const { getByTestId } = render(<AuthSocialButton onPress={() => { }} provider={provider} activity={false} />);
             const image = getByTestId(`${provider}-image`);
             expect(image).toBeTruthy();
         });

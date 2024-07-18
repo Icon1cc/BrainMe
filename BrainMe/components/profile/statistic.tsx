@@ -1,4 +1,10 @@
-import { View, Text, Image, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  useWindowDimensions,
+} from "react-native";
 import React from "react";
 
 import Colors from "@/constants/Colors";
@@ -21,6 +27,7 @@ enum StatisticType {
 }
 
 export default function Statistic(props: StatisticProps) {
+  const isTablet = useWindowDimensions().width > 763;
   // Splits the description into two parts.
   const text = props.description.split(" ");
 
@@ -35,7 +42,7 @@ export default function Statistic(props: StatisticProps) {
       ? `#${numberAbove1000}`
       : numberAbove1000;
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { height: isTablet ? 200 : 150 }]}>
       <Image
         source={StatisticType[props.type as keyof typeof StatisticType]}
         style={styles.image}

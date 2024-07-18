@@ -16,7 +16,9 @@ import type {
 } from "convex/server";
 import type * as chats from "../chats.js";
 import type * as http from "../http.js";
+import type * as leaderboard from "../leaderboard.js";
 import type * as messages from "../messages.js";
+import type * as quizz from "../quizz.js";
 import type * as user from "../user.js";
 
 /**
@@ -30,7 +32,9 @@ import type * as user from "../user.js";
 declare const fullApi: ApiFromModules<{
   chats: typeof chats;
   http: typeof http;
+  leaderboard: typeof leaderboard;
   messages: typeof messages;
+  quizz: typeof quizz;
   user: typeof user;
 }>;
 export declare const api: FilterApi<

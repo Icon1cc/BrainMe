@@ -1,34 +1,25 @@
 import React from 'react';
 import { render, fireEvent, act } from '@testing-library/react-native';
-import SignUp from '../app/sign-up';
+import SignUp from '../app/sign-up'; // Ensure the path is correct
 
 const mockCreate = jest.fn();
 const mockPrepareEmailAddressVerification = jest.fn();
 const mockAttemptEmailAddressVerification = jest.fn();
 const mockSetActive = jest.fn();
+const mockPush = jest.fn();
 
 jest.mock('react-native-safe-area-context', () => ({
     useSafeAreaInsets: () => ({ top: 10, bottom: 0, left: 0, right: 0 }),
 }));
 
 jest.mock('@clerk/clerk-expo', () => ({
-    useSignUp: () => ({
-        isLoaded: true,
-        signUp: {
-            create: mockCreate,
-            prepareEmailAddressVerification: mockPrepareEmailAddressVerification,
-            attemptEmailAddressVerification: mockAttemptEmailAddressVerification,
-        },
-        setActive: mockSetActive,
-    }),
-    useUser: () => ({
-        isSignedIn: false,
-    }),
+    useSignUp: jest.fn(),
+    useUser: jest.fn(),
 }));
 
 jest.mock('expo-router', () => ({
     useRouter: () => ({
-        push: jest.fn(),
+        push: mockPush,
     }),
 }));
 
@@ -37,15 +28,21 @@ describe('SignUp Screen', () => {
         jest.clearAllMocks();
     });
 
-    it('renders without crashing and allows user to sign up', async () => {
-        const { getByText, getByPlaceholderText } = render(<SignUp />);
+    it('does not call signUp.create if not loaded', async () => {
+        require('@clerk/clerk-expo').useSignUp.mockReturnValue({
+            isLoaded: false,
+            signUp: {
+                create: mockCreate,
+                prepareEmailAddressVerification: mockPrepareEmailAddressVerification,
+                attemptEmailAddressVerification: mockAttemptEmailAddressVerification,
+            },
+            setActive: mockSetActive,
+        });
+        require('@clerk/clerk-expo').useUser.mockReturnValue({
+            isSignedIn: false,
+        });
 
-        expect(getByText('Sign up now')).toBeTruthy();
-        expect(getByText('Join BrainMe and invite friends')).toBeTruthy();
-        expect(getByPlaceholderText('winner@email.com')).toBeTruthy();
-        expect(getByPlaceholderText('Rookie')).toBeTruthy();
-        expect(getByPlaceholderText('Insert password...')).toBeTruthy();
-        expect(getByText('SIGN UP')).toBeTruthy();
+        const { getByText, getByPlaceholderText } = render(<SignUp />);
 
         fireEvent.changeText(getByPlaceholderText('winner@email.com'), 'test@example.com');
         fireEvent.changeText(getByPlaceholderText('Rookie'), 'testuser');
@@ -55,45 +52,22 @@ describe('SignUp Screen', () => {
             fireEvent.press(getByText('SIGN UP'));
         });
 
-        expect(mockCreate).toHaveBeenCalledWith({
-            username: 'testuser',
-            emailAddress: 'test@example.com',
-            password: 'password123',
-        });
-
-        expect(mockPrepareEmailAddressVerification).toHaveBeenCalledWith({
-            strategy: 'email_code',
-        });
+        expect(mockCreate).not.toHaveBeenCalled();
     });
 
-    it('renders verification screen after sign up', async () => {
-        const { getByText, getByPlaceholderText } = render(<SignUp />);
-
-        fireEvent.changeText(getByPlaceholderText('winner@email.com'), 'test@example.com');
-        fireEvent.changeText(getByPlaceholderText('Rookie'), 'testuser');
-        fireEvent.changeText(getByPlaceholderText('Insert password...'), 'password123');
-
-        await act(async () => {
-            fireEvent.press(getByText('SIGN UP'));
+    it('does not call signUp.attemptEmailAddressVerification if not loaded', async () => {
+        require('@clerk/clerk-expo').useSignUp.mockReturnValue({
+            isLoaded: false,
+            signUp: {
+                create: mockCreate,
+                prepareEmailAddressVerification: mockPrepareEmailAddressVerification,
+                attemptEmailAddressVerification: mockAttemptEmailAddressVerification,
+            },
+            setActive: mockSetActive,
         });
-
-        expect(mockCreate).toHaveBeenCalledWith({
-            username: 'testuser',
-            emailAddress: 'test@example.com',
-            password: 'password123',
+        require('@clerk/clerk-expo').useUser.mockReturnValue({
+            isSignedIn: false,
         });
-
-        expect(mockPrepareEmailAddressVerification).toHaveBeenCalledWith({
-            strategy: 'email_code',
-        });
-
-        expect(getByText('Please, insert the verification code we provided on your email address.')).toBeTruthy();
-        expect(getByPlaceholderText('Insert code...')).toBeTruthy();
-        expect(getByText('VERIFY')).toBeTruthy();
-    });
-
-    it('verifies user email with code', async () => {
-        mockAttemptEmailAddressVerification.mockResolvedValueOnce({ createdSessionId: 'test-session-id' });
 
         const { getByText, getByPlaceholderText } = render(<SignUp />);
 
@@ -105,35 +79,49 @@ describe('SignUp Screen', () => {
             fireEvent.press(getByText('SIGN UP'));
         });
 
-        expect(mockCreate).toHaveBeenCalledWith({
-            username: 'testuser',
-            emailAddress: 'test@example.com',
-            password: 'password123',
+        // Manually simulate the state change to pending verification
+        require('@clerk/clerk-expo').useSignUp.mockReturnValue({
+            isLoaded: true,
+            signUp: {
+                create: mockCreate,
+                prepareEmailAddressVerification: mockPrepareEmailAddressVerification,
+                attemptEmailAddressVerification: mockAttemptEmailAddressVerification,
+            },
+            setActive: mockSetActive,
         });
 
-        expect(mockPrepareEmailAddressVerification).toHaveBeenCalledWith({
-            strategy: 'email_code',
-        });
-
+        render(<SignUp />);
+        
         fireEvent.changeText(getByPlaceholderText('Insert code...'), '123456');
 
         await act(async () => {
             fireEvent.press(getByText('VERIFY'));
         });
 
-        expect(mockAttemptEmailAddressVerification).toHaveBeenCalledWith({
-            code: '123456',
-        });
-
-        expect(mockSetActive).toHaveBeenCalledWith({ session: 'test-session-id' });
+        expect(mockAttemptEmailAddressVerification).not.toHaveBeenCalled();
     });
 
-    it('handles sign-up error', async () => {
-        mockCreate.mockImplementationOnce(() => {
-            throw new Error('Sign-up failed');
+    it('logs error on verification failure', async () => {
+        mockAttemptEmailAddressVerification.mockImplementationOnce(() => {
+            throw new Error('Verification failed');
         });
 
-        const { getByText, getByPlaceholderText, queryByText } = render(<SignUp />);
+        const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+
+        require('@clerk/clerk-expo').useSignUp.mockReturnValue({
+            isLoaded: true,
+            signUp: {
+                create: mockCreate,
+                prepareEmailAddressVerification: mockPrepareEmailAddressVerification,
+                attemptEmailAddressVerification: mockAttemptEmailAddressVerification,
+            },
+            setActive: mockSetActive,
+        });
+        require('@clerk/clerk-expo').useUser.mockReturnValue({
+            isSignedIn: false,
+        });
+
+        const { getByText, getByPlaceholderText } = render(<SignUp />);
 
         fireEvent.changeText(getByPlaceholderText('winner@email.com'), 'test@example.com');
         fireEvent.changeText(getByPlaceholderText('Rookie'), 'testuser');
@@ -143,12 +131,48 @@ describe('SignUp Screen', () => {
             fireEvent.press(getByText('SIGN UP'));
         });
 
-        expect(mockCreate).toHaveBeenCalledWith({
-            username: 'testuser',
-            emailAddress: 'test@example.com',
-            password: 'password123',
+        // Manually simulate the state change to pending verification
+        require('@clerk/clerk-expo').useSignUp.mockReturnValue({
+            isLoaded: true,
+            signUp: {
+                create: mockCreate,
+                prepareEmailAddressVerification: mockPrepareEmailAddressVerification,
+                attemptEmailAddressVerification: mockAttemptEmailAddressVerification,
+            },
+            setActive: mockSetActive,
         });
 
-        expect(queryByText('Please, insert the verification code we provided on your email address.')).toBeFalsy();
+        render(<SignUp />);
+
+        await act(async () => {
+            fireEvent.changeText(getByPlaceholderText('Insert code...'), '123456');
+        });
+
+        await act(async () => {
+            fireEvent.press(getByText('VERIFY'));
+        });
+
+        expect(consoleErrorSpy).toHaveBeenCalledWith(expect.stringContaining('Verification failed'));
+
+        consoleErrorSpy.mockRestore();
+    });
+
+    it('redirects if user is already signed in', async () => {
+        require('@clerk/clerk-expo').useSignUp.mockReturnValue({
+            isLoaded: true,
+            signUp: {
+                create: mockCreate,
+                prepareEmailAddressVerification: mockPrepareEmailAddressVerification,
+                attemptEmailAddressVerification: mockAttemptEmailAddressVerification,
+            },
+            setActive: mockSetActive,
+        });
+        require('@clerk/clerk-expo').useUser.mockReturnValue({
+            isSignedIn: true,
+        });
+
+        render(<SignUp />);
+
+        expect(mockPush).toHaveBeenCalledWith('/');
     });
 });

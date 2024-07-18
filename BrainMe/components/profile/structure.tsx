@@ -1,6 +1,5 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, useWindowDimensions } from "react-native";
 import { Stack } from "expo-router";
-import { StatusBar } from "expo-status-bar";
 import React, { ReactNode } from "react";
 
 import Colors from "@/constants/Colors";
@@ -13,6 +12,7 @@ interface StructureProps {
 }
 
 export function Structure({ title, children, placeholder }: StructureProps) {
+  const isTablet = useWindowDimensions().width > 763;
   return (
     <View
       style={{
@@ -34,19 +34,26 @@ export function Structure({ title, children, placeholder }: StructureProps) {
           },
         }}
       />
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          {
+            paddingHorizontal: isTablet ? 17 * 3 : 17,
+            paddingBottom: isTablet ? 17 * 5 : 17 * 2,
+          },
+        ]}
+      >
         <View
           style={{
             position: "absolute",
             alignSelf: "center",
-            top: -50,
+            top: isTablet ? -60 : -45,
           }}
         >
-          <ImageViewer size={100} selectedImage={placeholder} />
+          <ImageViewer size={isTablet ? 120 : 90} selectedImage={placeholder} />
         </View>
         {children}
       </View>
-      <StatusBar style="light" />
     </View>
   );
 }
@@ -59,8 +66,6 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    paddingTop: 17 * 5,
-    paddingBottom: 17 * 3,
-    paddingHorizontal: 17,
+    paddingTop: 17 * 2,
   },
 });

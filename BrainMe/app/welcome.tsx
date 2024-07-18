@@ -1,14 +1,13 @@
-import { View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { View, ActivityIndicator } from "react-native";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 
 import { Structure } from "@/components/auth/structure";
-
 import Input from "@/components/auth/input";
 import Separator from "@/components/auth/separator";
-import SocialAuth from "@/components/auth/auth-social-button";
+import AuthSocialButton from "@/components/auth/auth-social-button";
 import LoginButton from "@/components/auth/action-button";
+import Footer from "@/components/auth/footer-text"; // Ensure this import is correct
 
 import * as WebBrowser from "expo-web-browser";
 import { useOAuth, useUser, useSignIn } from "@clerk/clerk-expo";
@@ -23,11 +22,10 @@ enum Strategy {
 }
 
 export default function Welcome() {
-  const insets = useSafeAreaInsets();
-
   const { signIn, setActive, isLoaded } = useSignIn();
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
+  const [activity, setActivity] = useState(false);
 
   const { isSignedIn } = useUser();
 
@@ -48,6 +46,8 @@ export default function Welcome() {
       [Strategy.Facebook]: facebookAuth,
     }[strategy];
 
+    setActivity(true);
+
     try {
       console.log("OAuth start");
       const { createdSessionId } = await selectedAuth();
@@ -59,8 +59,10 @@ export default function Welcome() {
           console.error("OAuth error: setActive is undefined");
         }
       }
+      setActivity(false);
     } catch (err) {
       console.error("OAuth error", err);
+      setActivity(false);
     }
   };
 
@@ -69,14 +71,18 @@ export default function Welcome() {
       return;
     }
 
+    setActivity(true);
+
     try {
       const completeSignIn = await signIn.create({
         identifier: emailAddress,
         password,
       });
       await setActive({ session: completeSignIn.createdSessionId });
+      setActivity(false);
     } catch (err: any) {
       console.log(err);
+      setActivity(false);
     }
   };
 
@@ -91,6 +97,18 @@ export default function Welcome() {
       title="BrainMe"
       subtitle="Quizz your knowledge, share your wisdom!"
     >
+      <ActivityIndicator
+        animating={activity}
+        size="large"
+        color="blue"
+        style={{
+          position: "absolute",
+          top: -200,
+          left: 0,
+          right: 0,
+          bottom: 0,
+        }}
+      />
       <Input
         title="Email"
         placeholder="winner@email.com"
@@ -104,21 +122,31 @@ export default function Welcome() {
         onChangeText={setPassword}
       />
       <Separator />
-      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-        <SocialAuth
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <AuthSocialButton
+          activity={activity}
           onPress={() => onSelectAuth(Strategy.Google)}
           provider="google"
         />
-        <SocialAuth
+        <AuthSocialButton
+          activity={activity}
           onPress={() => onSelectAuth(Strategy.Facebook)}
           provider="facebook"
         />
-        <SocialAuth
+        <AuthSocialButton
+          activity={activity}
           onPress={() => onSelectAuth(Strategy.Apple)}
           provider="apple"
         />
       </View>
-      <LoginButton text="LOGIN" onPress={onSignInPress} />
+      <LoginButton activity={activity} text="LOGIN" onPress={onSignInPress} />
+      <Footer text="Don't have an account yet?" link="Sign up" />
     </Structure>
   );
 }

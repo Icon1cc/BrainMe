@@ -18,12 +18,23 @@ export default defineSchema({
     user_1: v.id("user"),
     user_2: v.id("user"),
     last_comment: v.optional(v.string()),
-    timestamp: v.number(),
+    timestamp: v.string(),
   }),
   messages: defineTable({
     chat_id: v.id("chats"),
     user: v.string(),
     content: v.string(),
     file: v.optional(v.string()),
+  }),
+  quizz: defineTable({
+    question: v.array(v.string()),
+    answers: v.array(v.array(v.string())),
+    correctAnswer: v.array(v.string()),
+  }),
+  leaderboard: defineTable({
+    user_id: v.id("user"),
+    ranking: v.number(),
+    gamesPlayed: v.number(),
+    points: v.number(),
   }),
 });

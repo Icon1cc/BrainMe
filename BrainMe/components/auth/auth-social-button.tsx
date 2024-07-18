@@ -10,13 +10,22 @@ enum ProviderImage {
 interface AuthSocialButtonProps {
   onPress: () => void;
   provider: string;
+  activity: boolean;
 }
 
 export default function AuthSocialButton(props: AuthSocialButtonProps) {
   return (
     <Pressable
+      disabled={props.activity}
       onPress={props.onPress}
-      style={styles.container}
+      style={({ pressed }) => {
+        return [
+          styles.container,
+          {
+            backgroundColor: pressed ? "lightgrey" : "transparent",
+          },
+        ];
+      }}
       testID="auth-social-button"
     >
       <Image
@@ -31,7 +40,7 @@ export default function AuthSocialButton(props: AuthSocialButtonProps) {
 const styles = StyleSheet.create({
   container: {
     paddingVertical: 17,
-    paddingHorizontal: 40,
+    paddingHorizontal: 17 * 2,
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
