@@ -100,19 +100,50 @@ export default function Chat() {
   // Send message to Convex.
   const handleMessage = async () => {
     Keyboard.dismiss();
-    // Regular mutation to add a message
-    await addMessage({
-      chat_id: chat as Id<"chats">,
-      content: newMessage,
-      user: user!,
-    });
-    // Regular mutation to update the chat group.
-    await conversation({
-      chatId: chat as Id<"chats">,
-      last_comment: newMessage,
-      timestamp: new Date().toLocaleTimeString(),
-    });
-    setNewMessage("");
+
+    if (selectedImage) {
+      const url = new URL(`${process.env.EXPO_PUBLIC_CONVEX_SITE}/sendImage`);
+
+      url.searchParams.set("user", user!);
+      url.searchParams.set("chat_id", chat as Id<"chats">);
+      url.searchParams.set("content", newMessage);
+
+      // Convert URI to blob.
+      const response = await fetch(selectedImage);
+      const blob = await response.blob();
+
+      await conversation({
+        chatId: chat as Id<"chats">,
+        last_comment: newMessage,
+        timestamp: new Date().toLocaleTimeString(),
+      });
+
+      // Send blob to Convex
+      fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": blob!.type },
+        body: blob,
+      })
+        .then(() => {
+          setSelectedImage(null);
+          setNewMessage("");
+        })
+        .catch((err) => console.log("ERROR: ", err));
+    } else {
+      // Regular mutation to add a message
+      await addMessage({
+        chat_id: chat as Id<"chats">,
+        content: newMessage,
+        user: user!,
+      });
+      // Regular mutation to update the chat group.
+      await conversation({
+        chatId: chat as Id<"chats">,
+        last_comment: newMessage,
+        timestamp: new Date().toLocaleTimeString(),
+      });
+      setNewMessage("");
+    }
   };
 
   const renderMessage: ListRenderItem<Doc<"messages">> = ({ item }) => {
@@ -132,14 +163,23 @@ export default function Chat() {
             {item.content}
           </Text>
         )}
-        {selectedImage && (
+        {item.file && (
           <Image
-            source={{ uri: selectedImage }}
+            source={{ uri: item.file }}
             style={{ width: 200, height: 200, margin: 10 }}
           />
         )}
-        <Text style={{ color: "white" }}>
-          {new Date(item._creationTime).toLocaleTimeString()}
+        <Text
+          style={{
+            color: "white",
+            alignSelf: isUserMessage ? "flex-end" : "flex-start",
+          }}
+        >
+          {new Date(item._creationTime).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          })}
         </Text>
       </View>
     );
@@ -167,12 +207,6 @@ export default function Chat() {
               </View>
             );
           },
-          //headerTitle: `${username}`,
-          /*headerTitleStyle: {
-            fontFamily: "NiveauGrotesk",
-            color: Colors.primary,
-            fontSize: 20,
-          },*/
           headerLeft: () => (
             <Pressable
               hitSlop={25}
@@ -206,6 +240,12 @@ export default function Chat() {
             { paddingHorizontal: isTablet ? 30 : 17 },
           ]}
         >
+          {selectedImage && (
+            <Image
+              source={{ uri: selectedImage }}
+              style={{ width: 150, height: 150, marginBottom: 20 }}
+            />
+          )}
           <View style={{ flexDirection: "row", alignItems: "center", gap: 20 }}>
             <TextInput
               style={styles.textInput}
