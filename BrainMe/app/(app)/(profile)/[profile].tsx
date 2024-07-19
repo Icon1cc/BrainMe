@@ -51,11 +51,15 @@ export default function OtherUser() {
           params: { chat: chat._id },
         });
       } else {
-        await convex.mutation(api.chats.createChat, {
+        await convex.mutation(api.chats.insert, {
           user_1: user._id,
           user_2: profile as Id<"user">,
           last_comment: "Start a new conversation!",
-          timestamp: new Date().toLocaleTimeString(),
+          timestamp: new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          }),
         });
         const newChat = await convex.query(api.chats.retrieveByUserIds, {
           user_1: user._id,

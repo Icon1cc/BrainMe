@@ -115,7 +115,11 @@ export default function Chat() {
       await conversation({
         chatId: chat as Id<"chats">,
         last_comment: newMessage,
-        timestamp: new Date().toLocaleTimeString(),
+        timestamp: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        }),
       });
 
       // Send blob to Convex
@@ -140,7 +144,11 @@ export default function Chat() {
       await conversation({
         chatId: chat as Id<"chats">,
         last_comment: newMessage,
-        timestamp: new Date().toLocaleTimeString(),
+        timestamp: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        }),
       });
       setNewMessage("");
     }

@@ -12,10 +12,6 @@ import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 
-interface RenderItemProps {}
-
-function RenderItem(props: RenderItemProps) {}
-
 export default function Finder() {
   const friends = useQuery(api.user.retrieveUserFriends);
   const boards = useQuery(api.leaderboard.collect, {
@@ -104,7 +100,7 @@ export default function Finder() {
         contentInsetAdjustmentBehavior="automatic"
         contentContainerStyle={{ paddingHorizontal: 17 }}
         keyExtractor={(item) => item._id}
-        ItemSeparatorComponent={() => <View style={{height: 17 }}/>}
+        ItemSeparatorComponent={() => <View style={{ height: 17 }} />}
         ListEmptyComponent={() => (
           <Text
             style={{
