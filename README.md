@@ -1,14 +1,32 @@
-# BrainMe
+# BrainMe.
+Welcome to the repository showcasing the design and build of a trivia game mobile application with React Native. This project uses **Convex** which is a Typescript backend service solution and **Clerk** for authentication and user management. 
 
-1. Setup of Expo router sdk 51. Following instruction: npx create-expo-app@latest
-2. Install of the pacifico from Google fonts. Following instruction: npx expo install expo-font @expo-google-fonts/inter
-3. Install Backend Convex dev. Following instruction: npm install convex react-dom react-native-get-random-values
-4. Install Clerk Authentication. Following instruction: npm install @clerk/clerk-expo
-5. Install Secure Store in order to store JWT in phone's device storage securely. Following instruciton: npx expo install expo-secure-store
+### Clone the Repository
 
-## Notes.
+```bash
+git clone https://github.com/Icon1cc/BrainMe.git
+cd BrainMe
+```
 
-1. Adapt the SplashScreen for big screens.
-2. Repair the SplaschScreen Statusbar.
-3. Optimize the tabBar for changing header name.
-4. Changer le username quand je crée un utilisateur
+### Install Dependencies
+
+```bash
+npm install
+```
+
+### Run the app
+
+```bash
+npx expo start -c
+```
+
+## Backend
+
+This project uses Convex as a BAAS and Clerk for authentication and user management. It is mandatory to create a personal account in both services and configure the .env.local file accordingly. Furthermore, a detailed step-by-step guide is given on both services website in order to embed them together.
+
+## Demo
+![quiz](https://github.com/user-attachments/assets/930cf37d-eade-4cb2-8c6e-8c40f06e7d33) ![review](https://github.com/user-attachments/assets/c3f2e4f0-840d-4221-82b1-87521288c731)
+![chat](https://github.com/user-attachments/assets/bfcbd311-2dc0-4129-99dd-652126943bb7) ![profile](https://github.com/user-attachments/assets/a20fc6c2-9e21-400a-80d4-d9b7b662a81a)
+
+
+
