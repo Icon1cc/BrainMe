@@ -10,7 +10,7 @@ export const insert = mutation({
     if (tokenIdentifier) {
       await ctx.db.insert("user", {
         username: identity!.name!,
-        user_id: tokenIdentifier,
+        tokenIdentifier: tokenIdentifier,
       });
     }
   },
@@ -24,7 +24,7 @@ export const remove = mutation({
     if (tokenIdentifier) {
       const user = await ctx.db
         .query("user")
-        .filter((q) => q.eq(q.field("user_id"), tokenIdentifier))
+        .filter((q) => q.eq(q.field("tokenIdentifier"), tokenIdentifier))
         .unique();
       if (user) {
         await ctx.db.delete(user._id);
@@ -49,7 +49,7 @@ export const update = mutation({
 });
 
 // This query returns your user from the database
-export const myUser = query({
+export const retrieve = query({
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
@@ -58,7 +58,7 @@ export const myUser = query({
       const { tokenIdentifier } = identity!;
       const user = await ctx.db
         .query("user")
-        .filter((q) => q.eq(q.field("user_id"), tokenIdentifier))
+        .filter((q) => q.eq(q.field("tokenIdentifier"), tokenIdentifier))
         .unique();
       if (user?.file && user.file) {
         const url = await ctx.storage.getUrl(user.file as Id<"_storage">);
@@ -98,7 +98,7 @@ export const getUsers = query({
     const { tokenIdentifier } = identity!;
     const users = await ctx.db
       .query("user")
-      .filter((q) => q.neq(q.field("user_id"), tokenIdentifier))
+      .filter((q) => q.neq(q.field("tokenIdentifier"), tokenIdentifier))
       .collect();
 
     // if the user has a file, get the URL from the storage.

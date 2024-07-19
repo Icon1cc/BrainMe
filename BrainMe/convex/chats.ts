@@ -1,5 +1,6 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
+import { Id } from "./_generated/dataModel";
 
 // This mutation creates a new chat.
 export const createChat = mutation({
@@ -55,19 +56,17 @@ export const getChatByUsers = query({
 });
 
 // This query returns chat groups related to your profile.
-export const get = query({
+export const retrieve = query({
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      return null;
-    } else {
-      const { tokenIdentifier } = identity!;
+    const { tokenIdentifier } = identity!;
+    if (tokenIdentifier) {
       const user = await ctx.db
         .query("user")
-        .filter((q) => q.eq(q.field("user_id"), tokenIdentifier))
+        .filter((q) => q.eq(q.field("tokenIdentifier"), tokenIdentifier))
         .unique();
       if (user) {
-        return await ctx.db
+        const chats = await ctx.db
           .query("chats")
           .filter((q) =>
             q.or(
@@ -77,11 +76,33 @@ export const get = query({
           )
           .order("desc")
           .collect();
-      } else {
-        return null;
+          const otherUsers = chats.map(async (chat) => {
+            const otherUser = ctx.db.get(
+              chat.user_1 === user._id ? chat.user_2 : chat.user_1
+            );
+
+          })
+        return Promise.all(
+          chats.map(async (chat) => {
+            const otherUser = ctx.db.get(
+              chat.user_1 === user._id ? chat.user_2 : chat.user_1
+            );
+            if(otherUser.file)
+          })
+        );
       }
     }
   },
+});
+
+users.map(async (user) => {
+  if (user.file) {
+    const url = await ctx.storage.getUrl(user.file as Id<"_storage">);
+    if (url) {
+      return { ...user, file: url };
+    }
+  }
+  return user;
 });
 
 // This query returns the chat group by it's object id.

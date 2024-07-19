@@ -14,10 +14,11 @@ export default function Home() {
 
   useEffect(() => {
     async function checkUser() {
-      const user = await convex.query(api.user.myUser);
+      const user = await convex.query(api.user.retrieve);
       if (!user) {
         await convex.mutation(api.user.insert);
         await convex.mutation(api.leaderboard.insert);
+        await convex.mutation(api.userstatistics.insert);
       }
     }
     checkUser();

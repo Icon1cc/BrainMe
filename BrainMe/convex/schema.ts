@@ -3,7 +3,7 @@ import { v } from "convex/values";
 
 export default defineSchema({
   user: defineTable({
-    user_id: v.string(),
+    tokenIdentifier: v.string(),
     username: v.string(),
     friends: v.optional(v.array(v.id("user"))),
     file: v.optional(v.string()),
@@ -21,6 +21,7 @@ export default defineSchema({
     file: v.optional(v.string()),
   }),
   quizz: defineTable({
+    user_id: v.id("user"),
     category: v.string(),
     difficulty: v.string(),
     questions: v.array(v.string()),
@@ -34,10 +35,13 @@ export default defineSchema({
   }),
   leaderboard: defineTable({
     user_id: v.id("user"),
-    ranking: v.number(),
+    points: v.number(),
+  }),
+  userstatistics: defineTable({
+    user_id: v.id("user"),
     games: v.number(),
     points: v.number(),
     level: v.number(),
-    ratio: v.number(),
+    correctAnswers: v.number(),
   }),
 });

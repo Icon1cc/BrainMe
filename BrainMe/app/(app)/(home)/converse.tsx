@@ -59,20 +59,25 @@ function RenderItem({ item }: RenderItemProps) {
 
 export default function Converse() {
   const convex = useConvex();
-  const myUser = useQuery(api.user.myUser);
-  const chatGroups = useQuery(api.chats.get);
-  console.log(chatGroups);
+  const user = useQuery(api.user.retrieve);
+  const chats = useQuery(api.chats.retrieve);
+  const isTablet = useWindowDimensions().width >= 768;
 
-  const [chats, setChats] = useState<
+  const [data, setData] = useState<
     {
       _id: Id<"chats">;
       username: string;
       last_comment: string;
       timestamp: string;
       selectedImage: string;
+      file: string;
     }[]
   >([]);
-  const [filteredChats, setFilteredChats] = useState(chats);
+  const [filteredChats, setFilteredChats] = useState(data);
+
+  useEffect(() => {
+    if (chats) setData(chats);
+  }, [chats]);
 
   const searchFilterFunction = (text: string) => {
     if (text) {
@@ -87,13 +92,13 @@ export default function Converse() {
     }
   };
 
-  useEffect(() => {
+  /*useEffect(() => {
     const loadChats = async () => {
       // Retrieves the other user id in all of the chat groups.
-      if (myUser && chatGroups) {
+      if (user && chatGroups) {
         const otherUsersId = chatGroups.map((chat) => {
           const otherUser =
-            chat.user_1 === myUser?._id ? chat.user_2 : chat.user_1;
+            chat.user_1 === user?._id ? chat.user_2 : chat.user_1;
           return otherUser;
         });
         // Retrieves the username of the other users.
@@ -127,9 +132,7 @@ export default function Converse() {
       }
     };
     loadChats();
-  }, [myUser, chatGroups]);
-
-  const isTablet = useWindowDimensions().width >= 768;
+  }, [user, chatGroups]);*/
 
   return (
     <View style={{ flex: 1 }}>

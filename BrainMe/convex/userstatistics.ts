@@ -12,9 +12,12 @@ export const insert = mutation({
         .filter((q) => q.eq(q.field("tokenIdentifier"), tokenIdentifier))
         .unique();
       if (user) {
-        await ctx.db.insert("leaderboard", {
+        await ctx.db.insert("userstatistics", {
           user_id: user!._id,
+          games: 0,
           points: 0,
+          level: 0,
+          correctAnswers: 0,
         });
       }
     }
@@ -32,22 +35,25 @@ export const remove = mutation({
         .filter((q) => q.eq(q.field("tokenIdentifier"), tokenIdentifier))
         .unique();
       if (user) {
-        const board = await ctx.db
-          .query("leaderboard")
+        const statistics = await ctx.db
+          .query("userstatistics")
           .filter((q) => q.eq(q.field("user_id"), user._id))
           .unique();
-        if (board) {
-          await ctx.db.delete(board._id);
+        if (statistics) {
+          await ctx.db.delete(statistics._id);
         }
       }
     }
   },
 });
 
-// Update your user's leaderboard.
+// Update your user's statistics.
 export const update = mutation({
   args: {
+    games: v.optional(v.number()),
     points: v.optional(v.number()),
+    level: v.optional(v.number()),
+    correctAnswers: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -58,12 +64,12 @@ export const update = mutation({
         .filter((q) => q.eq(q.field("tokenIdentifier"), tokenIdentifier))
         .unique();
       if (user) {
-        const board = await ctx.db
-          .query("leaderboard")
+        const statistics = await ctx.db
+          .query("userstatistics")
           .filter((q) => q.eq(q.field("user_id"), user._id))
           .unique();
-        if (board) {
-          await ctx.db.patch(board._id, {
+        if (statistics) {
+          await ctx.db.patch(statistics._id, {
             ...args,
           });
         }
@@ -72,7 +78,7 @@ export const update = mutation({
   },
 });
 
-// Get your user's leaderboard.
+// Get your user's statistics.
 export const retrieve = query({
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -84,18 +90,11 @@ export const retrieve = query({
         .unique();
       if (user) {
         return await ctx.db
-          .query("leaderboard")
+          .query("userstatistics")
           .filter((q) => q.eq(q.field("user_id"), user._id))
           .unique();
       }
     }
     return null;
-  },
-});
-
-// Returns the leaderboard.
-export const getLeaderboard = query({
-  handler: async (ctx) => {
-    return await ctx.db.query("leaderboard").collect();
   },
 });

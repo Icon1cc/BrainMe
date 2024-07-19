@@ -20,6 +20,7 @@ import type * as leaderboard from "../leaderboard.js";
 import type * as messages from "../messages.js";
 import type * as quizz from "../quizz.js";
 import type * as user from "../user.js";
+import type * as userstatistics from "../userstatistics.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -36,6 +37,7 @@ declare const fullApi: ApiFromModules<{
   messages: typeof messages;
   quizz: typeof quizz;
   user: typeof user;
+  userstatistics: typeof userstatistics;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,
