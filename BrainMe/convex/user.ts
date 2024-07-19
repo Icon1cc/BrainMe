@@ -3,20 +3,14 @@ import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
 // This mutation inserts a new user into the database.
-export const add = mutation({
+export const insert = mutation({
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
     const { tokenIdentifier } = identity!;
     if (tokenIdentifier) {
       await ctx.db.insert("user", {
-        username: "Rishabh Tiwari",
-        ranking: 0,
-        gamesPlayed: 0,
-        points: 0,
-        completionRate: 0,
-        correctAnswers: 0,
-        wrongAnswers: 0,
-        user_id: tokenIdentifier,
+        username: identity!.name!,
+        tokenIdentifier: tokenIdentifier,
       });
     }
   },
@@ -30,7 +24,7 @@ export const remove = mutation({
     if (tokenIdentifier) {
       const user = await ctx.db
         .query("user")
-        .filter((q) => q.eq(q.field("user_id"), tokenIdentifier))
+        .filter((q) => q.eq(q.field("tokenIdentifier"), tokenIdentifier))
         .unique();
       if (user) {
         await ctx.db.delete(user._id);
@@ -44,12 +38,6 @@ export const update = mutation({
   args: {
     _id: v.id("user"),
     username: v.optional(v.string()),
-    rank: v.optional(v.number()),
-    gamesPlayed: v.optional(v.number()),
-    points: v.optional(v.number()),
-    completionRate: v.optional(v.number()),
-    correctAnswers: v.optional(v.number()),
-    wrongAnswers: v.optional(v.number()),
     friends: v.optional(v.array(v.id("user"))),
     file: v.optional(v.string()),
   },
@@ -61,7 +49,7 @@ export const update = mutation({
 });
 
 // This query returns your user from the database
-export const myUser = query({
+export const retrieve = query({
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
@@ -70,7 +58,7 @@ export const myUser = query({
       const { tokenIdentifier } = identity!;
       const user = await ctx.db
         .query("user")
-        .filter((q) => q.eq(q.field("user_id"), tokenIdentifier))
+        .filter((q) => q.eq(q.field("tokenIdentifier"), tokenIdentifier))
         .unique();
       if (user?.file && user.file) {
         const url = await ctx.storage.getUrl(user.file as Id<"_storage">);
@@ -83,8 +71,33 @@ export const myUser = query({
   },
 });
 
+// This query returns the user's friends.
+export const retrieveUserFriends = query({
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    const { tokenIdentifier } = identity!;
+    const users = await ctx.db.query("user").collect();
+    const user = await ctx.db
+      .query("user")
+      .filter((q) => q.eq(q.field("tokenIdentifier"), tokenIdentifier))
+      .unique();
+    const friends = users.filter((u) => user?.friends?.includes(u._id));
+    return Promise.all(
+      friends.map(async (friend) => {
+        if (friend.file) {
+          const url = await ctx.storage.getUrl(friend.file as Id<"_storage">);
+          if (url) {
+            return { _id: friend._id, file: url };
+          }
+        }
+        return { _id: friend._id };
+      })
+    );
+  },
+});
+
 // This query retrieves a user from the database
-export const get = query({
+export const retrieveById = query({
   args: {
     _id: v.id("user"),
   },
@@ -104,13 +117,13 @@ export const get = query({
 });
 
 // This query return all the users except the current user.
-export const getUsers = query({
+export const collect = query({
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
     const { tokenIdentifier } = identity!;
     const users = await ctx.db
       .query("user")
-      .filter((q) => q.neq(q.field("user_id"), tokenIdentifier))
+      .filter((q) => q.neq(q.field("tokenIdentifier"), tokenIdentifier))
       .collect();
 
     // if the user has a file, get the URL from the storage.
@@ -129,7 +142,7 @@ export const getUsers = query({
 });
 
 // This query returns multiple users by their IDs.
-export const getUserByIds = query({
+export const retrieveByIds = query({
   args: { userIds: v.optional(v.array(v.id("user"))) },
   handler: async (ctx, args) => {
     if (args.userIds) {

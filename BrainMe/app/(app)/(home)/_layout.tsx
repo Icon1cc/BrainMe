@@ -52,16 +52,16 @@ export default function Layout() {
         name="converse"
         options={{
           title: "Chats",
+          headerTitleStyle: {
+            color: Colors.primary,
+            fontFamily: "NiveauGrotesk",
+            fontSize: 20,
+          },
           headerLargeTitle: true,
           headerLargeTitleStyle: {
             color: Colors.primary,
             fontFamily: "Pacifico",
             fontSize: 34,
-          },
-          headerTitleStyle: {
-            color: "black",
-            fontFamily: "NiveauGrotesk",
-            fontSize: 20,
           },
           headerLeft: () => (
             <Link href="/" asChild>

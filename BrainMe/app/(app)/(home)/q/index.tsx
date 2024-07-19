@@ -11,7 +11,7 @@ import ReviewQuestion from "@/components/home/quizz/review-question";
 
 const url = "https://the-trivia-api.com/api/questions";
 
-import { useMutation, useQuery } from "convex/react";
+import { useMutation, useQuery, useConvex } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -29,9 +29,15 @@ enum CategorySelection {
 }
 
 export default function Quizz() {
-  const addQuizz = useMutation(api.quizz.createQuizz);
-  const myUser = useQuery(api.user.myUser);
+  const insertQuizz = useMutation(api.quizz.insert);
+  const updateQuizz = useMutation(api.quizz.update);
+  const quizz = useQuery(api.quizz.retrieve);
+  const board = useQuery(api.leaderboard.retrieve);
+  const boardUpdate = useMutation(api.leaderboard.update);
+  const statistics = useQuery(api.userstatistics.retrieve);
+  const statisticsUpdate = useMutation(api.userstatistics.update);
   const router = useRouter();
+  const convex = useConvex();
 
   // Get the category and difficulty from the URL.
   const { category, difficulty } = useLocalSearchParams();
@@ -44,9 +50,8 @@ export default function Quizz() {
 
   // State to store the questions.
   const [data, setData] = useState<any>([]);
-  const [userAnswer, setUserAnswer] = useState("");
   const [userAnswers, setUserAnswers] = useState<string[]>([]);
-  const [userCorrectAnswers, setUserCorrectAnswers] = useState(0);
+  const [userAnswer, setUserAnswer] = useState("");
   const [currentQuestion, setCurrentQuestion] = useState(1);
   const [timeUp, setTimeUp] = useState(false);
 
@@ -55,6 +60,27 @@ export default function Quizz() {
   const [review, setReview] = useState(false);
 
   const handleOnEndOfQuizz = () => {
+    const threshold = 2;
+    const correctAnswers = data.filter((question: any, index: number) => {
+      return question.correctAnswer === quizz?.userAnswers[index];
+    }).length;
+    if (correctAnswers > threshold) {
+      const points =
+        difficulty === "easy" ? 2 : difficulty === "medium" ? 3 : 5;
+      boardUpdate({
+        points: board?.points! + points,
+      });
+      statisticsUpdate({
+        games: statistics?.games! + 1,
+        points: board?.points! + points,
+        correctAnswers: statistics?.correctAnswers! + correctAnswers,
+      });
+    } else {
+      statisticsUpdate({
+        games: statistics?.games! + 1,
+        correctAnswers: statistics?.correctAnswers! + correctAnswers,
+      });
+    }
     setPending(false);
     router.push("/");
   };
@@ -66,30 +92,27 @@ export default function Quizz() {
           _FlatList.current?.scrollToIndex({
             index: currentQuestion,
           });
+          updateQuizz({
+            _id: quizz?._id!,
+            userAnswers: [...userAnswers, userAnswer],
+          });
           setUserAnswers([...userAnswers, userAnswer]);
           setUserAnswer("");
           setCurrentQuestion(currentQuestion + 1);
           setTimeUp(false);
         } else {
           // End of the quizz.
+          updateQuizz({
+            _id: quizz?._id!,
+            userAnswers: [...userAnswers, userAnswer],
+          });
           setUserAnswers([...userAnswers, userAnswer]);
           setUserAnswer("");
-          setTimeUp(false);
           setPending(true);
         }
       }, 2000);
     }
   }, [timeUp]);
-
-  useEffect(() => {
-    if (userAnswers.length === data.length) {
-      setUserCorrectAnswers(
-        userAnswers.filter(
-          (answer, index) => answer === data[index].correctAnswer
-        ).length
-      );
-    }
-  }, [userAnswers]);
 
   useEffect(() => {
     // Fetch the questions.
@@ -109,12 +132,23 @@ export default function Quizz() {
             .sort(() => Math.random() - 0.5),
           correctAnswer: question.correctAnswer,
         }));
-        addQuizz({
-          question: quizz.map((q: any) => q.question!),
-          answers: quizz.map((q: any) => q.answers!),
-          correctAnswer: quizz.map((q: any) => q.correctAnswer!),
-        });
-        setData(quizz);
+        const user = await convex.query(api.user.retrieve);
+        if (user) {
+          insertQuizz({
+            user_id: user._id,
+            category: category as string,
+            difficulty: difficulty as string,
+            questions: data.map((q: any) => q.question),
+            answers: data.map((q: any) => ({
+              incorrectAnswers: q.incorrectAnswers.sort(
+                () => Math.random() - 0.5
+              ),
+              correctAnswer: q.correctAnswer,
+            })),
+            userAnswers: [],
+          });
+          setData(quizz);
+        }
       } catch (error) {
         console.error(error);
       }
@@ -172,7 +206,7 @@ export default function Quizz() {
             {data.map((item: any, index: any) => (
               <ReviewQuestion
                 key={index}
-                userAnswers={userAnswers}
+                userAnswers={quizz?.userAnswers!}
                 totalQuestions={data.length}
                 currentQuestion={index + 1}
                 question={item.question}
@@ -187,8 +221,17 @@ export default function Quizz() {
           <EndQuizz
             setReview={setReview}
             totalQuestions={data.length}
-            correctAnswers={userCorrectAnswers}
-            wrongAnswers={data.length - userCorrectAnswers}
+            correctAnswers={
+              data.filter((question: any, index: number) => {
+                return question.correctAnswer === quizz?.userAnswers[index];
+              }).length
+            }
+            wrongAnswers={
+              data.length -
+              data.filter((question: any, index: number) => {
+                return question.correctAnswer === quizz?.userAnswers[index];
+              }).length
+            }
             onHandleEndOfQuizz={handleOnEndOfQuizz}
           />
         </>

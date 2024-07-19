@@ -12,9 +12,14 @@ import React from "react";
 import Colors from "@/constants/Colors";
 import ImageViewer from "../image-viewer";
 
+import { Id } from "@/convex/_generated/dataModel";
+
 interface FriendsProps {
   number: number;
-  friends: string[];
+  friends: {
+    _id: Id<"user">;
+    file?: string;
+  }[];
 }
 
 export default function Friends({ number, friends }: FriendsProps) {
@@ -35,7 +40,10 @@ export default function Friends({ number, friends }: FriendsProps) {
           keyExtractor={(item) => Math.random().toString() + item}
           renderItem={({ item }) => (
             <View style={{ marginRight: -5 }}>
-              <ImageViewer size={isTablet ? 80 : 50} selectedImage={item} />
+              <ImageViewer
+                size={isTablet ? 80 : 50}
+                selectedImage={item.file}
+              />
             </View>
           )}
         />

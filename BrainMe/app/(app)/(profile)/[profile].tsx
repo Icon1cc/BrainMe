@@ -20,24 +20,28 @@ export default function OtherUser() {
   const router = useRouter();
 
   // Get the user's and our data.
-  const myUser = useQuery(api.user.myUser);
-  const otherUser = useQuery(api.user.get, { _id: profile as Id<"user"> });
-  const updateFriends = useMutation(api.user.update);
+  const user = useQuery(api.user.retrieve);
+  const otherUser = useQuery(api.user.retrieveById, {
+    _id: profile as Id<"user">,
+  });
+  const updateUser = useMutation(api.user.update);
+  const otherUserBoard = useQuery(api.userstatistics.retrieveByUserId, {
+    user_id: profile as Id<"user">,
+  });
   const [uploading, setUploading] = useState(false);
-
-  // Check if the user is a friend.
   const [isFriend, setIsFriend] = useState(false);
 
+  // Check if the user is a friend.
   useEffect(() => {
-    if (myUser && otherUser)
-      setIsFriend(myUser?.friends?.includes(profile as Id<"user">) || false);
-  }, [otherUser, myUser]);
+    if (user && otherUser)
+      setIsFriend(user.friends?.includes(profile as Id<"user">) || false);
+  }, [otherUser, user]);
 
   const handleOnMessage = async () => {
     setUploading(true);
-    if (myUser) {
-      const chat = await convex.query(api.chats.getChatByUsers, {
-        user_1: myUser._id,
+    if (user) {
+      const chat = await convex.query(api.chats.retrieveByUserIds, {
+        user_1: user._id,
         user_2: profile as Id<"user">,
       });
       if (chat) {
@@ -48,19 +52,19 @@ export default function OtherUser() {
         });
       } else {
         await convex.mutation(api.chats.createChat, {
-          user_1: myUser._id,
+          user_1: user._id,
           user_2: profile as Id<"user">,
-          last_comment: "",
-          timestamp: "",
+          last_comment: "Start a new conversation!",
+          timestamp: new Date().toLocaleTimeString(),
         });
-        const createdChat = await convex.query(api.chats.getChatByUsers, {
-          user_1: myUser._id,
+        const newChat = await convex.query(api.chats.retrieveByUserIds, {
+          user_1: user._id,
           user_2: profile as Id<"user">,
         });
-        if (createdChat) {
+        if (newChat) {
           router.push({
             pathname: "/(home)/t/[chat]",
-            params: { chat: createdChat._id },
+            params: { chat: newChat._id },
           });
           setUploading(false);
         } else {
@@ -72,15 +76,15 @@ export default function OtherUser() {
 
   const handleOnFollow = async () => {
     if (isFriend) {
-      await updateFriends({
-        _id: myUser?._id!,
-        friends: myUser?.friends?.filter((id) => id !== profile) || [],
+      await updateUser({
+        _id: user?._id!,
+        friends: user?.friends?.filter((id) => id !== profile) || [],
       });
       setIsFriend(false);
     } else {
-      await updateFriends({
-        _id: myUser?._id!,
-        friends: [...(myUser?.friends || []), profile as Id<"user">],
+      await updateUser({
+        _id: user?._id!,
+        friends: [...(user?.friends || []), profile as Id<"user">],
       });
       setIsFriend(true);
     }
@@ -94,12 +98,12 @@ export default function OtherUser() {
         style={styles.activityIndicator}
       />
       <Grid
-        ranking={otherUser?.ranking!}
-        gamesPlayed={otherUser?.gamesPlayed!}
-        points={otherUser?.points!}
-        completionRate={otherUser?.completionRate!}
-        correctAnswers={otherUser?.correctAnswers!}
-        wrongAnswers={otherUser?.wrongAnswers!}
+        ranking={0}
+        games={otherUserBoard?.games!}
+        points={otherUserBoard?.points!}
+        level={otherUserBoard?.level!}
+        correct={otherUserBoard?.correctAnswers! / otherUserBoard?.games!}
+        incorrect={otherUserBoard?.correctAnswers!}
       />
       <Options
         disabled={uploading}

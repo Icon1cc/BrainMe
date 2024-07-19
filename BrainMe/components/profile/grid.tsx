@@ -5,11 +5,11 @@ import Stat from "@/components/profile/statistic";
 
 interface GridProps {
   ranking: number;
-  gamesPlayed: number;
+  games: number;
   points: number;
-  completionRate: number;
-  correctAnswers: number;
-  wrongAnswers: number;
+  level: number;
+  correct: number;
+  incorrect: number;
 }
 
 export default function Grid(props: GridProps) {
@@ -22,29 +22,25 @@ export default function Grid(props: GridProps) {
           hashtag
           description="World rank"
         />
-        <Stat
-          type="joystick"
-          stat={props.gamesPlayed!}
-          description="Games played"
-        />
+        <Stat type="joystick" stat={props.games!} description="Games played" />
         <Stat type="coin" stat={props.points!} description="Points total" />
       </View>
       <View style={{ flexDirection: "row", gap: 17 }}>
         <Stat
           type="potion"
-          stat={props.completionRate!}
+          stat={props.level!}
           percent
           description="Completion rate"
         />
         <Stat
           type="target"
-          stat={props.correctAnswers!}
+          stat={props.correct!}
           percent
           description="Correct answers"
         />
         <Stat
           type="skull"
-          stat={props.wrongAnswers!}
+          stat={props.incorrect!}
           percent
           description="Incorrect answers"
         />
