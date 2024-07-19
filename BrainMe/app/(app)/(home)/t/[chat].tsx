@@ -23,6 +23,7 @@ import { useConvex, useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id, Doc } from "@/convex/_generated/dataModel";
 import { Feather } from "@expo/vector-icons";
+import ImageViewer from "@/components/image-viewer";
 
 export default function Chat() {
   // Back-end + Navigation
@@ -37,6 +38,7 @@ export default function Chat() {
   const messages = useQuery(api.messages.getMessages, {
     chat_id: chat as Id<"chats">,
   });
+  const [OtherUri, setOtherUri] = useState<string>("");
 
   const isTablet = useWindowDimensions().width >= 768;
 
@@ -63,6 +65,10 @@ export default function Chat() {
       const otherUser = await convex.query(api.user.retrieveById, {
         _id: otherUserId as Id<"user">,
       });
+
+      if (otherUser?.file) {
+        setOtherUri(otherUser.file);
+      }
 
       // Set the other user's username.
       setUsername(otherUser!.username);
@@ -143,12 +149,30 @@ export default function Chat() {
     <View style={[{ flex: 1 }]}>
       <Stack.Screen
         options={{
-          headerTitle: `${username}`,
-          headerTitleStyle: {
+          headerTitle() {
+            return (
+              <View
+                style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
+              >
+                <ImageViewer size={20} selectedImage={OtherUri} />
+                <Text
+                  style={{
+                    fontFamily: "NiveauGrotesk",
+                    color: Colors.primary,
+                    fontSize: 20,
+                  }}
+                >
+                  `${username}`
+                </Text>
+              </View>
+            );
+          },
+          //headerTitle: `${username}`,
+          /*headerTitleStyle: {
             fontFamily: "NiveauGrotesk",
             color: Colors.primary,
             fontSize: 20,
-          },
+          },*/
           headerLeft: () => (
             <Pressable
               hitSlop={25}
