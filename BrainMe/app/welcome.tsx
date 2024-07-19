@@ -117,7 +117,6 @@ export default function Welcome() {
         size="large"
         color="black"
         style={{
-          zIndex: 1,
           position: "absolute",
           top: -200,
           left: 0,
