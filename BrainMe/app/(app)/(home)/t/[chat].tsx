@@ -257,10 +257,14 @@ export default function Chat() {
               autoCorrect={false}
               onChangeText={setNewMessage}
             />
-            <Pressable onPress={captureImage}>
+            <Pressable onPress={captureImage} hitSlop={25}>
               <Feather name="file-plus" size={24} color={"white"} />
             </Pressable>
-            <Pressable onPress={handleMessage} disabled={newMessage === ""}>
+            <Pressable
+              onPress={handleMessage}
+              disabled={newMessage === ""}
+              hitSlop={25}
+            >
               <Feather name="send" size={24} color={"white"} />
             </Pressable>
           </View>
