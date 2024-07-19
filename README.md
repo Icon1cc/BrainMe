@@ -5,7 +5,7 @@ Welcome to the repository showcasing the design and build of a trivia game mobil
 
 ```bash
 git clone https://github.com/Icon1cc/BrainMe.git
-cd social-app
+cd BrainMe
 ```
 
 ### Install Dependencies
