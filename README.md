@@ -1,5 +1,5 @@
 # BrainMe.
-Welcome to the repository showcasing Expo Router V2's navigation system through the design and build of a trivial game mobile application with React Native. This project uses **Convex** which is a Typescript backend service solution and **Clerk** for authentication and user management. 
+Welcome to the repository showcasing the design and build of a trivial game mobile application with React Native. This project uses **Convex** which is a Typescript backend service solution and **Clerk** for authentication and user management. 
 
 ## Notes.
 
