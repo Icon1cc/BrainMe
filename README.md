@@ -4,7 +4,7 @@ Welcome to the repository showcasing the design and build of a trivia game mobil
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/Alex1721/social-app-react-native.git
+git clone https://github.com/Icon1cc/BrainMe.git
 cd social-app
 ```
 
