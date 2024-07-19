@@ -20,7 +20,7 @@ export default function Grid(props: GridProps) {
           type="star"
           stat={props.ranking}
           hashtag
-          description="World rank"
+          description="Leaderboard Rank"
         />
         <Stat type="joystick" stat={props.games!} description="Games played" />
         <Stat type="coin" stat={props.points!} description="Points total" />
@@ -29,8 +29,7 @@ export default function Grid(props: GridProps) {
         <Stat
           type="potion"
           stat={props.level!}
-          percent
-          description="Completion rate"
+          description="Profile Level"
         />
         <Stat
           type="target"
