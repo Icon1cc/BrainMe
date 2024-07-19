@@ -107,7 +107,7 @@ export default function Settings() {
       <ActivityIndicator
         animating={uploading}
         size="large"
-        color="blue"
+        color="black"
         style={styles.activityIndicator}
       />
       <ProfilePic
@@ -137,6 +137,7 @@ const styles = StyleSheet.create({
   },
   activityIndicator: {
     position: "absolute",
+    zIndex: 1,
     top: -20,
     left: 0,
     right: 0,
