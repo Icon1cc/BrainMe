@@ -161,21 +161,3 @@ export const retrieveByIds = query({
     }
   },
 });
-
-// This query returns all the users in the database.
-export const all = query({
-  handler: async (ctx) => {
-    const users = await ctx.db.query("user").collect();
-    return Promise.all(
-      users.map(async (user) => {
-        if (user.file) {
-          const url = await ctx.storage.getUrl(user.file as Id<"_storage">);
-          if (url) {
-            return { ...user, file: url };
-          }
-        }
-        return user;
-      })
-    );
-  },
-});

@@ -1,9 +1,8 @@
 import { View, FlatList, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 
-import Header from "@/components/leaderboard/header";
-import TopPodium from "@/components/leaderboard/podium/top-podium";
-import Podium from "@/components/leaderboard/podium/ranks";
+import TopPodium from "@/components/leaderboard/top-podium";
+import Podium from "@/components/leaderboard/ranks";
 
 // Backend.
 import { useQuery } from "convex/react";
@@ -11,29 +10,15 @@ import { Id } from "@/convex/_generated/dataModel";
 import { api } from "@/convex/_generated/api";
 
 export default function LeaderBoard() {
-  const all = useQuery(api.user.all);
+  const leaderboard = useQuery(api.leaderboard.collect, {});
+  const users = useQuery(api.user.collect);
   const searchParameter = ["ranking", "games played"];
   const [searchIndex, setSearchIndex] = useState(0);
-  const [users, setUsers] = useState<
-    {
-      _id: Id<"user">;
-      file?: string | undefined;
-      username: string;
-      points: number;
-    }[]
-  >([]);
 
-  const onChangeArrow = (direction: "forward" | "backward") => {
-    if (all) {
-      if (direction === "forward") {
-        setSearchIndex((prev) => (prev + 1) % searchParameter.length);
-      } else {
-        setSearchIndex(
-          (prev) => (prev - 1 + searchParameter.length) % searchParameter.length
-        );
-      }
+  useEffect(() => {
+    if (leaderboard && users) {
     }
-  };
+  }, [leaderboard, users]);
 
   useEffect(() => {
     if (all) {
@@ -62,7 +47,6 @@ export default function LeaderBoard() {
   }, [all, searchIndex]);
   return (
     <View style={styles.container}>
-      <Header title={searchParameter[searchIndex]} onPress={onChangeArrow} />
       <View style={{ gap: 17, flex: 1 }}>
         <TopPodium top3users={users.slice(0, 3)} />
         <FlatList

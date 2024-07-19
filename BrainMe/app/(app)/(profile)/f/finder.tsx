@@ -114,21 +114,12 @@ export default function Finder() {
           </Text>
         )}
         renderItem={({ item }) => (
-          <Link
-            href={{
-              pathname: "/(app)/(profile)/[profile]",
-              params: { profile: item._id },
-            }}
-            asChild
-          >
-            <Pressable>
-              <Profile
-                username={item.username}
-                points={item.points}
-                selectedImage={item.file}
-              />
-            </Pressable>
-          </Link>
+          <Profile
+            _id={item._id}
+            username={item.username}
+            points={item.points}
+            selectedImage={item.file}
+          />
         )}
       />
     </View>
