@@ -21,7 +21,9 @@ export default function Home() {
         await convex.mutation(api.userstatistics.insert);
       }
     }
-    checkUser();
+    setTimeout(() => {
+      checkUser();
+    }, 500);
   }, []);
 
   return (

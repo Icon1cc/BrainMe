@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 // Backend.
 import { useQuery } from "convex/react";
