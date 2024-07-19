@@ -16,7 +16,7 @@ export const insert = mutation({
           user_id: user!._id,
           games: 0,
           points: 0,
-          level: 0,
+          level: 1,
           correctAnswers: 0,
         });
       }

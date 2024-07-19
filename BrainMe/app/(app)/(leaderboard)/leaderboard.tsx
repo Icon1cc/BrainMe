@@ -23,41 +23,38 @@ export default function LeaderBoard() {
 
   useEffect(() => {
     if (leaderboard && users) {
-      setData(
-        users.map((user) => {
-          const board = leaderboard.find((board) => board.user_id === user._id);
-          return {
-            _id: user._id,
-            file: user.file,
-            username: user.username,
-            points: board!.points,
-          };
-        })
-      );
+      const board = users.map((user) => {
+        const board = leaderboard.find((board) => board.user_id === user._id);
+        return {
+          _id: user._id,
+          file: user.file,
+          username: user.username,
+          points: board!.points,
+        };
+      });
+      setData(board.sort((a, b) => b.points - a.points));
     }
   }, [leaderboard, users]);
 
   return (
     <View style={styles.container}>
-      <View style={{ gap: 17, flex: 1 }}>
-        <TopPodium top3users={data.slice(0, 3)} />
-        <FlatList
-          style={{ flex: 1 }}
-          data={data.slice(3)}
-          showsVerticalScrollIndicator={false}
-          keyExtractor={(item) => item._id}
-          ItemSeparatorComponent={() => <View style={{ height: 17 }} />}
-          renderItem={({ item, index }) => (
-            <Podium
-              placeholder={item.file}
-              userId={item._id}
-              position={index + 4}
-              username={item.username}
-              rank={item.points}
-            />
-          )}
-        />
-      </View>
+      <TopPodium top3users={data.slice(0, 3)} />
+      <FlatList
+        style={{ flex: 1 }}
+        data={data.slice(3)}
+        showsVerticalScrollIndicator={false}
+        keyExtractor={(item) => item._id}
+        ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+        renderItem={({ item, index }) => (
+          <Podium
+            placeholder={item.file}
+            userId={item._id}
+            position={index + 4}
+            username={item.username}
+            rank={item.points}
+          />
+        )}
+      />
     </View>
   );
 }
@@ -65,9 +62,7 @@ export default function LeaderBoard() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 17 * 7,
-    paddingBottom: 10,
-    paddingHorizontal: 17 * 1,
-    gap: 17,
+    gap: 10,
+    paddingHorizontal: 17,
   },
 });

@@ -9,6 +9,7 @@ import React from "react";
 import Colors from "@/constants/Colors";
 
 import { Id } from "@/convex/_generated/dataModel";
+import { FontAwesome6 } from "@expo/vector-icons";
 
 interface PodiumProps {
   position: 1 | 2 | 3;
@@ -39,9 +40,18 @@ function Podium(props: PodiumProps) {
   const imageSource = props.placeholder
     ? { uri: props.placeholder }
     : require("@/assets/images/user/user.png");
+  const colorStyle =
+    props.position === 1
+      ? "#FFD700"
+      : props.position === 2
+        ? "#BDBDBD"
+        : "#CE7431";
   return (
     <View style={[styles.box, sides]}>
-      <Text style={[styles.text, textSize]}>{props.position}</Text>
+      <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+        <Text style={[styles.text, textSize]}>{props.position}</Text>
+        <FontAwesome6 name="medal" size={24} color={colorStyle} />
+      </View>
       <View style={{ flex: 1, justifyContent: "center" }}>
         <Image source={imageSource} style={imageSize} />
       </View>
@@ -91,6 +101,7 @@ export default function TopPodium({ top3users }: TopPodiumProps) {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 17,
     flexDirection: "row",
     alignItems: "flex-end",
     gap: 17,
