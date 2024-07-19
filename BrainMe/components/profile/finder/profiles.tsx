@@ -1,4 +1,5 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, Pressable, StyleSheet } from "react-native";
+import { Link } from "expo-router";
 import React from "react";
 
 import Colors from "@/constants/Colors";
@@ -8,27 +9,37 @@ interface ProfilePros {
   username: string;
   selectedImage: string | undefined;
   points: number;
+  _id: string;
 }
 
 export default function Profiles(props: ProfilePros) {
   return (
-    <View style={styles.container}>
-      <ImageViewer size={40} selectedImage={props.selectedImage} />
-      <Text style={{ flex: 1, fontSize: 20 }}>{props.username}</Text>
-      <Text style={{ fontFamily: "NiveauGroteskLight", fontSize: 16 }}>
-        {props.points} points
-      </Text>
-    </View>
+    <Link
+      href={{
+        pathname: "/(app)/(profile)/[profile]",
+        params: { profile: props._id },
+      }}
+      asChild
+    >
+      <Pressable style={{ flexDirection: "row", gap: 10 }}>
+        <ImageViewer size={50} selectedImage={props.selectedImage} />
+        <View style={styles.container}>
+          <Text style={{ flex: 1, fontSize: 20 }}>{props.username}</Text>
+          <Text style={{ fontFamily: "NiveauGroteskLight", fontSize: 16 }}>
+            {props.points} points
+          </Text>
+        </View>
+      </Pressable>
+    </Link>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 15,
-    gap: 17,
-    borderBottomWidth: 0.5,
+    borderBottomWidth: 1,
     borderBottomColor: Colors.border,
   },
 });

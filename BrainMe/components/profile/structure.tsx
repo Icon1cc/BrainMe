@@ -10,9 +10,15 @@ interface StructureProps {
   title: string;
   placeholder: string;
   children: ReactNode;
+  ranking: number;
 }
 
-export function Structure({ title, children, placeholder }: StructureProps) {
+export function Structure({
+  title,
+  children,
+  placeholder,
+  ranking,
+}: StructureProps) {
   const isTablet = useWindowDimensions().width > 763;
   return (
     <View
@@ -53,7 +59,21 @@ export function Structure({ title, children, placeholder }: StructureProps) {
           }}
         >
           <ImageViewer size={isTablet ? 120 : 90} selectedImage={placeholder} />
-          <FontAwesome6 name="medal" size={30} color="#CE7431" />
+          {ranking < 4 && (
+            <FontAwesome6
+              name="medal"
+              size={30}
+              color={
+                ranking === 1
+                  ? "#FFD700"
+                  : ranking === 2
+                    ? "#BDBDBD"
+                    : ranking === 3
+                      ? "#CE7431"
+                      : "white"
+              }
+            />
+          )}
         </View>
         {children}
       </View>

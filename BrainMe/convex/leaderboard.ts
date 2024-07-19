@@ -106,12 +106,16 @@ export const collect = query({
       .filter((q) => q.eq(q.field("tokenIdentifier"), tokenIdentifier))
       .unique();
     if (user && args.withoutUser) {
-      return await ctx.db
+      const leaderboard = await ctx.db
         .query("leaderboard")
         .filter((q) => q.neq(q.field("user_id"), user?._id))
         .collect();
+      leaderboard.sort((a, b) => b.points - a.points);
+      return leaderboard;
     } else if (user) {
-      return await ctx.db.query("leaderboard").collect();
+      const leaderboard = await ctx.db.query("leaderboard").collect();
+      leaderboard.sort((a, b) => b.points - a.points);
+      return leaderboard;
     }
   },
 });

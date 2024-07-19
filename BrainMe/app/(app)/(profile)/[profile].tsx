@@ -90,7 +90,11 @@ export default function OtherUser() {
     }
   };
   return (
-    <Structure title={otherUser?.username!} placeholder={otherUser?.file!}>
+    <Structure
+      title={otherUser?.username!}
+      placeholder={otherUser?.file!}
+      ranking={0}
+    >
       <ActivityIndicator
         animating={uploading}
         size="large"

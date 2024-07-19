@@ -14,7 +14,7 @@ import { Id } from "@/convex/_generated/dataModel";
 
 interface RenderItemProps {}
 
-function RenderItem({ item }: any) {}
+function RenderItem(props: RenderItemProps) {}
 
 export default function Finder() {
   const friends = useQuery(api.user.retrieveUserFriends);
@@ -117,21 +117,12 @@ export default function Finder() {
           </Text>
         )}
         renderItem={({ item }) => (
-          <Link
-            href={{
-              pathname: "/(app)/(profile)/[profile]",
-              params: { profile: item._id },
-            }}
-            asChild
-          >
-            <Pressable>
-              <Profile
-                username={item.username}
-                points={item.points}
-                selectedImage={item.file}
-              />
-            </Pressable>
-          </Link>
+          <Profile
+            username={item.username}
+            points={item.points}
+            selectedImage={item.file}
+            _id={item._id}
+          />
         )}
       />
     </View>
