@@ -76,33 +76,31 @@ export const retrieve = query({
           )
           .order("desc")
           .collect();
-          const otherUsers = chats.map(async (chat) => {
-            const otherUser = ctx.db.get(
-              chat.user_1 === user._id ? chat.user_2 : chat.user_1
-            );
-
-          })
         return Promise.all(
           chats.map(async (chat) => {
-            const otherUser = ctx.db.get(
-              chat.user_1 === user._id ? chat.user_2 : chat.user_1
-            );
-            if(otherUser.file)
+            const otherUser = await ctx.db
+              .query("user")
+              .filter((q) =>
+                q.eq(
+                  q.field("_id"),
+                  chat.user_1 === user._id ? chat.user_2 : chat.user_1
+                )
+              )
+              .unique();
+            if (otherUser && otherUser.file) {
+              const url = await ctx.storage.getUrl(
+                otherUser.file as Id<"_storage">
+              );
+              if (url) {
+                return { ...chat, username: otherUser?.username!, file: url };
+              }
+            }
+            return { ...chat, username: otherUser?.username! };
           })
         );
       }
     }
   },
-});
-
-users.map(async (user) => {
-  if (user.file) {
-    const url = await ctx.storage.getUrl(user.file as Id<"_storage">);
-    if (url) {
-      return { ...user, file: url };
-    }
-  }
-  return user;
 });
 
 // This query returns the chat group by it's object id.
