@@ -14,6 +14,13 @@ cd BrainMe
 npm install
 ```
 
+### Run the backend
+
+```bash
+npm install convex
+npx convex dev
+```
+
 ### Run the app
 
 ```bash
