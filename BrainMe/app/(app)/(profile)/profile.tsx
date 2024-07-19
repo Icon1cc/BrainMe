@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 // Backend.
 import { useQuery } from "convex/react";
@@ -11,29 +11,23 @@ import Grid from "@/components/profile/grid";
 import Friends from "@/components/profile/friends";
 
 export default function Profile() {
-  const myUser = useQuery(api.user.myUser);
-  const myFriends = useQuery(api.user.getUserByIds, {
-    userIds: myUser?.friends?.map((friend) => friend),
-  });
+  const user = useQuery(api.user.retrieve);
+  const friends = useQuery(api.user.retrieveUserFriends);
+  const statistics = useQuery(api.userstatistics.retrieve);
 
-  const [friends, setFriends] = useState<string[]>([]);
-
-  useEffect(() => {
-    if (myFriends) {
-      setFriends(myFriends.map((friend) => friend?.file!));
-    }
-  }, [myFriends]);
   return (
-    <Structure title={myUser?.username!} placeholder={myUser?.file!}>
+    <Structure title={user?.username!} placeholder={user?.file!}>
       <Grid
-        ranking={myUser?.ranking!}
-        gamesPlayed={myUser?.gamesPlayed!}
-        points={myUser?.points!}
-        completionRate={myUser?.completionRate!}
-        correctAnswers={myUser?.correctAnswers!}
-        wrongAnswers={myUser?.wrongAnswers!}
+        ranking={0} // user?.ranking!
+        games={statistics?.games!}
+        points={statistics?.points!}
+        level={statistics?.level!}
+        correct={statistics?.correctAnswers! / statistics?.games!}
+        incorrect={
+          statistics?.games! - statistics?.correctAnswers! / statistics?.games!
+        }
       />
-      <Friends number={myUser?.friends?.length!} friends={friends} />
+      <Friends number={user?.friends?.length!} friends={friends!} />
     </Structure>
   );
 }

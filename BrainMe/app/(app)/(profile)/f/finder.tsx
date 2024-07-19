@@ -8,27 +8,22 @@ import Colors from "@/constants/Colors";
 import Profile from "@/components/profile/finder/profiles";
 
 //Backend.
-import { useConvex } from "convex/react";
+import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 
 export default function Finder() {
-  const convex = useConvex();
+  const users = useQuery(api.user.collect); // retrieve all users except the current user.
+  const boards = useQuery(api.leaderboard.collect, {
+    withoutUser: true,
+  }); // retrieve all user statistics.
 
   const [data, setData] = useState<
     {
       _id: Id<"user">;
-      _creationTime: number;
-      friends?: Id<"user">[] | undefined;
       file?: string | undefined;
-      user_id: string;
       username: string;
-      ranking: number;
-      gamesPlayed: number;
       points: number;
-      completionRate: number;
-      correctAnswers: number;
-      wrongAnswers: number;
     }[]
   >([]);
   const [filteredData, setFilteredData] = useState(data);
@@ -48,15 +43,21 @@ export default function Finder() {
   };
 
   useEffect(() => {
-    const loadUsers = async () => {
-      const users = await convex.query(api.user.getUsers);
-      if (users) {
-        setData(users);
-        setFilteredData([]);
-      }
-    };
-    loadUsers();
-  }, []);
+    if (users && boards) {
+      setData(
+        users.map((user: any) => {
+          const board = boards.find((board: any) => board.user_id === user._id);
+          return {
+            _id: user._id,
+            file: user.file,
+            username: user.username,
+            points: board!.points,
+          };
+        })
+      );
+      setFilteredData([]);
+    }
+  }, [users, boards]);
   return (
     <View style={{ flex: 1 }}>
       <StatusBar style="dark" />

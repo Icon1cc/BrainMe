@@ -71,8 +71,33 @@ export const retrieve = query({
   },
 });
 
+// This query returns the user's friends.
+export const retrieveUserFriends = query({
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    const { tokenIdentifier } = identity!;
+    const users = await ctx.db.query("user").collect();
+    const user = await ctx.db
+      .query("user")
+      .filter((q) => q.eq(q.field("tokenIdentifier"), tokenIdentifier))
+      .unique();
+    const friends = users.filter((u) => user?.friends?.includes(u._id));
+    return Promise.all(
+      friends.map(async (friend) => {
+        if (friend.file) {
+          const url = await ctx.storage.getUrl(friend.file as Id<"_storage">);
+          if (url) {
+            return { _id: friend._id, file: url };
+          }
+        }
+        return { _id: friend._id };
+      })
+    );
+  },
+});
+
 // This query retrieves a user from the database
-export const get = query({
+export const retrieveById = query({
   args: {
     _id: v.id("user"),
   },
@@ -92,7 +117,7 @@ export const get = query({
 });
 
 // This query return all the users except the current user.
-export const getUsers = query({
+export const collect = query({
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
     const { tokenIdentifier } = identity!;
@@ -117,7 +142,7 @@ export const getUsers = query({
 });
 
 // This query returns multiple users by their IDs.
-export const getUserByIds = query({
+export const retrieveByIds = query({
   args: { userIds: v.optional(v.array(v.id("user"))) },
   handler: async (ctx, args) => {
     if (args.userIds) {

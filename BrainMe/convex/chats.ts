@@ -30,31 +30,6 @@ export const updateChat = mutation({
   },
 });
 
-// This query returns chat group by the user ids.
-export const getChatByUsers = query({
-  args: {
-    user_1: v.id("user"),
-    user_2: v.id("user"),
-  },
-  handler: async (ctx, args) => {
-    return await ctx.db
-      .query("chats")
-      .filter((q) =>
-        q.or(
-          q.and(
-            q.eq(q.field("user_1"), args.user_1),
-            q.eq(q.field("user_2"), args.user_2)
-          ),
-          q.and(
-            q.eq(q.field("user_1"), args.user_2),
-            q.eq(q.field("user_2"), args.user_1)
-          )
-        )
-      )
-      .unique();
-  },
-});
-
 // This query returns chat groups related to your profile.
 export const retrieve = query({
   handler: async (ctx) => {
@@ -104,9 +79,34 @@ export const retrieve = query({
 });
 
 // This query returns the chat group by it's object id.
-export const getChatById = query({
+export const retrieveById = query({
   args: { chatId: v.id("chats") },
   handler: async (ctx, args) => {
     return await ctx.db.get(args.chatId);
+  },
+});
+
+// This query returns chat group by the user ids.
+export const retrieveByUserIds = query({
+  args: {
+    user_1: v.id("user"),
+    user_2: v.id("user"),
+  },
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query("chats")
+      .filter((q) =>
+        q.or(
+          q.and(
+            q.eq(q.field("user_1"), args.user_1),
+            q.eq(q.field("user_2"), args.user_2)
+          ),
+          q.and(
+            q.eq(q.field("user_1"), args.user_2),
+            q.eq(q.field("user_2"), args.user_1)
+          )
+        )
+      )
+      .unique();
   },
 });

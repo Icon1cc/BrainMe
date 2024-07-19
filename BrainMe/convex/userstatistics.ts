@@ -98,3 +98,16 @@ export const retrieve = query({
     return null;
   },
 });
+
+// Get your user's statistics.
+export const retrieveByUserId = query({
+  args: {
+    user_id: v.id("user"),
+  },
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query("userstatistics")
+      .filter((q) => q.eq(q.field("user_id"), args.user_id))
+      .unique();
+  },
+});

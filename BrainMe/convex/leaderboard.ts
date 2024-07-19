@@ -93,6 +93,29 @@ export const retrieve = query({
   },
 });
 
+// Retrieve all users statistics.
+export const collect = query({
+  args: {
+    withoutUser: v.optional(v.boolean()),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    const { tokenIdentifier } = identity!;
+    const user = await ctx.db
+      .query("user")
+      .filter((q) => q.eq(q.field("tokenIdentifier"), tokenIdentifier))
+      .unique();
+    if (user && args.withoutUser) {
+      return await ctx.db
+        .query("leaderboard")
+        .filter((q) => q.neq(q.field("user_id"), user?._id))
+        .collect();
+    } else if (user) {
+      return await ctx.db.query("leaderboard").collect();
+    }
+  },
+});
+
 // Returns the leaderboard.
 export const getLeaderboard = query({
   handler: async (ctx) => {
