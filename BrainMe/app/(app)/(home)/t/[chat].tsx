@@ -9,6 +9,7 @@ import {
   ListRenderItem,
   TextInput,
   Pressable,
+  Image,
   useWindowDimensions,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -46,11 +47,11 @@ export default function Chat() {
   useEffect(() => {
     const loadUser = async () => {
       // Load our user.
-      const user = await convex.query(api.user.myUser);
+      const user = await convex.query(api.user.retrieve);
       setUser(user?.username);
 
       // Load the chat group.
-      const chatGroup = await convex.query(api.chats.getChatById, {
+      const chatGroup = await convex.query(api.chats.retrieveById, {
         chatId: chat as Id<"chats">,
       });
 
@@ -59,7 +60,7 @@ export default function Chat() {
         chatGroup?.user_1 === user?._id ? chatGroup?.user_2 : chatGroup?.user_1;
 
       // Load the other user from its id.
-      const otherUser = await convex.query(api.user.get, {
+      const otherUser = await convex.query(api.user.retrieveById, {
         _id: otherUserId as Id<"user">,
       });
 
@@ -125,8 +126,14 @@ export default function Chat() {
             {item.content}
           </Text>
         )}
+        {selectedImage && (
+          <Image
+            source={{ uri: selectedImage }}
+            style={{ width: 200, height: 200, margin: 10 }}
+          />
+        )}
         <Text style={{ color: "white" }}>
-          {new Date(item._creationTime).toLocaleTimeString()} - {item.user}
+          {new Date(item._creationTime).toLocaleTimeString()}
         </Text>
       </View>
     );
