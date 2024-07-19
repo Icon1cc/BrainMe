@@ -35,5 +35,8 @@ This project uses Convex as a BAAS and Clerk for authentication and user managem
 ![quiz](https://github.com/user-attachments/assets/930cf37d-eade-4cb2-8c6e-8c40f06e7d33) ![review](https://github.com/user-attachments/assets/c3f2e4f0-840d-4221-82b1-87521288c731)
 ![chat](https://github.com/user-attachments/assets/bfcbd311-2dc0-4129-99dd-652126943bb7) ![profile](https://github.com/user-attachments/assets/a20fc6c2-9e21-400a-80d4-d9b7b662a81a)
 
+## Authors
 
-
+Rishabh Tiwari: rishtiwari98@gmail.com
+Alexandre Boving: alexandre.boving@mail.polimi.it \ alexandre.boving@gmail.com
+Credits: Politecnico di Milano
