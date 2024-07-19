@@ -3,7 +3,7 @@ import { v } from "convex/values";
 import { Id } from "./_generated/dataModel";
 
 // This mutation creates a new chat.
-export const createChat = mutation({
+export const insert = mutation({
   args: {
     user_1: v.id("user"),
     user_2: v.id("user"),

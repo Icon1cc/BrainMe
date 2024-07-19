@@ -6,10 +6,10 @@ import {
   StyleSheet,
   useWindowDimensions,
 } from "react-native";
-import { Stack, useRouter, useLocalSearchParams } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import React, { useState, useEffect } from "react";
 
-import { useConvex, useMutation, useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 
@@ -42,32 +42,22 @@ const RenderItem = ({
 
 export default function NewChat() {
   const isTablet = useWindowDimensions().width >= 768;
-  const { users } = useLocalSearchParams();
-  const convex = useConvex();
-  const myUser = useQuery(api.user.myUser);
-  const createChat = useMutation(api.chats.createChat);
+  const user = useQuery(api.user.retrieve);
+  const friends = useQuery(api.user.retrieveUserFriends);
+  const insertChat = useMutation(api.chats.insert);
   const router = useRouter();
   const [data, setData] = useState<
     {
       _id: Id<"user">;
-      _creationTime: number;
-      friends?: Id<"user">[] | undefined;
-      file?: string | undefined;
-      user_id: string;
       username: string;
-      ranking: number;
-      gamesPlayed: number;
-      points: number;
-      completionRate: number;
-      correctAnswers: number;
-      wrongAnswers: number;
+      file?: string;
     }[]
   >([]);
   const [filteredData, setFilteredData] = useState(data);
 
   const onHandlePress = async (id: Id<"user">) => {
-    await createChat({
-      user_1: myUser?._id as Id<"user">,
+    await insertChat({
+      user_1: user?._id as Id<"user">,
       user_2: id,
       last_comment: "",
       timestamp: "",
@@ -77,14 +67,13 @@ export default function NewChat() {
 
   useEffect(() => {
     const loadAllUsers = async () => {
-      const allUsers = await convex.query(api.user.getUsers);
-      if (allUsers) {
-        setData(allUsers);
-        setFilteredData(allUsers);
+      if (friends) {
+        setData(friends);
+        setFilteredData(friends);
       }
     };
     loadAllUsers();
-  }, [users]);
+  }, [friends]);
 
   const searchFilterFunction = (text: string) => {
     if (text) {
@@ -140,7 +129,7 @@ export default function NewChat() {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    gap: 5,
+    gap: 10,
   },
   name: {
     flex: 1,

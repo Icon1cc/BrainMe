@@ -9,6 +9,7 @@ import {
   ListRenderItem,
   TextInput,
   Pressable,
+  Image,
   useWindowDimensions,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -22,6 +23,7 @@ import { useConvex, useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id, Doc } from "@/convex/_generated/dataModel";
 import { Feather } from "@expo/vector-icons";
+import ImageViewer from "@/components/image-viewer";
 
 export default function Chat() {
   // Back-end + Navigation
@@ -36,6 +38,7 @@ export default function Chat() {
   const messages = useQuery(api.messages.getMessages, {
     chat_id: chat as Id<"chats">,
   });
+  const [OtherUri, setOtherUri] = useState<string>("");
 
   const isTablet = useWindowDimensions().width >= 768;
 
@@ -46,11 +49,11 @@ export default function Chat() {
   useEffect(() => {
     const loadUser = async () => {
       // Load our user.
-      const user = await convex.query(api.user.myUser);
+      const user = await convex.query(api.user.retrieve);
       setUser(user?.username);
 
       // Load the chat group.
-      const chatGroup = await convex.query(api.chats.getChatById, {
+      const chatGroup = await convex.query(api.chats.retrieveById, {
         chatId: chat as Id<"chats">,
       });
 
@@ -59,9 +62,13 @@ export default function Chat() {
         chatGroup?.user_1 === user?._id ? chatGroup?.user_2 : chatGroup?.user_1;
 
       // Load the other user from its id.
-      const otherUser = await convex.query(api.user.get, {
+      const otherUser = await convex.query(api.user.retrieveById, {
         _id: otherUserId as Id<"user">,
       });
+
+      if (otherUser?.file) {
+        setOtherUri(otherUser.file);
+      }
 
       // Set the other user's username.
       setUsername(otherUser!.username);
@@ -93,19 +100,58 @@ export default function Chat() {
   // Send message to Convex.
   const handleMessage = async () => {
     Keyboard.dismiss();
-    // Regular mutation to add a message
-    await addMessage({
-      chat_id: chat as Id<"chats">,
-      content: newMessage,
-      user: user!,
-    });
-    // Regular mutation to update the chat group.
-    await conversation({
-      chatId: chat as Id<"chats">,
-      last_comment: newMessage,
-      timestamp: new Date().toLocaleTimeString(),
-    });
-    setNewMessage("");
+
+    if (selectedImage) {
+      const url = new URL(`${process.env.EXPO_PUBLIC_CONVEX_SITE}/sendImage`);
+
+      url.searchParams.set("user", user!);
+      url.searchParams.set("chat_id", chat as Id<"chats">);
+      url.searchParams.set("content", newMessage);
+
+      // Convert URI to blob.
+      const response = await fetch(selectedImage);
+      const blob = await response.blob();
+
+      await conversation({
+        chatId: chat as Id<"chats">,
+        last_comment: newMessage,
+        timestamp: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        }),
+      });
+
+      // Send blob to Convex
+      fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": blob!.type },
+        body: blob,
+      })
+        .then(() => {
+          setSelectedImage(null);
+          setNewMessage("");
+        })
+        .catch((err) => console.log("ERROR: ", err));
+    } else {
+      // Regular mutation to add a message
+      await addMessage({
+        chat_id: chat as Id<"chats">,
+        content: newMessage,
+        user: user!,
+      });
+      // Regular mutation to update the chat group.
+      await conversation({
+        chatId: chat as Id<"chats">,
+        last_comment: newMessage,
+        timestamp: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        }),
+      });
+      setNewMessage("");
+    }
   };
 
   const renderMessage: ListRenderItem<Doc<"messages">> = ({ item }) => {
@@ -125,8 +171,23 @@ export default function Chat() {
             {item.content}
           </Text>
         )}
-        <Text style={{ color: "white" }}>
-          {new Date(item._creationTime).toLocaleTimeString()} - {item.user}
+        {item.file && (
+          <Image
+            source={{ uri: item.file }}
+            style={{ width: 200, height: 200, margin: 10 }}
+          />
+        )}
+        <Text
+          style={{
+            color: "white",
+            alignSelf: isUserMessage ? "flex-end" : "flex-start",
+          }}
+        >
+          {new Date(item._creationTime).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          })}
         </Text>
       </View>
     );
@@ -136,11 +197,23 @@ export default function Chat() {
     <View style={[{ flex: 1 }]}>
       <Stack.Screen
         options={{
-          headerTitle: `${username}`,
-          headerTitleStyle: {
-            fontFamily: "NiveauGrotesk",
-            color: Colors.primary,
-            fontSize: 20,
+          headerTitle() {
+            return (
+              <View
+                style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
+              >
+                <ImageViewer size={36} selectedImage={OtherUri} />
+                <Text
+                  style={{
+                    fontFamily: "NiveauGrotesk",
+                    color: Colors.primary,
+                    fontSize: 20,
+                  }}
+                >
+                  {username}
+                </Text>
+              </View>
+            );
           },
           headerLeft: () => (
             <Pressable
@@ -175,6 +248,12 @@ export default function Chat() {
             { paddingHorizontal: isTablet ? 30 : 17 },
           ]}
         >
+          {selectedImage && (
+            <Image
+              source={{ uri: selectedImage }}
+              style={{ width: 150, height: 150, marginBottom: 20 }}
+            />
+          )}
           <View style={{ flexDirection: "row", alignItems: "center", gap: 20 }}>
             <TextInput
               style={styles.textInput}
@@ -186,10 +265,14 @@ export default function Chat() {
               autoCorrect={false}
               onChangeText={setNewMessage}
             />
-            <Pressable onPress={captureImage}>
+            <Pressable onPress={captureImage} hitSlop={25}>
               <Feather name="file-plus" size={24} color={"white"} />
             </Pressable>
-            <Pressable onPress={handleMessage} disabled={newMessage === ""}>
+            <Pressable
+              onPress={handleMessage}
+              disabled={newMessage === ""}
+              hitSlop={25}
+            >
               <Feather name="send" size={24} color={"white"} />
             </Pressable>
           </View>

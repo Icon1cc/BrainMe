@@ -77,7 +77,6 @@ export default function Converse() {
     }[]
   >([]);
   const [filteredChats, setFilteredChats] = useState(data);
-  console.log(filteredChats);
 
   const searchFilterFunction = (text: string) => {
     if (text) {
