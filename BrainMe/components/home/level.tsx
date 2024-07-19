@@ -3,9 +3,13 @@ import React from "react";
 
 import Colors from "@/constants/Colors";
 
-interface LevelProps {}
+interface LevelProps {
+  level: number;
+  points: number;
+  nextLevelPoints: number;
+}
 
-export default function Level({}: LevelProps) {
+export default function Level(props: LevelProps) {
   return (
     <View style={styles.container}>
       <View
@@ -16,8 +20,10 @@ export default function Level({}: LevelProps) {
         }}
       >
         <View style={{ gap: 5 }}>
-          <Text style={styles.level}>Level 9</Text>
-          <Text style={styles.leveleft}>+10 points left till next level</Text>
+          <Text style={styles.level}>Level {props.level}</Text>
+          <Text style={styles.leveleft}>
+            +{props.nextLevelPoints} points left till next level
+          </Text>
         </View>
         <Image
           source={require("@/assets/images/icons/coin.png")}
@@ -25,7 +31,14 @@ export default function Level({}: LevelProps) {
         />
       </View>
       <View style={styles.progression}>
-        <View style={styles.progressionbar} />
+        <View
+          style={[
+            styles.progressionbar,
+            {
+              width: `${(props.points / (props.points + props.nextLevelPoints)) * 100}%`,
+            },
+          ]}
+        />
       </View>
     </View>
   );
@@ -56,7 +69,6 @@ const styles = StyleSheet.create({
   progressionbar: {
     height: 17,
     backgroundColor: "#006989",
-    width: "70%",
     borderRadius: 12,
   },
 });

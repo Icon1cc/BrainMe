@@ -13,7 +13,7 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 
 export default function Finder() {
-  const users = useQuery(api.user.collect); // retrieve all users except the current user.
+  const users = useQuery(api.user.collect, { withoutUser: true }); // retrieve all users except the current user.
   const boards = useQuery(api.leaderboard.collect, {
     withoutUser: true,
   }); // retrieve all user statistics.
@@ -114,21 +114,12 @@ export default function Finder() {
           </Text>
         )}
         renderItem={({ item }) => (
-          <Link
-            href={{
-              pathname: "/(app)/(profile)/[profile]",
-              params: { profile: item._id },
-            }}
-            asChild
-          >
-            <Pressable>
-              <Profile
-                username={item.username}
-                points={item.points}
-                selectedImage={item.file}
-              />
-            </Pressable>
-          </Link>
+          <Profile
+            _id={item._id}
+            username={item.username}
+            points={item.points}
+            selectedImage={item.file}
+          />
         )}
       />
     </View>

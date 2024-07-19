@@ -71,8 +71,14 @@ export default function Quizz() {
         points: board?.points! + points,
       });
       statisticsUpdate({
+        level: Math.ceil(
+          Math.pow(2, statistics?.level! - 1) * 10 >
+            statistics?.points! + points
+            ? statistics?.level!
+            : statistics?.level! + 1
+        ),
         games: statistics?.games! + 1,
-        points: board?.points! + points,
+        points: statistics?.points! + points,
         correctAnswers: statistics?.correctAnswers! + correctAnswers,
       });
     } else {

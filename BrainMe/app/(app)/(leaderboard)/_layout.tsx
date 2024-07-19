@@ -7,22 +7,16 @@ import Colors from "@/constants/Colors";
 
 export default function Layout() {
   return (
-    <Stack screenOptions={{ headerTransparent: true }}>
+    <Stack>
       <Stack.Screen
         name="leaderboard"
         options={{
-          headerTitle() {
-            return (
-              <Text
-                style={{
-                  fontFamily: "Pacifico",
-                  fontSize: 24,
-                  color: Colors.primary,
-                }}
-              >
-                Classification
-              </Text>
-            );
+          headerShadowVisible: false,
+          title: "Ranking",
+          headerTitleStyle: {
+            fontFamily: "Pacifico",
+            fontSize: 24,
+            color: Colors.primary,
           },
         }}
       />

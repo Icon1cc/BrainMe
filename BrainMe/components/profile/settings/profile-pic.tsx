@@ -16,6 +16,7 @@ export default function ProfilePic({
 }: ProfilePicProps) {
   const isTablet = useWindowDimensions().width > 763;
   const pickImageAsync = async () => {
+    console.log("Picking an image");
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
       quality: 1,

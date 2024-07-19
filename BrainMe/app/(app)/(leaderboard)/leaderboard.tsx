@@ -1,9 +1,8 @@
 import { View, FlatList, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 
-import Header from "@/components/leaderboard/header";
-import TopPodium from "@/components/leaderboard/podium/top-podium";
-import Podium from "@/components/leaderboard/podium/ranks";
+import TopPodium from "@/components/leaderboard/top-podium";
+import Podium from "@/components/leaderboard/ranks";
 
 // Backend.
 import { useQuery } from "convex/react";
@@ -11,10 +10,9 @@ import { Id } from "@/convex/_generated/dataModel";
 import { api } from "@/convex/_generated/api";
 
 export default function LeaderBoard() {
-  const all = useQuery(api.user.all);
-  const searchParameter = ["ranking", "games played"];
-  const [searchIndex, setSearchIndex] = useState(0);
-  const [users, setUsers] = useState<
+  const leaderboard = useQuery(api.leaderboard.collect, {});
+  const users = useQuery(api.user.collect, {});
+  const [data, setData] = useState<
     {
       _id: Id<"user">;
       file?: string | undefined;
@@ -23,65 +21,40 @@ export default function LeaderBoard() {
     }[]
   >([]);
 
-  const onChangeArrow = (direction: "forward" | "backward") => {
-    if (all) {
-      if (direction === "forward") {
-        setSearchIndex((prev) => (prev + 1) % searchParameter.length);
-      } else {
-        setSearchIndex(
-          (prev) => (prev - 1 + searchParameter.length) % searchParameter.length
-        );
-      }
-    }
-  };
-
   useEffect(() => {
-    if (all) {
-      if (searchParameter[searchIndex] === "games played") {
-        const users = all.sort((a, b) => b.gamesPlayed - a.gamesPlayed);
-        setUsers(
-          users.map((user) => ({
-            _id: user._id,
-            file: user.file,
-            username: user.username,
-            points: user.gamesPlayed,
-          }))
-        );
-      } else {
-        const users = all.sort((a, b) => b.points - a.points);
-        setUsers(
-          users.map((user) => ({
-            _id: user._id,
-            file: user.file,
-            username: user.username,
-            points: user.points,
-          }))
-        );
-      }
+    if (leaderboard && users) {
+      const board = users.map((user) => {
+        const board = leaderboard.find((board) => board.user_id === user._id);
+        return {
+          _id: user._id,
+          file: user.file,
+          username: user.username,
+          points: board!.points,
+        };
+      });
+      setData(board.sort((a, b) => b.points - a.points));
     }
-  }, [all, searchIndex]);
+  }, [leaderboard, users]);
+
   return (
     <View style={styles.container}>
-      <Header title={searchParameter[searchIndex]} onPress={onChangeArrow} />
-      <View style={{ gap: 17, flex: 1 }}>
-        <TopPodium top3users={users.slice(0, 3)} />
-        <FlatList
-          style={{ flex: 1 }}
-          data={users.slice(3)}
-          showsVerticalScrollIndicator={false}
-          keyExtractor={(item) => item._id}
-          ItemSeparatorComponent={() => <View style={{ height: 17 }} />}
-          renderItem={({ item, index }) => (
-            <Podium
-              placeholder={item.file}
-              userId={item._id}
-              position={index + 4}
-              username={item.username}
-              rank={item.points}
-            />
-          )}
-        />
-      </View>
+      <TopPodium top3users={data.slice(0, 3)} />
+      <FlatList
+        style={{ flex: 1 }}
+        data={data.slice(3)}
+        showsVerticalScrollIndicator={false}
+        keyExtractor={(item) => item._id}
+        ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+        renderItem={({ item, index }) => (
+          <Podium
+            placeholder={item.file}
+            userId={item._id}
+            position={index + 4}
+            username={item.username}
+            rank={item.points}
+          />
+        )}
+      />
     </View>
   );
 }
@@ -89,9 +62,7 @@ export default function LeaderBoard() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 17 * 7,
-    paddingBottom: 10,
-    paddingHorizontal: 17 * 1,
-    gap: 17,
+    gap: 10,
+    paddingHorizontal: 17,
   },
 });
