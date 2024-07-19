@@ -12,6 +12,10 @@ import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 
+interface RenderItemProps {}
+
+function RenderItem({ item }: any) {}
+
 export default function Finder() {
   const friends = useQuery(api.user.retrieveUserFriends);
   const boards = useQuery(api.leaderboard.collect, {
@@ -75,7 +79,7 @@ export default function Finder() {
               </Link>
             );
           },
-          title: "Find friends",
+          title: "Friends",
           headerTitleStyle: {
             fontFamily: "Pacifico",
             fontSize: 24,

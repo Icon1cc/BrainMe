@@ -4,6 +4,7 @@ import React, { ReactNode } from "react";
 
 import Colors from "@/constants/Colors";
 import ImageViewer from "../image-viewer";
+import { FontAwesome6 } from "@expo/vector-icons";
 
 interface StructureProps {
   title: string;
@@ -47,10 +48,12 @@ export function Structure({ title, children, placeholder }: StructureProps) {
           style={{
             position: "absolute",
             alignSelf: "center",
+            alignItems: "center",
             top: isTablet ? -60 : -45,
           }}
         >
           <ImageViewer size={isTablet ? 120 : 90} selectedImage={placeholder} />
+          <FontAwesome6 name="medal" size={30} color="#CE7431" />
         </View>
         {children}
       </View>
@@ -69,3 +72,7 @@ const styles = StyleSheet.create({
     paddingTop: 17 * 2,
   },
 });
+
+// Bronze: #CE7431
+// Silver: #BDBDBD
+// Gold: #FFD700
