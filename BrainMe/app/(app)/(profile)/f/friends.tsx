@@ -13,7 +13,7 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 
 export default function Finder() {
-  const users = useQuery(api.user.collect); // retrieve all users except the current user.
+  const friends = useQuery(api.user.retrieveUserFriends);
   const boards = useQuery(api.leaderboard.collect, {
     withoutUser: true,
   }); // retrieve all user statistics.
@@ -38,26 +38,25 @@ export default function Finder() {
       });
       setFilteredData(newData);
     } else {
-      setFilteredData([]);
+      setFilteredData(data);
     }
   };
 
   useEffect(() => {
-    if (users && boards) {
-      setData(
-        users.map((user: any) => {
-          const board = boards.find((board: any) => board.user_id === user._id);
-          return {
-            _id: user._id,
-            file: user.file,
-            username: user.username,
-            points: board!.points,
-          };
-        })
-      );
-      setFilteredData([]);
+    if (friends && boards) {
+      const data = friends.map((friend: any) => {
+        const board = boards.find((board: any) => board.user_id === friend._id);
+        return {
+          _id: friend._id,
+          file: friend.file,
+          username: friend.username,
+          points: board!.points,
+        };
+      });
+      setData(data);
+      setFilteredData(data);
     }
-  }, [users, boards]);
+  }, [friends, boards]);
   return (
     <View style={{ flex: 1 }}>
       <StatusBar style="dark" />

@@ -85,10 +85,10 @@ export const retrieveUserFriends = query({
         if (friend.file) {
           const url = await ctx.storage.getUrl(friend.file as Id<"_storage">);
           if (url) {
-            return { _id: friend._id, file: url };
+            return { _id: friend._id, username: friend.username, file: url };
           }
         }
-        return { _id: friend._id };
+        return { _id: friend._id, username: friend.username };
       })
     );
   },

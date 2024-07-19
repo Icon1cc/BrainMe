@@ -18,6 +18,7 @@ interface FriendsProps {
   number: number;
   friends: {
     _id: Id<"user">;
+
     file?: string;
   }[];
 }
