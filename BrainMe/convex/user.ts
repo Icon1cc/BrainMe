@@ -116,26 +116,46 @@ export const retrieveById = query({
 
 // This query return all the users except the current user.
 export const collect = query({
-  handler: async (ctx) => {
+  args: {
+    withoutUser: v.optional(v.boolean()),
+  },
+  handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
     const { tokenIdentifier } = identity!;
-    const users = await ctx.db
-      .query("user")
-      .filter((q) => q.neq(q.field("tokenIdentifier"), tokenIdentifier))
-      .collect();
+    if (args.withoutUser) {
+      const users = await ctx.db
+        .query("user")
+        .filter((q) => q.neq(q.field("tokenIdentifier"), tokenIdentifier))
+        .collect();
 
-    // if the user has a file, get the URL from the storage.
-    return Promise.all(
-      users.map(async (user) => {
-        if (user.file) {
-          const url = await ctx.storage.getUrl(user.file as Id<"_storage">);
-          if (url) {
-            return { ...user, file: url };
+      // if the user has a file, get the URL from the storage.
+      return Promise.all(
+        users.map(async (user) => {
+          if (user.file) {
+            const url = await ctx.storage.getUrl(user.file as Id<"_storage">);
+            if (url) {
+              return { ...user, file: url };
+            }
           }
-        }
-        return user;
-      })
-    );
+          return user;
+        })
+      );
+    } else {
+      const users = await ctx.db.query("user").collect();
+
+      // if the user has a file, get the URL from the storage.
+      return Promise.all(
+        users.map(async (user) => {
+          if (user.file) {
+            const url = await ctx.storage.getUrl(user.file as Id<"_storage">);
+            if (url) {
+              return { ...user, file: url };
+            }
+          }
+          return user;
+        })
+      );
+    }
   },
 });
 

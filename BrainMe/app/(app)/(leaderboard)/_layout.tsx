@@ -11,6 +11,7 @@ export default function Layout() {
       <Stack.Screen
         name="leaderboard"
         options={{
+          title: "Leaderboard",
           headerTitle() {
             return (
               <Text
@@ -20,7 +21,7 @@ export default function Layout() {
                   color: Colors.primary,
                 }}
               >
-                Classification
+                Leaderboard
               </Text>
             );
           },

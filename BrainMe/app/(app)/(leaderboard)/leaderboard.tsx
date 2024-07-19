@@ -11,47 +11,39 @@ import { api } from "@/convex/_generated/api";
 
 export default function LeaderBoard() {
   const leaderboard = useQuery(api.leaderboard.collect, {});
-  const users = useQuery(api.user.collect);
-  const searchParameter = ["ranking", "games played"];
-  const [searchIndex, setSearchIndex] = useState(0);
+  const users = useQuery(api.user.collect, {});
+  const [data, setData] = useState<
+    {
+      _id: Id<"user">;
+      file?: string | undefined;
+      username: string;
+      points: number;
+    }[]
+  >([]);
 
   useEffect(() => {
     if (leaderboard && users) {
+      setData(
+        users.map((user) => {
+          const board = leaderboard.find((board) => board.user_id === user._id);
+          return {
+            _id: user._id,
+            file: user.file,
+            username: user.username,
+            points: board!.points,
+          };
+        })
+      );
     }
   }, [leaderboard, users]);
 
-  useEffect(() => {
-    if (all) {
-      if (searchParameter[searchIndex] === "games played") {
-        const users = all.sort((a, b) => b.gamesPlayed - a.gamesPlayed);
-        setUsers(
-          users.map((user) => ({
-            _id: user._id,
-            file: user.file,
-            username: user.username,
-            points: user.gamesPlayed,
-          }))
-        );
-      } else {
-        const users = all.sort((a, b) => b.points - a.points);
-        setUsers(
-          users.map((user) => ({
-            _id: user._id,
-            file: user.file,
-            username: user.username,
-            points: user.points,
-          }))
-        );
-      }
-    }
-  }, [all, searchIndex]);
   return (
     <View style={styles.container}>
       <View style={{ gap: 17, flex: 1 }}>
-        <TopPodium top3users={users.slice(0, 3)} />
+        <TopPodium top3users={data.slice(0, 3)} />
         <FlatList
           style={{ flex: 1 }}
-          data={users.slice(3)}
+          data={data.slice(3)}
           showsVerticalScrollIndicator={false}
           keyExtractor={(item) => item._id}
           ItemSeparatorComponent={() => <View style={{ height: 17 }} />}
