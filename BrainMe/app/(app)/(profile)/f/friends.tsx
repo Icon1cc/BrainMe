@@ -104,6 +104,7 @@ export default function Finder() {
         contentInsetAdjustmentBehavior="automatic"
         contentContainerStyle={{ paddingHorizontal: 17 }}
         keyExtractor={(item) => item._id}
+        ItemSeparatorComponent={() => <View style={{height: 17 }}/>}
         ListEmptyComponent={() => (
           <Text
             style={{

@@ -43,6 +43,7 @@ export default function Friends({ number, friends }: FriendsProps) {
           scrollEnabled={false}
           showsHorizontalScrollIndicator={false}
           keyExtractor={(item) => Math.random().toString() + item}
+          ItemSeparatorComponent={() => <View style={{height: 17 }}/>}
           renderItem={({ item }) => (
             <View style={{ marginRight: -5 }}>
               <ImageViewer

@@ -154,7 +154,7 @@ export default function Chat() {
               <View
                 style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
               >
-                <ImageViewer size={20} selectedImage={OtherUri} />
+                <ImageViewer size={36} selectedImage={OtherUri} />
                 <Text
                   style={{
                     fontFamily: "NiveauGrotesk",
@@ -162,7 +162,7 @@ export default function Chat() {
                     fontSize: 20,
                   }}
                 >
-                  `${username}`
+                  {username}
                 </Text>
               </View>
             );
