@@ -44,7 +44,7 @@ export default function NewChat() {
   const isTablet = useWindowDimensions().width >= 768;
   const { users } = useLocalSearchParams();
   const convex = useConvex();
-  const myUser = useQuery(api.user.myUser);
+  const myUser = useQuery(api.user.retrieve);
   const createChat = useMutation(api.chats.createChat);
   const router = useRouter();
   const [data, setData] = useState<
@@ -53,14 +53,8 @@ export default function NewChat() {
       _creationTime: number;
       friends?: Id<"user">[] | undefined;
       file?: string | undefined;
-      user_id: string;
+      tokenIdentifier: string;
       username: string;
-      ranking: number;
-      gamesPlayed: number;
-      points: number;
-      completionRate: number;
-      correctAnswers: number;
-      wrongAnswers: number;
     }[]
   >([]);
   const [filteredData, setFilteredData] = useState(data);
@@ -77,7 +71,7 @@ export default function NewChat() {
 
   useEffect(() => {
     const loadAllUsers = async () => {
-      const allUsers = await convex.query(api.user.getUsers);
+      const allUsers = await convex.query(api.user.collect, {});
       if (allUsers) {
         setData(allUsers);
         setFilteredData(allUsers);
