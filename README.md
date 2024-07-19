@@ -1,5 +1,5 @@
 # BrainMe.
-Welcome to the repository showcasing the design and build of a Trivia game mobile application with React Native. This project uses **Convex** which is a Typescript backend service solution and **Clerk** for authentication and user management. 
+Welcome to the repository showcasing the design and build of a trivia game mobile application with React Native. This project uses **Convex** which is a Typescript backend service solution and **Clerk** for authentication and user management. 
 
 ## Notes.
 
