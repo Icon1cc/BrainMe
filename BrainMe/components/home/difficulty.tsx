@@ -53,7 +53,7 @@ export default function Difficulty({
         >
           <Image
             source={require("@/assets/images/difficulties/easy.png")}
-            style={{ width: isTablet ? 40 : 30, height: isTablet ? 40 : 30 }}
+            style={{ width: isTablet ? 50 : 30, height: isTablet ? 50 : 30 }}
           />
           <Text style={styles.text}>Easy</Text>
         </Pressable>
@@ -86,7 +86,7 @@ export default function Difficulty({
         >
           <Image
             source={require("@/assets/images/difficulties/medium.png")}
-            style={{ width: isTablet ? 40 : 30, height: isTablet ? 40 : 30 }}
+            style={{ width: isTablet ? 50 : 30, height: isTablet ? 50 : 30 }}
           />
           <Text style={styles.text}>Medium</Text>
         </Pressable>
@@ -119,7 +119,7 @@ export default function Difficulty({
         >
           <Image
             source={require("@/assets/images/difficulties/hard.png")}
-            style={{ width: isTablet ? 40 : 30, height: isTablet ? 40 : 30 }}
+            style={{ width: isTablet ? 50 : 30, height: isTablet ? 50 : 30 }}
           />
           <Text style={styles.text}>Hard</Text>
         </Pressable>

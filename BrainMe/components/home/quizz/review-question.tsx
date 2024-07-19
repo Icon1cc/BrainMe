@@ -1,4 +1,10 @@
-import { View, Text, Dimensions, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  Dimensions,
+  StyleSheet,
+  useWindowDimensions,
+} from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import React, { useState } from "react";
 
@@ -14,11 +20,12 @@ interface QuestionProps {
 import AnswerButton from "./answer-button";
 
 export default function Question(props: QuestionProps) {
+  const isTablet = useWindowDimensions().width >= 768;
   const [selectedbox, setSelectedbox] = useState(0);
   const { width } = Dimensions.get("window");
 
   return (
-    <View style={{ paddingHorizontal: 17, width: width }}>
+    <View style={{ paddingHorizontal: isTablet ? 17 * 2 : 17, width: width }}>
       <View style={styles.container}>
         {props.userAnswers[props.currentQuestion - 1] ===
         props.correctAnswer ? (

@@ -92,7 +92,6 @@ export default function Welcome() {
             size="large"
             color="black"
             style={{
-              zIndex: 1,
               position: "absolute",
               top: -200,
               left: 0,
@@ -122,7 +121,7 @@ export default function Welcome() {
             text="SIGN UP"
             onPress={onSignUpPress}
           />
-          <Footer text="Already have an account?" />
+          <Footer text="Already have an account?" link="/welcome" />
         </>
       ) : (
         <>
@@ -155,7 +154,7 @@ export default function Welcome() {
             text="VERIFY"
             onPress={onPressVerify}
           />
-          <Footer text="Already have an account?" />
+          <Footer text="Already have an account?" link="/welcome" />
         </>
       )}
     </Structure>

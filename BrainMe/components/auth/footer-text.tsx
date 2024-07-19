@@ -6,26 +6,19 @@ import Colors from "@/constants/Colors";
 
 interface FooterProps {
   text: string;
-  link?: "Sign up";
+  link: "/sign-up" | "/welcome";
 }
 
 export default function Footer({ text, link }: FooterProps) {
+  const linkText = link === "/sign-up" ? "Sign up" : "Sign in";
   return (
     <View style={styles.container}>
       <Text>{text}</Text>
-      {link === "Sign up" ? (
-        <Link href="/sign-up" asChild>
-          <Pressable hitSlop={25}>
-            <Text style={styles.text}>Sign up</Text>
-          </Pressable>
-        </Link>
-      ) : (
-        <Link href="/welcome" asChild>
-          <Pressable hitSlop={25}>
-            <Text style={styles.text}>Sign in</Text>
-          </Pressable>
-        </Link>
-      )}
+      <Link href={link} asChild>
+        <Pressable hitSlop={25}>
+          <Text style={styles.text}>{linkText}</Text>
+        </Pressable>
+      </Link>
     </View>
   );
 }

@@ -63,7 +63,7 @@ export default function Block({ nav, image }: BlockProps) {
     >
       <Image
         source={ProviderImage[image as keyof typeof ProviderImage]}
-        style={{ width: 50, height: 50 }}
+        style={{ width: isTablet ? 70 : 50, height: isTablet ? 70 : 50 }}
       />
       <Text style={styles.category}>{nav}</Text>
     </Pressable>

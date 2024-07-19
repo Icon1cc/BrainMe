@@ -1,4 +1,10 @@
-import { View, Text, Dimensions, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  Dimensions,
+  StyleSheet,
+  useWindowDimensions,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 
 interface QuestionProps {
@@ -14,6 +20,7 @@ interface QuestionProps {
 import AnswerButton from "./answer-button";
 
 export default function Question(props: QuestionProps) {
+  const isTablet = useWindowDimensions().width >= 768;
   const [selectedbox, setSelectedbox] = useState(0);
   const { width } = Dimensions.get("window");
 
@@ -21,7 +28,7 @@ export default function Question(props: QuestionProps) {
     props.setUserAnswer(props.answers[selectedbox - 1]);
   }, [selectedbox]);
   return (
-    <View style={{ paddingHorizontal: 17, width: width }}>
+    <View style={{ paddingHorizontal: isTablet ? 17 * 2 : 17, width: width }}>
       <View style={styles.container}>
         <Text style={styles.remaining}>
           Question {props.currentQuestion} out of {props.totalQuestions}

@@ -161,7 +161,7 @@ export default function Welcome() {
         />
       </View>
       <LoginButton activity={activity} text="LOGIN" onPress={onSignInPress} />
-      <Footer text="Don't have an account yet?" link="Sign up" />
+      <Footer text="Don't have an account yet?" link="/sign-up" />
     </Structure>
   );
 }

@@ -1,4 +1,10 @@
-import { View, FlatList, Pressable, ScrollView } from "react-native";
+import {
+  View,
+  FlatList,
+  Pressable,
+  ScrollView,
+  useWindowDimensions,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState, useRef } from "react";
@@ -29,6 +35,7 @@ enum CategorySelection {
 }
 
 export default function Quizz() {
+  const isTablet = useWindowDimensions().width >= 768;
   const insertQuizz = useMutation(api.quizz.insert);
   const updateQuizz = useMutation(api.quizz.update);
   const quizz = useQuery(api.quizz.retrieve);
@@ -196,7 +203,10 @@ export default function Quizz() {
         <>
           <Pressable
             hitSlop={25}
-            style={{ alignSelf: "flex-end", paddingRight: 17 }}
+            style={{
+              alignSelf: "flex-end",
+              paddingRight: isTablet ? 17 * 2 : 17,
+            }}
             onPress={() => {
               setReview(false);
             }}

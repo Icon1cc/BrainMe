@@ -1,4 +1,4 @@
-import { View, Animated, StyleSheet } from "react-native";
+import { View, Animated, StyleSheet, useWindowDimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useRef, useEffect, useState } from "react";
 
@@ -8,6 +8,7 @@ interface TimeBarProps {
 }
 
 export default function TimeBar({ timeUp, setTimeUp }: TimeBarProps) {
+  const isTablet = useWindowDimensions().width >= 768;
   const animatedValue = useRef(new Animated.Value(-1000)).current;
   const reactive = useRef(new Animated.Value(-1000)).current;
 
@@ -43,7 +44,7 @@ export default function TimeBar({ timeUp, setTimeUp }: TimeBarProps) {
       style={{
         flexDirection: "row",
         alignItems: "center",
-        paddingHorizontal: 17,
+        paddingHorizontal: isTablet ? 17 * 2 : 17,
         gap: 17,
       }}
     >

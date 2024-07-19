@@ -66,7 +66,7 @@ export default function Category() {
       >
         <Image
           source={ProviderImage[category as keyof typeof ProviderImage]}
-          style={{ width: isTablet ? 90 : 60, height: isTablet ? 90 : 60 }}
+          style={{ width: isTablet ? 120 : 60, height: isTablet ? 120 : 60 }}
         />
       </View>
       <Difficulty difficulty={difficulty} setDifficulty={setDifficulty} />
