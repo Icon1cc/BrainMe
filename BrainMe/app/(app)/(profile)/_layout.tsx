@@ -1,9 +1,10 @@
-import { Text, Pressable } from "react-native";
+import { Pressable } from "react-native";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
-import { Stack, Link } from "expo-router";
+import { Stack, Link, useRouter } from "expo-router";
 import React from "react";
 
 export default function Layout() {
+  const router = useRouter();
   return (
     <Stack
       screenOptions={{
@@ -22,7 +23,16 @@ export default function Layout() {
         name="[profile]"
         options={{
           headerLeft() {
-            return <Header navigation="f/finder" />;
+            return (
+              <Pressable
+                hitSlop={25}
+                onPress={() => {
+                  router.back();
+                }}
+              >
+                <AntDesign name="arrowleft" size={24} color="white" />
+              </Pressable>
+            );
           },
         }}
       />
@@ -38,7 +48,7 @@ export default function Layout() {
 }
 
 interface HeaderProps {
-  navigation: "f/finder" | "profile" | "accounts" | "[profile]";
+  navigation: "profile" | "accounts" | "[profile]";
 }
 
 function Header(props: HeaderProps) {

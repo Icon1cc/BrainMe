@@ -52,15 +52,13 @@ export const update = mutation({
 export const retrieve = query({
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      return null;
-    } else {
-      const { tokenIdentifier } = identity!;
+    const { tokenIdentifier } = identity!;
+    if (tokenIdentifier) {
       const user = await ctx.db
         .query("user")
         .filter((q) => q.eq(q.field("tokenIdentifier"), tokenIdentifier))
         .unique();
-      if (user?.file && user.file) {
+      if (user?.file) {
         const url = await ctx.storage.getUrl(user.file as Id<"_storage">);
         if (url) {
           return { ...user, file: url };
@@ -87,10 +85,10 @@ export const retrieveUserFriends = query({
         if (friend.file) {
           const url = await ctx.storage.getUrl(friend.file as Id<"_storage">);
           if (url) {
-            return { _id: friend._id, file: url };
+            return { _id: friend._id, username: friend.username, file: url };
           }
         }
-        return { _id: friend._id };
+        return { _id: friend._id, username: friend.username };
       })
     );
   },

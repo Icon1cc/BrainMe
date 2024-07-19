@@ -90,8 +90,9 @@ export default function Welcome() {
           <ActivityIndicator
             animating={activity}
             size="large"
-            color="blue"
+            color="black"
             style={{
+              zIndex: 1,
               position: "absolute",
               top: -200,
               left: 0,

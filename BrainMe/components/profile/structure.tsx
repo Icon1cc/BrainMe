@@ -4,14 +4,21 @@ import React, { ReactNode } from "react";
 
 import Colors from "@/constants/Colors";
 import ImageViewer from "../image-viewer";
+import { FontAwesome6 } from "@expo/vector-icons";
 
 interface StructureProps {
   title: string;
   placeholder: string;
   children: ReactNode;
+  ranking: number;
 }
 
-export function Structure({ title, children, placeholder }: StructureProps) {
+export function Structure({
+  title,
+  children,
+  placeholder,
+  ranking,
+}: StructureProps) {
   const isTablet = useWindowDimensions().width > 763;
   return (
     <View
@@ -47,10 +54,26 @@ export function Structure({ title, children, placeholder }: StructureProps) {
           style={{
             position: "absolute",
             alignSelf: "center",
+            alignItems: "center",
             top: isTablet ? -60 : -45,
           }}
         >
           <ImageViewer size={isTablet ? 120 : 90} selectedImage={placeholder} />
+          {ranking < 4 && (
+            <FontAwesome6
+              name="medal"
+              size={30}
+              color={
+                ranking === 1
+                  ? "#FFD700"
+                  : ranking === 2
+                    ? "#BDBDBD"
+                    : ranking === 3
+                      ? "#CE7431"
+                      : "white"
+              }
+            />
+          )}
         </View>
         {children}
       </View>
@@ -69,3 +92,7 @@ const styles = StyleSheet.create({
     paddingTop: 17 * 2,
   },
 });
+
+// Bronze: #CE7431
+// Silver: #BDBDBD
+// Gold: #FFD700

@@ -15,13 +15,14 @@ import PushNotifications from "@/components/profile/settings/push-notifications"
 import SignOut from "@/components/profile/settings/session";
 
 // Backend.
-import { useQuery } from "convex/react";
+import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 
 export default function Settings() {
   const isTablet = useWindowDimensions().width > 763;
   const { title, param } = useLocalSearchParams();
-  const myUser = useQuery(api.user.myUser);
+  const user = useQuery(api.user.retrieve);
+  const update = useMutation(api.user.update);
   // Safe area insets and router.
   const router = useRouter();
 
@@ -38,7 +39,7 @@ export default function Settings() {
     if (selectedImage) {
       setUploading(true);
       const url = new URL(`${process.env.EXPO_PUBLIC_CONVEX_SITE}/profilepic`);
-      url.searchParams.set("user", myUser?._id!);
+      url.searchParams.set("user", user?._id!);
       url.searchParams.set("username", name + " " + familyName);
 
       // Convert the image URI to a blob.
@@ -56,6 +57,11 @@ export default function Settings() {
         })
         .catch((err) => console.log("ERROR: ", err))
         .finally(() => setUploading(false));
+    } else {
+      await update({
+        _id: user?._id!,
+        username: name + " " + familyName,
+      });
     }
     router.back();
   };
@@ -71,12 +77,12 @@ export default function Settings() {
   }, [title, param]);
 
   useEffect(() => {
-    if (myUser) {
-      setName(myUser.username.split(" ")[0]);
-      setFamilyName(myUser.username.split(" ")[1] || "");
-      setSelectedImage(myUser.file!);
+    if (user) {
+      setName(user.username.split(" ")[0]);
+      setFamilyName(user.username.split(" ")[1] || "");
+      setSelectedImage(user.file!);
     }
-  }, [myUser]);
+  }, [user]);
   return (
     <View
       style={[
@@ -101,7 +107,7 @@ export default function Settings() {
       <ActivityIndicator
         animating={uploading}
         size="large"
-        color="blue"
+        color="black"
         style={styles.activityIndicator}
       />
       <ProfilePic
@@ -131,6 +137,7 @@ const styles = StyleSheet.create({
   },
   activityIndicator: {
     position: "absolute",
+    zIndex: 1,
     top: -20,
     left: 0,
     right: 0,

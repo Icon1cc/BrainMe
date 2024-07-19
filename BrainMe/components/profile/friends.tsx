@@ -6,7 +6,7 @@ import {
   StyleSheet,
   useWindowDimensions,
 } from "react-native";
-import { useRouter } from "expo-router";
+import { useRouter, Link } from "expo-router";
 import React from "react";
 
 import Colors from "@/constants/Colors";
@@ -18,6 +18,7 @@ interface FriendsProps {
   number: number;
   friends: {
     _id: Id<"user">;
+
     file?: string;
   }[];
 }
@@ -28,9 +29,13 @@ export default function Friends({ number, friends }: FriendsProps) {
   const router = useRouter();
   return (
     <View style={{ gap: isTablet ? 10 : 5 }}>
-      <Text style={[styles.text, { fontSize: isTablet ? 24 : 20 }]}>
-        Friends ({number})
-      </Text>
+      <Link href={"/(app)/(profile)/f/friends"} asChild>
+        <Pressable>
+          <Text style={[styles.text, { fontSize: isTablet ? 24 : 20 }]}>
+            Friends ({number})
+          </Text>
+        </Pressable>
+      </Link>
       <View style={styles.container}>
         <FlatList
           data={friends}

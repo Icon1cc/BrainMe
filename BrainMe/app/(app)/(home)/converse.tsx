@@ -62,7 +62,6 @@ function RenderItem({ item }: RenderItemProps) {
 
 export default function Converse() {
   const chats = useQuery(api.chats.retrieve);
-  console.log(chats);
   const isTablet = useWindowDimensions().width >= 768;
 
   const [data, setData] = useState<
