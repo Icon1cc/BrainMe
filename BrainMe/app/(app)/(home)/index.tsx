@@ -25,7 +25,7 @@ export default function Home() {
     }
     setTimeout(() => {
       checkUser();
-    }, 500);
+    }, 1000);
   }, []);
 
   useEffect(() => {

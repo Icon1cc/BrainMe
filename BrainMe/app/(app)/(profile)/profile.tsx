@@ -30,7 +30,10 @@ export default function Profile() {
   const games = statistics?.games ?? 0; // Default to 0 if undefined
 
   const totalQuestions = games * 5; // Each quiz has 5 questions
-  const correctPercentage = totalQuestions > 0 ? (correctAnswers / totalQuestions) * 100 : 0;
+  const correctPercentage =
+    totalQuestions > 0
+      ? Math.round((correctAnswers / totalQuestions) * 100)
+      : 0;
   const incorrectPercentage = 100 - correctPercentage;
 
   return (
@@ -40,7 +43,7 @@ export default function Profile() {
       ranking={ranking}
     >
       <Grid
-        ranking={ranking!} 
+        ranking={ranking!}
         games={games}
         points={statistics?.points! ?? 0}
         level={statistics?.level! ?? 0}
