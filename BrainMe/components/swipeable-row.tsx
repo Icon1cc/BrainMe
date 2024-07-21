@@ -1,8 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
 import React, { Component, PropsWithChildren } from "react";
 import { Animated, StyleSheet, View, I18nManager } from "react-native";
-
 import { RectButton } from "react-native-gesture-handler";
 
 import Swipeable from "react-native-gesture-handler/Swipeable";
@@ -11,12 +9,12 @@ import Swipeable from "react-native-gesture-handler/Swipeable";
 
 interface RectangularButtonProps {
   color: string;
-  pressHandler: () => void;
+  onPressMessage: () => void;
+  onPressUser: () => void;
   text: string;
 }
 
 function RectangularButton(props: RectangularButtonProps) {
-  const router = useRouter();
   return (
     <RectButton
       style={[
@@ -25,7 +23,7 @@ function RectangularButton(props: RectangularButtonProps) {
           backgroundColor: props.color,
         },
       ]}
-      onPress={props.pressHandler}
+      onPress={props.text === "Chat" ? props.onPressMessage : props.onPressUser}
     >
       <Ionicons
         name={props.text === "Chat" ? "chatbubbles-outline" : "person-outline"}
@@ -36,13 +34,33 @@ function RectangularButton(props: RectangularButtonProps) {
   );
 }
 
-interface Props {
-  userId: string;
+interface SwipieProps {
+  children: React.ReactNode;
+  onPressMessage: () => void;
+  onPressUser: () => void;
 }
 
-export default class AppleStyleSwipeableRow extends Component<
-  PropsWithChildren<unknown>
-> {
+export default function Swipie({
+  children,
+  onPressMessage,
+  onPressUser,
+}: SwipieProps) {
+  return (
+    <AppleStyleSwipeableRow
+      onPressMessage={onPressMessage}
+      onPressUser={onPressUser}
+    >
+      {children}
+    </AppleStyleSwipeableRow>
+  );
+}
+
+interface AppleStyleSwipeableRowProps extends PropsWithChildren<unknown> {
+  onPressMessage: () => void;
+  onPressUser: () => void;
+}
+
+class AppleStyleSwipeableRow extends Component<AppleStyleSwipeableRowProps> {
   private renderRightAction = (
     text: string,
     color: string,
@@ -53,17 +71,29 @@ export default class AppleStyleSwipeableRow extends Component<
       inputRange: [0, 1],
       outputRange: [x, 0],
     });
-    const pressHandler = () => {
-      this.close();
-      // eslint-disable-next-line no-alert
-      window.alert(text);
+
+    const onPressMessage = () => {
+      const { onPressMessage } = this.props;
+      if (onPressMessage) {
+        this.close();
+        onPressMessage();
+      }
+    };
+
+    const onPressUser = () => {
+      const { onPressUser } = this.props;
+      if (onPressUser) {
+        this.close();
+        onPressUser();
+      }
     };
 
     return (
       <Animated.View style={{ flex: 1, transform: [{ translateX: trans }] }}>
         <RectangularButton
           color={color}
-          pressHandler={pressHandler}
+          onPressMessage={onPressMessage}
+          onPressUser={onPressUser}
           text={text}
         />
       </Animated.View>
@@ -95,6 +125,7 @@ export default class AppleStyleSwipeableRow extends Component<
   };
   render() {
     const { children } = this.props;
+
     return (
       <Swipeable
         ref={this.updateRef}

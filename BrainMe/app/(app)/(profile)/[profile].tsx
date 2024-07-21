@@ -47,7 +47,7 @@ export default function OtherUser() {
       if (chat) {
         setUploading(false);
         router.push({
-          pathname: "/(home)/t/[chat]",
+          pathname: "/(profile)/t/[chat]",
           params: { chat: chat._id },
         });
       } else {
@@ -67,7 +67,7 @@ export default function OtherUser() {
         });
         if (newChat) {
           router.push({
-            pathname: "/(home)/t/[chat]",
+            pathname: "/(profile)/t/[chat]",
             params: { chat: newChat._id },
           });
           setUploading(false);
