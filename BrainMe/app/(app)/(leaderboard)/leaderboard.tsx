@@ -12,6 +12,7 @@ import { api } from "@/convex/_generated/api";
 export default function LeaderBoard() {
   const leaderboard = useQuery(api.leaderboard.collect, {});
   const users = useQuery(api.user.collect, {});
+  console.log(users);
   const [data, setData] = useState<
     {
       _id: Id<"user">;
@@ -29,7 +30,7 @@ export default function LeaderBoard() {
           _id: user._id,
           file: user.file,
           username: user.username,
-          points: board!.points,
+          points: board?.points ?? 0,
         };
       });
       setData(board.sort((a, b) => b.points - a.points));

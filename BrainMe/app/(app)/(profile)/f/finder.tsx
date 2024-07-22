@@ -51,7 +51,7 @@ export default function Finder() {
             _id: user._id,
             file: user.file,
             username: user.username,
-            points: board!.points,
+            points: board?.points ?? 0,
           };
         })
       );

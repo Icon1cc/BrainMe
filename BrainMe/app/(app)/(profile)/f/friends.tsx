@@ -50,7 +50,7 @@ export default function Finder() {
           _id: friend._id,
           file: friend.file,
           username: friend.username,
-          points: board!.points,
+          points: board?.points ?? 0,
         };
       });
       setData(data);
