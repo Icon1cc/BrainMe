@@ -14,7 +14,7 @@ import SignUpButton from "@/components/auth/action-button";
 export default function Welcome() {
   // This hook provides functions and state for signing up.
   const { isLoaded, signUp, setActive } = useSignUp();
-  const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
   const [pendingVerification, setPendingVerification] = useState(false);
@@ -37,7 +37,8 @@ export default function Welcome() {
 
     try {
       await signUp.create({
-        username,
+        firstName: name,
+        lastName: " ",
         emailAddress,
         password,
       });
@@ -100,17 +101,20 @@ export default function Welcome() {
             }}
           />
           <Input
+            code={emailAddress}
             title="Email"
             placeholder="winner@email.com"
             keyboardType="email-address"
             onChangeText={setEmailAddress}
           />
           <Input
-            title="Your username"
+            code={name}
+            title="Your name"
             placeholder="Rookie"
-            onChangeText={setUsername}
+            onChangeText={setName}
           />
           <Input
+            code={password}
             title="Password"
             placeholder="Insert password..."
             secureTextEntry
@@ -142,6 +146,7 @@ export default function Welcome() {
             address.
           </Text>
           <Input
+            code={code}
             title="Verification code"
             placeholder="Insert code..."
             keyboardType="numeric"

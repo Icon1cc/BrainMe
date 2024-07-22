@@ -125,12 +125,14 @@ export default function Welcome() {
         }}
       />
       <Input
+        code={emailAddress}
         title="Email"
         placeholder="winner@email.com"
         keyboardType="email-address"
         onChangeText={setEmailAddress}
       />
       <Input
+        code={password}
         title="Your password"
         placeholder="Insert password..."
         secureTextEntry

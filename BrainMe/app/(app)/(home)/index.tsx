@@ -17,15 +17,14 @@ export default function Home() {
   useEffect(() => {
     async function checkUser() {
       const user = await convex.query(api.user.retrieve);
+      console.log("How many times does this run?");
       if (!user) {
         await convex.mutation(api.user.insert);
         await convex.mutation(api.leaderboard.insert);
         await convex.mutation(api.userstatistics.insert);
       }
     }
-    setTimeout(() => {
-      checkUser();
-    }, 1000);
+    setTimeout(() => checkUser(), 1000);
   }, []);
 
   useEffect(() => {

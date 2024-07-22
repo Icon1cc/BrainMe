@@ -3,6 +3,7 @@ import React from "react";
 
 interface InputProps {
   title: string;
+  code: string;
   placeholder: string;
   keyboardType?: "default" | "email-address" | "numeric" | "phone-pad";
   secureTextEntry?: boolean;
@@ -13,6 +14,7 @@ interface InputProps {
 
 export default function Input({
   title,
+  code,
   placeholder,
   keyboardType,
   onChangeText,
@@ -31,6 +33,7 @@ export default function Input({
         onChangeText={(text) => onChangeText(text)}
         textAlign={textAlign}
         maxLength={maxlength}
+        value={code}
         secureTextEntry={secureTextEntry}
       />
     </View>

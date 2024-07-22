@@ -82,17 +82,20 @@ export const update = mutation({
 export const retrieve = query({
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
-    const { tokenIdentifier } = identity!;
-    if (tokenIdentifier) {
-      const user = await ctx.db
-        .query("user")
-        .filter((q) => q.eq(q.field("tokenIdentifier"), tokenIdentifier))
-        .unique();
-      if (user) {
-        return await ctx.db
-          .query("userstatistics")
-          .filter((q) => q.eq(q.field("user_id"), user._id))
+    if (identity) {
+      console.log("identity", identity);
+      const { tokenIdentifier } = identity;
+      if (tokenIdentifier) {
+        const user = await ctx.db
+          .query("user")
+          .filter((q) => q.eq(q.field("tokenIdentifier"), tokenIdentifier))
           .unique();
+        if (user) {
+          return await ctx.db
+            .query("userstatistics")
+            .filter((q) => q.eq(q.field("user_id"), user._id))
+            .unique();
+        }
       }
     }
     return null;

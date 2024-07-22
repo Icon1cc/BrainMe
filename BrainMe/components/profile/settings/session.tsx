@@ -11,7 +11,9 @@ export default function Session() {
   const { signOut } = useAuth();
 
   // Backend.
-  const remove = useMutation(api.user.remove);
+  const removeUser = useMutation(api.user.remove);
+  const removeStatistics = useMutation(api.userstatistics.remove);
+  const removeLeaderboard = useMutation(api.leaderboard.remove);
 
   const onHandleDelete = () => {
     Alert.alert("Are you sure you want to delete your account?", "", [
@@ -22,7 +24,9 @@ export default function Session() {
       {
         text: "Delete",
         onPress: () => {
-          remove();
+          removeUser();
+          removeStatistics();
+          removeLeaderboard();
           signOut();
         },
       },
