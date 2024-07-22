@@ -1,0 +1,164 @@
+
+\documentclass[12pt,a4paper]{article}
+\usepackage{graphicx} % for including images
+\usepackage{fancyhdr} % for headers and footers
+\usepackage{hyperref} % for clickable table of contents
+\usepackage{array}    % For more complex table configurations
+\usepackage{geometry} % Adjust the page margins if necessary
+\usepackage{amssymb}
+\usepackage{tabularx} % For width-specific tables
+\usepackage{float}
+\usepackage{tikz}
+\usepackage{enumitem}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{comment}
+\usepackage[backend=biber,style=alphabetic,sorting=ynt]{biblatex}
+\usepackage{wrapfig}
+\usepackage{listings}
+\usepackage{biblatex}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{array}
+\usepackage{makecell}
+\usepackage{float}
+\usepackage{textcomp}
+\usepackage[T1]{fontenc}
+\usepackage{wallpaper}
+\usepackage{mdframed}
+\usepackage{amsmath}
+\usepackage{longtable}
+\usepackage{fancybox}
+
+% Define colors
+\definecolor{commentcolor}{rgb}{0.5,0.5,0.5}
+\definecolor{stringcolor}{rgb}{0.58,0,0.82}
+\definecolor{keywordcolor}{rgb}{0,0,1}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+% Language definition for Alloy
+\lstdefinelanguage{Alloy}{
+  morekeywords={sig, abstract, extends, fact, all, no, in, set, one, some, lone, none, disj, and, or, not, implies, iff, for, let, if, then, else, iden, univ},
+  sensitive=true,
+  morecomment=[l]{//},
+  morestring=[b]",
+}
+
+% Setting the listing environment
+\lstset{
+    language=Alloy,
+    commentstyle=\color{commentcolor},
+    keywordstyle=\color{keywordcolor},
+    stringstyle=\color{stringcolor},
+    basicstyle=\ttfamily\small,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+
+% Adjust header height and separation
+\setlength{\headheight}{15pt}
+\setlength{\headsep}{20pt}
+
+\addbibresource{references.bib}
+
+\begin{document}
+
+% FRONT PAGE
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=10cm]{Cover Page/politecnico-milano-logo.png}
+    \label{fig:galaxy}
+\end{figure}
+
+\vspace{0.5cm}
+
+\begin{center}
+    {\huge  Politecnico di Milano}\\
+    \vspace{0.5cm}
+    {\Large Design and Implementation of Mobile Applications} 
+    \vspace{0.5cm}
+\end{center}
+
+\Xhline{5\arrayrulewidth}
+\vspace{0.3cm}
+\begin{figure}[htp]
+    \centering
+    {\Huge \bf BrainMe} \\
+    \vspace{.7cm}
+    {\Huge \bf Requirements \& Design Document}
+\end{figure}
+\vspace{.3cm}
+\Xhline{5\arrayrulewidth}
+\vspace{1cm}
+
+\noindent \textit{Author} \hfill \textit{Person code} \\
+TIWARI Rishabh \hfill \textit{10987397} \\
+BOVING Alexandre \hfill \textit{10601768} 
+\vspace{\fill}
+
+\begin{center}
+    The \(10^{th}\) of June, 2024
+\end{center}
+
+\thispagestyle{empty}
+\newpage % Start a new page for the logo and label
+
+% Center everything on the page
+\begin{center}
+    % Add vertical space at the top to push the content to the middle
+    \vspace*{\fill}
+
+    \vspace{1.5cm}
+
+    % Insert the logo image, adjust the width as needed
+
+    \newcommand{\roundimage}[4]{
+  \begin{tikzpicture}
+    \clip[rounded corners=#1] (0,0) rectangle (#2,#3);
+    \node[anchor=south west, inner sep=0] at (0,0) {\includegraphics[width=#2,height=#3]{#4}};
+  \end{tikzpicture}
+}
+    % Ensure the image file path is correct
+\roundimage{0.5cm}{0.6\linewidth}{1.2\linewidth}{Images/splash screen.png}
+    % Add some vertical space between the image and the label
+    \vspace{0.5cm}
+
+    % Label the image
+    {\textbf{The BrainMe Application}} % Large and bold text for the label
+
+    % Add vertical space at the bottom to keep the content centered
+    \vspace*{\fill}
+\end{center}
+
+\newpage
+
+% TABLE OF CONTENTS
+\tableofcontents
+\newpage
+
+% Set header and footer from this page onward
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\includegraphics[width=1cm]{Images/header_logo.jpg}}
+\lhead{BrainMe Mobile Application}
+\rfoot{Page \thepage}
+
+% Add vertical space after header
+\vspace{2cm}
+
+\input{introduction.tex}
+\input{application_architecture.tex}
+\input{data_management}
+\input{user_interface.tex}
+\input{testing_campaign.tex}
+\input{future_developments.tex}
+\input{References.tex}
+
+\end{document}

@@ -1,0 +1,164 @@
+\vspace{0.7cm}
+
+\section{Introduction}
+
+BrainMe is a multi-platform application that we designed to enhance the learning experience by providing users with interactive tools and features. Built with React Native and Expo Router for the front-end, Convex for the backend, and Clerk for authentication, BrainMe aims to create a seamless and engaging environment for users to take quizzes and interact with a dynamic community.
+
+\subsection{Definitions, Acronyms and Abbreviations}
+
+\subsubsection{Definitions}
+
+\begin{itemize}
+    \item \textbf{BrainMe}: The name of the application being developed, which aims to enhance the learning experience through quizzes and social interaction.
+    \item \textbf{Convex Database}: The main storage solution used in the BrainMe application for storing structured data related to users, quizzes, messages, and leaderboard information.
+    \item \textbf{React Native}: An open-source mobile application framework created by Facebook, used to develop applications for Android, iOS, and other platforms.
+    \item \textbf{Expo Router}: A tool used for navigation within the React Native framework.
+    \item \textbf{Clerk}: The authentication service used in the BrainMe application.
+    \item \textbf{TriviaAPI}: The external service providing quiz questions for the BrainMe application.
+    \item \textbf{Widget}: A component of the graphical user interface (GUI) that displays information or provides a specific way for a user to interact with the operating system or an application.
+    \item \textbf{Component}: A modular part of the UI in React Native that encapsulates its own structure, style, and behavior.
+\end{itemize}
+
+\subsubsection{Acronyms}
+
+\begin{itemize}
+    \item \textbf{UI}: User Interface
+    \item \textbf{UX}: User Experience
+    \item \textbf{API}: Application Programming Interface
+    \item \textbf{JSON}: JavaScript Object Notation
+    \item \textbf{REST}: Representational State Transfer
+    \item \textbf{HTTPS}: Hypertext Transfer Protocol Secure
+    \item \textbf{SSO}: Single Sign-On
+    \item \textbf{CI/CD}: Continuous Integration and Continuous Deployment
+    \item \textbf{E2E}: End-to-End
+\end{itemize}
+
+\subsubsection{Abbreviations}
+
+\begin{itemize}
+    \item \textbf{GitHub Actions}: A CI/CD service provided by GitHub to automate the software workflow.
+    \item \textbf{Detox}: An end-to-end testing and automation library for React Native applications.
+    \item \textbf{TokenIdentifier}: A unique identifier for a user token used for authentication.
+\end{itemize}
+
+
+\subsection{Purpose}
+
+BrainMe was created to make learning more interactive and personalized. Here's what users can do with our app:
+\begin{itemize}
+    \item \textbf{Engage with Predefined Quiz Topics:} Users can choose from a wide range of predefined quiz topics.
+    \item \textbf{Select Quiz Difficulty Levels:} Users can select the difficulty level for each quiz topic.
+    \item \textbf{Review Completed Quizzes:} Users can review the quizzes they have completed.
+    \item \textbf{Track Quiz Progress:} Users can track their progress in different quizzes.
+    \item \textbf{Compete on Leaderboards:} Users can compete with others on leaderboards.
+    \item \textbf{Earn Trophies:} Users receive trophies for achieving the top three positions on the leaderboard.
+    \item \textbf{Follow Other Users:} Users can follow other users and see their progress.
+    \item \textbf{Search for Users:} Users can search for other users within the app.
+    \item \textbf{Send Messages:} Users can send messages to other users within the app.
+    \item \textbf{Receive Push Notifications:} Users get notifications for new messages and updates.
+    \item \textbf{Earn Points and Levels:} Users earn points based on quiz performance, which helps increase their profile level.
+    \item \textbf{View Profile and Stats:} Users can view their profile level, points, rank on the leaderboard, and detailed performance statistics.
+    \item \textbf{Customize Notifications:} Users can customize their notification preferences.
+\end{itemize}
+
+The idea for BrainMe came from the need for a learning tool that combines quizzes and community interaction. By bringing these features together, BrainMe aims to provide a comprehensive and fun learning platform for users of all ages and interests. This document outlines the core design choices and the reasons behind them, showing our commitment to delivering a high-quality user experience.
+
+
+\subsection{Requirements}
+
+\begin{longtable}{|c|p{12cm}|}
+\hline
+\textbf{ID} & \textbf{Functional Requirements} \\
+\hline
+FR1 & Users shall be able to sign in to the application. \\
+\hline
+FR2 & Users shall be able to sign up for an account in the application. \\
+\hline
+FR3 & Users shall be able to log out from the application. \\
+\hline
+FR4 & Registered users shall be able to edit their contact details. \\
+\hline
+FR5 & Registered users shall be able to delete their accounts. \\
+\hline
+FR6 & Registered users shall be able to choose from predefined quiz topics. \\
+\hline
+FR7 & Registered users shall be able to select the difficulty level for each quiz topic. \\
+\hline
+FR8 & Registered users shall be able to review completed quizzes. \\
+\hline
+FR9 & Registered users shall be able to track their quiz progress. \\
+\hline
+FR10 & Registered users shall be able to compete on leaderboards. \\
+\hline
+FR11 & Users shall receive trophies for achieving the top three positions on the leaderboard. \\
+\hline
+FR12 & Registered users shall be able to follow other users. \\
+\hline
+FR13 & Registered users shall be able to search for other users within the application. \\
+\hline
+FR14 & Registered users shall be able to send messages within the application. \\
+\hline
+FR15 & Users shall receive push notifications for new messages. \\
+\hline
+FR16 & Users shall receive points based on their performance in quizzes. \\
+\hline
+FR17 & User profile levels shall increase based on the points accumulated by the user. \\
+\hline
+FR18 & Registered users shall be able to view their profile level and points. \\
+\hline
+FR19 & Registered users shall be able to view their rank on the leaderboard. \\
+\hline
+FR20 & Registered users shall be able to view a list of their friends they follow. \\
+\hline
+FR21 & Registered users shall be able to view the profile details of other users (e.g., username, profile picture). \\
+\hline
+FR22 & Users shall be able to customize their notification preferences. \\
+\hline
+FR23 & Registered users shall be able to view detailed performance statistics. \\
+\hline
+\end{longtable}
+
+\subsection{Features Implemented}
+
+The functionalities implemented in the BrainMe app, in an intuitive order of interaction, are:
+
+\subsubsection{Login and Registration}
+
+Users can sign in (or sign up) using their email address. The app also supports Single Sign-On (SSO) with Google, Facebook and Apple identity providers. A “forgot password” feature is implemented to help users reset their password if needed, ensuring they can always regain access to their accounts.
+
+\subsubsection{Quiz Topic Selection}
+
+Registered users can choose from a wide range of predefined quiz topics. This selection is made easy through a list displayed by tapping the appropriate button on the quiz page. Users can select the difficulty level for each quiz topic for a more personalized learning experience.
+
+\subsubsection{Quiz-Based Learning}
+
+BrainMe enhances the learning process through interactive quizzes. Registered users can take quizzes based on different genres and levels, allowing them to test and expand their knowledge in a fun and engaging way. This feature helps users assess their understanding and track their progress.
+
+\subsubsection{Review and Track Progress}
+
+Users can review the quizzes they have completed and track their progress over time. This feature helps users monitor their development, see how much they have improved, and identify areas where they need more practice.
+
+\subsubsection{Compete on Leaderboards}
+
+BrainMe fosters a sense of community and healthy competition by allowing registered users to compete on leaderboards. Users can see their rankings and strive to improve, promoting a motivating and engaging learning environment.
+
+\subsubsection{Earn Trophies and Points}
+
+To motivate users, BrainMe includes a rewards system where users receive trophies for achieving the top three positions on the leaderboard. Users also earn points based on their performance in quizzes. As users accumulate points, their profile levels increase, providing a sense of accomplishment and encouraging continued engagement with the app.
+
+\subsubsection{Follow and Search for Users}
+
+Users can follow other users and see their progress, fostering a collaborative learning environment. They can also search for other users within the app, making it easy to find and connect with friends and fellow learners.
+
+\subsubsection{Messaging and Notifications}
+
+BrainMe enhances social learning by allowing registered users to send and receive messages within the application. Push notifications ensure users are promptly informed about new messages, quiz updates, and other interactions, keeping them engaged and informed.
+
+\subsubsection{View Profile and Performance Statistics}
+
+Registered users can view their profile level, points, and rank on the leaderboard. They can also access detailed performance statistics, helping them understand their strengths and areas for improvement.
+
+\subsubsection{Enabling/Disabling Notifications}
+
+Registered users can choose to enable or disable the notifications in the settings page. This can help the users to make preferences of their own. \\\\
+By consolidating these features into one application, BrainMe aims to provide a comprehensive and optimized learning platform for users of all ages and interests. This document outlines the core design choices and the rationale behind them, demonstrating our commitment to deliver a high-quality user experience.
