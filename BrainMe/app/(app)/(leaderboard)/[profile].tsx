@@ -110,7 +110,11 @@ export default function OtherUser() {
         games={otherUserBoard?.games!}
         points={otherUserBoard?.points!}
         level={otherUserBoard?.level!}
-        correct={otherUserBoard?.correctAnswers! / otherUserBoard?.games!}
+        correct={
+          otherUserBoard?.games! > 0
+            ? otherUserBoard?.correctAnswers! / otherUserBoard?.games!
+            : 0
+        }
         incorrect={otherUserBoard?.correctAnswers!}
       />
       <Options
